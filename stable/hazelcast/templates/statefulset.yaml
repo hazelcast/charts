@@ -67,7 +67,7 @@ spec:
           mountPath: /data/hazelcast
         env:
         - name: JAVA_OPTS
-          value: "-Dhazelcast.rest.enabled={{ .Values.hazelcast.rest }} -Dhazelcast.config=/data/hazelcast/hazelcast.xml -DserviceName={{ template "hazelcast.fullname" . }} {{ .Values.hazelcast.javaOpts }}"
+          value: "-Dhazelcast.rest.enabled={{ .Values.hazelcast.rest }} -Dhazelcast.config=/data/hazelcast/hazelcast.xml -DserviceName={{ template "hazelcast.fullname" . }} -Dhazelcast.mancenter.enabled={{ .Values.mancenter.enabled }} -Dhazelcast.mancenter.url=http://{{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}/hazelcast-mancenter {{ .Values.hazelcast.javaOpts }}"
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
       volumes:
       - name: hazelcast-storage

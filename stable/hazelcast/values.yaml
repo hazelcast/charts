@@ -52,6 +52,8 @@ hazelcast:
             </discovery-strategies>
           </join>
         </network>
+
+        <management-center enabled="${hazelcast.mancenter.enabled}">${hazelcast.mancenter.url}</management-center>
       </hazelcast>
 
 
@@ -140,6 +142,8 @@ mancenter:
     # - myRegistryKeySecretName
   # nodeSelector is an array of Hazelcast Management Center Node labels for POD assignments
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+  # javaOpts are additional JAVA_OPTS properties for Hazelcast Management Center
+  javaOpts:
   nodeSelector: {}
   # Configure resource requests and limits
   # ref: http://kubernetes.io/docs/user-guide/compute-resources/
