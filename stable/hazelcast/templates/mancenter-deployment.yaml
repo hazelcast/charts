@@ -1,0 +1,55 @@
+{{- if .Values.mancenter.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "mancenter.fullname" . }}
+  labels:
+    app: {{ template "hazelcast.name" . }}
+    chart: {{ template "hazelcast.chart" . }}
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "hazelcast.name" . }}
+      release: "{{ .Release.Name }}"
+      role: mancenter
+  template:
+    metadata:
+      labels:
+        app: {{ template "hazelcast.name" . }}
+        release: "{{ .Release.Name }}"
+        role: mancenter
+    spec:
+      {{- if .Values.mancenter.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.mancenter.image.pullSecrets }}
+        - name: {{ . }}
+        {{- end}}
+      {{- end}}
+      {{- if .Values.mancenter.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.mancenter.nodeSelector | indent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ template "mancenter.fullname" . }}
+        image: "{{ .Values.mancenter.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.mancenter.image.pullPolicy | quote }}
+        resources:
+{{ toYaml .Values.mancenter.resources | indent 10 }}
+        ports:
+        - name: mancenter
+          containerPort: 8080
+        volumeMounts:
+        - name: mancenter-storage
+          mountPath: /data
+      volumes:
+      - name: mancenter-storage
+      {{- if .Values.mancenter.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.mancenter.persistence.existingClaim | default (include "mancenter.fullname" .) }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}
+{{- end -}}
