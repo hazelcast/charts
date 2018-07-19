@@ -32,6 +32,8 @@ spec:
       nodeSelector:
 {{ toYaml .Values.mancenter.nodeSelector | indent 8 }}
       {{- end }}
+      securityContext:
+        runAsUser: 0
       containers:
       - name: {{ template "mancenter.fullname" . }}
         image: "{{ .Values.mancenter.image.repository }}:{{ .Values.image.tag }}"
