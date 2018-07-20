@@ -1,18 +1,18 @@
-# Hazelcast
+# Hazelcast Enterprise
 
-[Hazelcast IMDG](http://hazelcast.com/) is the most widely used in-memory data grid with hundreds of thousands of installed clusters around the world. It offers caching solutions ensuring that data is in the right place when it’s needed for optimal performance.
+[Hazelcast IMDG Enterprise](https://hazelcast.com/products/enterprise/) is the most widely used in-memory data grid with hundreds of thousands of installed clusters around the world. It offers caching solutions ensuring that data is in the right place when it’s needed for optimal performance.
 
 ## Quick Start
 
 ```bash
 $ helm repo add hazelcast <hazelcast_repo_url>
 $ helm repo update
-$ helm install hazelcast/hazelcast
+$ helm install --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise
 ```
 
 ## Introduction
 
-This chart bootstraps a [Hazelcast](https://github.com/hazelcast/hazelcast-docker/tree/master/hazelcast-kubernetes) and [Management Center](https://github.com/hazelcast/management-center-docker) deployments on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a [Hazelcast Enterprise](https://github.com/hazelcast/hazelcast-docker/tree/master/hazelcast-enterprise-kubernetes) and [Management Center](https://github.com/hazelcast/management-center-docker) deployments on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
@@ -23,7 +23,7 @@ This chart bootstraps a [Hazelcast](https://github.com/hazelcast/hazelcast-docke
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm install --name my-release hazelcast/hazelcast
+$ helm install --set hazelcast.licenseKey=<license_key> --name my-release hazelcast/hazelcast-enterprise
 ```
 
 The command deploys Hazelcast on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
@@ -51,6 +51,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `image.pullPolicy`                         | Image pull policy                                                                                              | `IfNotPresent`                                       |
 | `image.pullSecrets`                        | Specify docker-registry secret names as an array                                                               | `nil`                                                |
 | `cluster.memberCount`                      | Number of Hazelcast members                                                                                    | 2                                                    |
+| `hazelcast.licenseKey`                     | Hazelcast Enterprise License Key                                                                               | `nil`                                                |
 | `hazelcast.rest`                           | Enable REST endpoints for Hazelcast member                                                                     | `true`                                               |
 | `hazelcast.javaOpts`                       | Additional JAVA_OPTS properties for Hazelcast member                                                           | `nil`                                                |
 | `hazelcast.configurationFiles`             | Hazelcast configuration files                                                                                  | `{DEFAULT_HAZELCAST_XML}`                            |
@@ -105,8 +106,8 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```bash
 $ helm install --name my-release \
-  --set cluster.memberCount=3,hazelcast.rest=false \
-    hazelcast/hazelcast
+  --set hazelcast.licenseKey=<license_key>,cluster.memberCount=3,hazelcast.rest=false \
+    hazelcast/hazelcast-enterprise
 ```
 
 The above command sets number of Hazelcast members to 3 and disables REST endpoints.
@@ -114,10 +115,10 @@ The above command sets number of Hazelcast members to 3 and disables REST endpoi
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```bash
-$ helm install --name my-release -f values.yaml hazelcast/hazelcast
+$ helm install --name my-release -f values.yaml stable/hazelcast
 ```
 
-> **Tip**: You can use the default [values.yaml](values.yaml)
+> **Tip**: You can use the default [values.yaml](values.yaml) with the `hazelcast.license` filled in
 
 ## Custom Hazelcast configuration
 
