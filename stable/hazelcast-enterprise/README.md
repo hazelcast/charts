@@ -46,7 +46,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 
 | Parameter                                  | Description                                                                                                    | Default                                              |
 |--------------------------------------------|----------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
-| `image.repository`                         | Hazelcast Image name                                                                                           | `hazelcast/hazelcast-kubernetes`                     |
+| `image.repository`                         | Hazelcast Image name                                                                                           | `hazelcast/hazelcast-enterprise-kubernetes`          |
 | `image.tag`                                | Hazelcast Image tag                                                                                            | `{VERSION}`                                          |
 | `image.pullPolicy`                         | Image pull policy                                                                                              | `IfNotPresent`                                       |
 | `image.pullSecrets`                        | Specify docker-registry secret names as an array                                                               | `nil`                                                |
@@ -117,7 +117,7 @@ The above command sets number of Hazelcast members to 3 and disables REST endpoi
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```bash
-$ helm install --name my-release -f values.yaml stable/hazelcast
+$ helm install --name my-release -f values.yaml hazelcast/hazelcast-enterprise
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml) with the `hazelcast.license` filled in
