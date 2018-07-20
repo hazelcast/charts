@@ -125,6 +125,7 @@ serviceAccount:
 
 mancenter:
   enabled: true
+
   image:
     # repository is the Hazelcast Management Center image name
     repository: "hazelcast/management-center"
@@ -140,11 +141,14 @@ mancenter:
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
     # pullSecrets:
     # - myRegistryKeySecretName
-  # nodeSelector is an array of Hazelcast Management Center Node labels for POD assignments
-  # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+
   # javaOpts are additional JAVA_OPTS properties for Hazelcast Management Center
   javaOpts:
+
+  # nodeSelector is an array of Hazelcast Management Center Node labels for POD assignments
+  # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
   nodeSelector: {}
+
   # Configure resource requests and limits
   # ref: http://kubernetes.io/docs/user-guide/compute-resources/
   #
@@ -152,18 +156,21 @@ mancenter:
   #   requests:
   #     memory: 256Mi
   #     cpu: 100m
+
   persistence:
     enabled: true
     # existingClaim: true
     accessModes:
     - ReadWriteOnce
     size: 8Gi
+
   # Hazelcast Management Center Service properties
   service:
     # type defines the Kubernetes service type ('ClusterIP', 'LoadBalancer', or 'NodePort')
     type: LoadBalancer
     # port is the Kubernetes service port
     port: 8080
+
   # Hazelcast Management Center Liveness probe
   livenessProbe:
     # enabled is a flag to used to enable liveness probe
@@ -178,7 +185,6 @@ mancenter:
     successThreshold: 1
     # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
     failureThreshold: 3
-
   # Hazelcast Management Center Readiness probe
   readinessProbe:
     # enabled is a flag to used to enable readiness probe
