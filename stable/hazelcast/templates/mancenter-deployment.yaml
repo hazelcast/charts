@@ -43,6 +43,28 @@ spec:
         ports:
         - name: mancenter
           containerPort: 8080
+        {{- if .Values.mancenter.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: /hazelcast-mancenter
+            port: 8080
+          initialDelaySeconds: {{ .Values.mancenter.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.mancenter.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.mancenter.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.mancenter.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.mancenter.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.mancenter.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: /hazelcast-mancenter
+            port: 8080
+          initialDelaySeconds: {{ .Values.mancenter.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.mancenter.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.mancenter.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.mancenter.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.mancenter.readinessProbe.failureThreshold }}
+        {{- end }}
         volumeMounts:
         - name: mancenter-storage
           mountPath: /data
