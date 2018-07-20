@@ -152,6 +152,8 @@ mancenter:
   # licenseKey is the license key for Hazelcast Management Center
   # if not provided, it can be filled in the Management Center web interface
   licenseKey:
+  # licenseKeySecretName is the name of the secret where the Hazelcast Management Center License Key is stored (can be used instead of licenseKey)
+  # licenseKeySecretName:
 
   # nodeSelector is an array of Hazelcast Management Center Node labels for POD assignments
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
