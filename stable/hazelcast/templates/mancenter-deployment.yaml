@@ -70,7 +70,7 @@ spec:
           mountPath: /data
         env:
         - name: JAVA_OPTS
-          value: "{{ .Values.mancenter.javaOpts }}"
+          value: "{{ if .Values.mancenter.licenseKey }}-Dhazelcast.mc.license={{ .Values.mancenter.licenseKey }}{{ end }} {{ .Values.mancenter.javaOpts }}"
       volumes:
       - name: mancenter-storage
       {{- if .Values.mancenter.persistence.enabled }}
