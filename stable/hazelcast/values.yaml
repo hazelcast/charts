@@ -123,9 +123,13 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name:
 
+# Hazelcast Management Center application properties
 mancenter:
+  # enabled is a flag to enable Management Center application
   enabled: true
-
+  ## Hazelcast Management Center image version
+  ## ref: https://hub.docker.com/r/hazelcast/management-center/tags/
+  ##
   image:
     # repository is the Hazelcast Management Center image name
     repository: "hazelcast/management-center"
@@ -161,11 +165,17 @@ mancenter:
   #     memory: 256Mi
   #     cpu: 100m
 
+  # Management Center persistence properties
   persistence:
+    # enabled is a flag to enable persistence for Management Center
     enabled: true
-    # existingClaim: true
+    # existingClaim is a name of the existing Persistence Volume Claim that will be used for persistence
+    # if not defined, a new Persistent Value Claim is created with the default name
+    # existingClaim:
+    # accessModes defines the access modes for the created Persistent Volume Claim
     accessModes:
     - ReadWriteOnce
+    # size is the size of Persistent Volume Claim
     size: 8Gi
 
   # Hazelcast Management Center Service properties
