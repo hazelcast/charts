@@ -36,7 +36,7 @@ spec:
         runAsUser: 0
       containers:
       - name: {{ template "mancenter.fullname" . }}
-        image: "{{ .Values.mancenter.image.repository }}:{{ .Values.image.tag }}"
+        image: "{{ .Values.mancenter.image.repository }}:{{ .Values.mancenter.image.tag }}"
         imagePullPolicy: {{ .Values.mancenter.image.pullPolicy | quote }}
         resources:
 {{ toYaml .Values.mancenter.resources | indent 10 }}
