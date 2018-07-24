@@ -8,8 +8,8 @@ keywords:
 - in-memory
 - database
 - caching
-home: http://hazelcast.com/
-icon: http://hazelcast.com/images/logos/HazelcastLogo-Blue_Dark_Icon_200px.png
+home: http://hazelcast.org/
+icon: http://hazelcast.com/images/logos/Hazelcast-IMDG-Logo-Orange_Dark_Icon_200px.png
 sources:
 - https://github.com/hazelcast/hazelcast
 maintainers:

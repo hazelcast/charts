@@ -9,7 +9,7 @@ keywords:
 - database
 - caching
 home: https://hazelcast.com/products/enterprise/
-icon: http://hazelcast.com/images/logos/HazelcastLogo-Blue_Dark_Icon_200px.png
+icon: http://hazelcast.com/images/logos/Hazelcast-IMDG-Logo-Blue_Dark_Icon_200px.png
 maintainers:
 - name: leszko
   email: rafal@hazelcast.com
