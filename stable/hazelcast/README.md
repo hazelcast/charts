@@ -5,7 +5,7 @@
 ## Quick Start
 
 ```bash
-$ helm repo add hazelcast <hazelcast_repo_url>
+$ helm repo add hazelcast https://hazelcast.github.io/charts/ 
 $ helm repo update
 $ helm install hazelcast/hazelcast
 ```
