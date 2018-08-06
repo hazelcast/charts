@@ -3,10 +3,6 @@ pipeline {
         label "lab"
     }
 
-    triggers {
-        pollSCM('0 * * * *')
-    }
-
     stages {
         stage('Checkout GH Pages') {
             steps {
