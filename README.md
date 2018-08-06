@@ -16,6 +16,8 @@ Then, you can install the charts by:
 
     $ helm install hazelcast/<chart>
 
+The available list of charts can be found in the [stable](stable) directory.
+
 ## How to find us?
 
 In case of any question or issue, please raise a GH issue or contact as directly via [Hazelcast Gitter](https://gitter.im/hazelcast/hazelcast).
