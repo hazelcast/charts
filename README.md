@@ -18,7 +18,7 @@ Then, you can install the charts by:
     
 The available list of charts can be found in the [stable](stable) directory.
 
-Please note that if `hazelcast-enterprise` chart is used, hazelcast enterprise licens key must be passed to the helm chart as below. You can contact sales@hazelcast.com for a trial license key.
+Please note that if `hazelcast-enterprise` chart is used, hazelcast enterprise license key must be passed to the helm chart as below. You can contact sales@hazelcast.com for a trial license key.
 
 ```
 helm install --set hazelcast.licenseKey=$HAZELCAST_ENTERPRISE_LICENSE_KEY hazelcast/hazelcast-enterprise
@@ -28,26 +28,26 @@ helm install --set hazelcast.licenseKey=$HAZELCAST_ENTERPRISE_LICENSE_KEY hazelc
 
 If you don't have `helm` in your system, you can download and install it from [helm github project page](https://github.com/helm/helm#install).
 
-Once you install helm command line tool, you need a Tiller service running in your kubernetes cluster. Installing Tiller as simple as exectuing `init` command. 
+Once you install helm command line tool, you need a Tiller service running in your kubernetes cluster. Installing Tiller as simple as executing `init` command. 
 
 ```
-helm init
+$ helm init
 ```
 
 Verify that Tiller Version is returned.
 
 ```
-helm version --server
+$ helm version --server
 ```
 
 
 ## Troubleshooting in Kubernetes Environments
 
-If you have Helm and Tiller is intalled in your system. You can start deploying Hazelcast Helm Charts to your kubernetes cluster. This is the list of some common problems you might face while deploying Hazelcast 
+If you have Helm and Tiller is installed in your system. You can start deploying Hazelcast Helm Charts to your kubernetes cluster. This is the list of some common problems you might face while deploying Hazelcast.
 
 ### Why is Management Center EXTERNAL-IP not assigned?
 
-[Minikube](https://github.com/kubernetes/minikube) is a tool that makes it easy to run Kubernetes locally. However, It does not come with LoadBalancer so Management Center can't be accesible with external IP. 
+[Minikube](https://github.com/kubernetes/minikube) is a tool that makes it easy to run Kubernetes locally. However, It does not come with LoadBalancer so Management Center can't be accessible with external IP. 
 
 You can see below that EXTERNAL-IP is pending when you install hazelcast helm charts via `helm install` and execute `kubectl get services` right after.
 
@@ -83,10 +83,11 @@ If you see your Management Center in a Pending State as above, you can try a few
 Firstly, you can check if Persistent Volume and PersistentVolumeClaim are already bound.
 
 ```
-charts (readme_update)$ kubectl get pv
+$ kubectl get pv
 NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                                                  STORAGECLASS   REASON    AGE
 pvc-7f4baaff-a63d-11e8-9df7-0800277c0239   8Gi        RWO            Delete           Bound     default/mouthy-alpaca-hazelcast-enterprise-mancenter   standard                 4d
-charts (readme_update)$ kubectl get pvc 
+
+$ kubectl get pvc 
 NAME                                           STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 mouthy-alpaca-hazelcast-enterprise-mancenter   Bound     pvc-7f4baaff-a63d-11e8-9df7-0800277c0239   8Gi        RWO            standard       4d
 ```
@@ -114,7 +115,7 @@ parameters:
 Use storage class name defined in the storage.yaml file in helm installation.
 
 ```
-helm install --set mancenter.persistence.storageClass=standard hazelcast/<chart>
+$ helm install --set mancenter.persistence.storageClass=standard hazelcast/<chart>
 ```
 **Persistent Volume Availability Zone**
 
@@ -122,32 +123,29 @@ helm install --set mancenter.persistence.storageClass=standard hazelcast/<chart>
 Otherwise, Management Center Pod will be stuck in pending state. You can check `failure-domain.beta.kubernetes.io/zone` labels on the Kubernetes Nodes and Persistent Volume and see PersistentVolume is in one of the node's Availability Zone.
 
 ```
-kubectl get no --show-labels
+$ kubectl get no --show-labels
 NAME                                            STATUS    ROLES     AGE       VERSION   LABELS
 ip-192-168-101-236.us-west-2.compute.internal   Ready     <none>    42m       v1.10.3   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=t2.medium,beta.kubernetes.io/os=linux,failure-domain.beta.kubernetes.io/region=us-west-2,failure-domain.beta.kubernetes.io/zone=us-west-2a,kubernetes.io/hostname=ip-192-168-101-236.us-west-2.compute.internal
 ip-192-168-245-179.us-west-2.compute.internal   Ready     <none>    42m       v1.10.3   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=t2.medium,beta.kubernetes.io/os=linux,failure-domain.beta.kubernetes.io/region=us-west-2,failure-domain.beta.kubernetes.io/zone=us-west-2c,kubernetes.io/hostname=ip-192-168-245-179.us-west-2.compute.internal
 ```
 
 ```
-kubectl get pv --show-labels
+$ kubectl get pv --show-labels
 NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                                                  STORAGECLASS   REASON    AGE       LABELS
 pvc-539749c4-9f31-11e8-b9d0-0af5b0ce3266   8Gi        RWO            Delete           Bound     default/dining-serval-hazelcast-enterprise-mancenter   standard                 30s       failure-domain.beta.kubernetes.io/region=us-west-2,failure-domain.beta.kubernetes.io/zone=us-west-2c
 ```
 
-You need to re-intall hazelcast helm chart until you have both PersistentVolume and Kubernetes Node in the same Availability Zone.
+You need to reinstall hazelcast helm chart until you have both PersistentVolume and Kubernetes Node in the same Availability Zone.
 
 **Persistent Volume Creation Time**
 
 Creating Persistent Volume in some Kubernetes Environments take up to 5 minutes so you can wait for sometime to see if Persistent Volume is created.
 
 ```
-kubectl get pv --watch
+$ kubectl get pv --watch
 ```
 If you see Persistent Volume created, your Management Center Pod will be turning `Running` state soon.
 
 ## How to find us?
 
 In case of any question or issue, please raise a GH issue, send an email to [Hazelcast Google Groups](https://groups.google.com/forum/#!forum/hazelcast) or contact as directly via [Hazelcast Gitter](https://gitter.im/hazelcast/hazelcast).
-
-
- 
