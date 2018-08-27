@@ -15,14 +15,26 @@ Add the Hazelcast repository:
 Then, you can install the charts by:
 
     $ helm install hazelcast/<chart>
-
+    
 The available list of charts can be found in the [stable](stable) directory.
+
+please note that if `hazelcast-enterprise` chart is used, hazelcast enterprise licens key must be passed to the helm chart as below. You can contact sales@hazelcast.com for a trial license key.
+
+```
+helm install --set hazelcast.licenseKey=$HAZELCAST_ENTERPRISE_LICENSE_KEY hazelcast/hazelcast-enterprise
+```
 
 ## Helm & Tiller
 
 If you don't have `helm` in your system, you can download and install it from [helm github project page](https://github.com/helm/helm#install).
 
-Once you install helm command line tool, you need a Tiller service running in your kubernetes cluster. Following is the set of commands to start Tiller Service.
+Once you install helm command line tool, you need a Tiller service running in your kubernetes cluster. Installing Tiller as simple as exectuing `init` command. 
+
+```
+helm init
+```
+
+if RBAC enabled in your cluster, you need to create a service-account first and pass it through while executing `helm init`
 
 ```
 kubectl create serviceaccount tiller --namespace kube-system
@@ -30,13 +42,13 @@ kubectl create clusterrolebinding tiller-admin-binding --clusterrole=cluster-adm
 helm init --service-account=tiller
 ```
 
-## Kubernetes Environments
+# Troubleshooting in Kubernetes Environments
 
-Following Kubernetes Environments are supported by Hazelcast Helm Charts. You need to make sure Helm and Tiller is configured correctly in your kubernetes cluster.
+If you have helm and Tiller is intalled in your system. You can start deploying Hazelcast Helm Charts to your kubernetes cluster. This is the list of some common problems you might face while deploying Hazelcast 
 
-# Minikube
+### Why is Mancenter LoadBalancer in pending state?
 
-[Minikube](https://github.com/kubernetes/minikube) is a tool that makes it easy to run Kubernetes locally. It does not come with LoadBalancer so Management Center can't be accesible with external IP. 
+[Minikube](https://github.com/kubernetes/minikube) is a tool that makes it easy to run Kubernetes locally. However, It does not come with LoadBalancer so Management Center can't be accesible with external IP. 
 
 You can see below that EXTERNAL-IP is pending when you install hazelcast helm charts via `helm install` and execute `kubectl get services` right after.
 
@@ -49,17 +61,90 @@ service/littering-pig-hazelcast-enterprise-mancenter   LoadBalancer   10.104.97.
 
 However, you can still reach Hazelcast Management Center with the http://MINIKUBE_IP:30145/hazelcast-mancenter for the case above. `$(minikube ip)` is the command to retrieve minikube IP address.
 
-# Azure Kubernetes Service (AKS)
+### "cluster-admin" not found
 
-[Azure Kubernetes Service](https://azure.microsoft.com/en-us/services/kubernetes-service/) is a fully managed Kubernetes container orchestration service offered by Microsoft. 
+In some Kubernetes Clusters, RBAC might not be enabled by default so you might end up seeing RBAC related error while helm install.
 
-`helm install --set hazelcast.licenseKey=$HAZELCAST_ENTERPRISE_LICENSE_KEY --set rbac.create=false hazelcast/hazelcast-enterprise`
+```
+Error: release funky-woodpecker failed: roles.rbac.authorization.k8s.io “funky-woodpecker-hazelcast-enterprise” is forbidden: attempt to grant extra privileges: [PolicyRule{APIGroups:[“”], Resources:[“endpoints”], Verbs:[“get”]} PolicyRule{APIGroups:[“”], Resources:[“endpoints”], Verbs:[“list”]}] user=&{system:serviceaccount:kube-system:tiller 411da847-9999-11e8-bf5e-ba0dc6d88758 [system:serviceaccounts system:serviceaccounts:kube-system system:authenticated] map[]} ownerrules=[] ruleResolutionErrors=[clusterroles.rbac.authorization.k8s.io “cluster-admin” not found]
+```
 
-# Google Kubernetes Engines (GKE)
+In that case, you need either enable debug or pass `--set rbac.create=false` into your `helm install` command. 
 
-[Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine/) is a managed, production-ready environment for deploying containerized applications
+### Management Center Pod in Pending state
 
-`helm install --set hazelcast.licenseKey=$HAZELCAST_ENTERPRISE_LICENSE_KEY hazelcast/hazelcast-enterprise`
+```
+NAME                                                            READY     STATUS              RESTARTS   AGE
+dining-serval-hazelcast-enterprise-0                            1/1       Running             0          50s
+dining-serval-hazelcast-enterprise-1                            0/1       Running             0          19s
+dining-serval-hazelcast-enterprise-mancenter-5f56d785dc-h5slc   0/1       Pending             0          50s
+```
+If you see your Management Center in a Pending State as above, you can try a few things for troubleshooting.
+
+Firstly, you can check if Persistent Volume and PersistentVolumeClaim are already bound.
+
+```
+charts (readme_update)$ kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                                                  STORAGECLASS   REASON    AGE
+pvc-7f4baaff-a63d-11e8-9df7-0800277c0239   8Gi        RWO            Delete           Bound     default/mouthy-alpaca-hazelcast-enterprise-mancenter   standard                 4d
+charts (readme_update)$ kubectl get pvc 
+NAME                                           STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+mouthy-alpaca-hazelcast-enterprise-mancenter   Bound     pvc-7f4baaff-a63d-11e8-9df7-0800277c0239   8Gi        RWO            standard       4d
+```
+
+You can see they are bound as above. If they are not, this is the list of potential problems you might be having.
+
+**Creating Storage Class**
+
+Some Kubernetes Providers do not offer default storage class so you have to create one and pass it to helm installation.
+
+create `storage.yaml` file
+```
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: standard
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+  zones: us-west-2a, us-west-2b, us-west-2c
+```
+
+apply via `kubectl apply -f storage.yaml`
+
+use storage class name defined in the storage.yaml file in helm installation.
+
+```
+helm install --set mancenter.persistence.storageClass=standard hazelcast/<chart>
+```
+**Persistent Volume Availability Zone**
+
+[AWS EKS](https://aws.amazon.com/eks/) requires your volume to be in the same Availability Zone as Kubernetes Nodes that Management Center Pod is running.
+Otherwise, Management Center Pod will be stuck in pending state. You can check `failure-domain.beta.kubernetes.io/zone` labels on the Kubernetes Nodes and Persistent Volume and see PersistentVolume is in one of the node's Availability Zone.
+
+```
+kubectl get no --show-labels
+NAME                                            STATUS    ROLES     AGE       VERSION   LABELS
+ip-192-168-101-236.us-west-2.compute.internal   Ready     <none>    42m       v1.10.3   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=t2.medium,beta.kubernetes.io/os=linux,failure-domain.beta.kubernetes.io/region=us-west-2,failure-domain.beta.kubernetes.io/zone=us-west-2a,kubernetes.io/hostname=ip-192-168-101-236.us-west-2.compute.internal
+ip-192-168-245-179.us-west-2.compute.internal   Ready     <none>    42m       v1.10.3   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=t2.medium,beta.kubernetes.io/os=linux,failure-domain.beta.kubernetes.io/region=us-west-2,failure-domain.beta.kubernetes.io/zone=us-west-2c,kubernetes.io/hostname=ip-192-168-245-179.us-west-2.compute.internal
+```
+
+```
+kubectl get pv --show-labels
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                                                  STORAGECLASS   REASON    AGE       LABELS
+pvc-539749c4-9f31-11e8-b9d0-0af5b0ce3266   8Gi        RWO            Delete           Bound     default/dining-serval-hazelcast-enterprise-mancenter   standard                 30s       failure-domain.beta.kubernetes.io/region=us-west-2,failure-domain.beta.kubernetes.io/zone=us-west-2c
+```
+
+You need to re-intall hazelcast helm chart until you have both PersistentVolume and Kubernetes Node in the same Availability Zone.
+
+**Persistent Volume Creation Time**
+
+Creating Persistent Volume in some Kubernetes Environments take up to 5 minutes so you can wait for sometime to see if Persistent Volume is created.
+
+```
+kubectl get pv --watch
+```
+If you see Persistent Volume created, your Management Center Pod will be turning `Running` state soon.
 
 ## How to find us?
 
