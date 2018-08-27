@@ -18,7 +18,7 @@ Then, you can install the charts by:
     
 The available list of charts can be found in the [stable](stable) directory.
 
-please note that if `hazelcast-enterprise` chart is used, hazelcast enterprise licens key must be passed to the helm chart as below. You can contact sales@hazelcast.com for a trial license key.
+Please note that if `hazelcast-enterprise` chart is used, hazelcast enterprise licens key must be passed to the helm chart as below. You can contact sales@hazelcast.com for a trial license key.
 
 ```
 helm install --set hazelcast.licenseKey=$HAZELCAST_ENTERPRISE_LICENSE_KEY hazelcast/hazelcast-enterprise
@@ -34,19 +34,18 @@ Once you install helm command line tool, you need a Tiller service running in yo
 helm init
 ```
 
-if RBAC enabled in your cluster, you need to create a service-account first and pass it through while executing `helm init`
+Verify that Tiller Version is returned.
 
 ```
-kubectl create serviceaccount tiller --namespace kube-system
-kubectl create clusterrolebinding tiller-admin-binding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-helm init --service-account=tiller
+helm version --server
 ```
 
-# Troubleshooting in Kubernetes Environments
 
-If you have helm and Tiller is intalled in your system. You can start deploying Hazelcast Helm Charts to your kubernetes cluster. This is the list of some common problems you might face while deploying Hazelcast 
+## Troubleshooting in Kubernetes Environments
 
-### Why is Mancenter LoadBalancer in pending state?
+If you have Helm and Tiller is intalled in your system. You can start deploying Hazelcast Helm Charts to your kubernetes cluster. This is the list of some common problems you might face while deploying Hazelcast 
+
+### Why is Management Center EXTERNAL-IP not assigned?
 
 [Minikube](https://github.com/kubernetes/minikube) is a tool that makes it easy to run Kubernetes locally. However, It does not come with LoadBalancer so Management Center can't be accesible with external IP. 
 
@@ -71,7 +70,7 @@ Error: release funky-woodpecker failed: roles.rbac.authorization.k8s.io “funky
 
 In that case, you need either enable debug or pass `--set rbac.create=false` into your `helm install` command. 
 
-### Management Center Pod in Pending state
+### Why is Management Center Pod in Pending state?
 
 ```
 NAME                                                            READY     STATUS              RESTARTS   AGE
@@ -98,7 +97,8 @@ You can see they are bound as above. If they are not, this is the list of potent
 
 Some Kubernetes Providers do not offer default storage class so you have to create one and pass it to helm installation.
 
-create `storage.yaml` file
+Create `storage.yaml` file and apply via `kubectl apply -f storage.yaml`
+
 ```
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
@@ -110,9 +110,8 @@ parameters:
   zones: us-west-2a, us-west-2b, us-west-2c
 ```
 
-apply via `kubectl apply -f storage.yaml`
 
-use storage class name defined in the storage.yaml file in helm installation.
+Use storage class name defined in the storage.yaml file in helm installation.
 
 ```
 helm install --set mancenter.persistence.storageClass=standard hazelcast/<chart>
