@@ -1,13 +1,15 @@
-# Hazelcast Helm Charts
+# Hazelcast Enterprise Helm Charts
 
-This is a repository for Hazelcast Helm Charts. For more information about installing and using Helm, see its
+This is a repository for Hazelcast Enterprise Helm Charts. For more information about installing and using Helm, see its
 [README.md](https://github.com/kubernetes/helm/tree/master/README.md). To get a quick introduction to Charts see this [chart document](https://github.com/kubernetes/helm/blob/master/docs/charts.md).
 
 Note that the structure and style of this repository and the Helm Charts themselves is similar to the [Official Helm Chart repository](https://github.com/helm/charts).
 
+The Helm Chart for Hazelcast Open Source in the the official [Helm Repository](https://github.com/helm/charts/tree/master/stable/hazelcast).  
+
 ## Quick Start
 
-Add the Hazelcast repository:
+Add the Hazelcast Enterprise repository:
 
     $ helm repo add hazelcast https://hazelcast.github.io/charts/
     $ helm repo update
