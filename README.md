@@ -7,7 +7,7 @@ Note that the structure and style of this repository and the Helm Charts themsel
 
 The Helm Chart for Hazelcast Open Source in the the official [Helm Repository](https://github.com/helm/charts/tree/master/stable/hazelcast).  
 
-We also have specific instructions for [IBM Cloud]/(IBM_Cloud.md).
+We also have specific instructions for [IBM Cloud]/(./IBM_Cloud.md).
 
 ## Quick Start
 
