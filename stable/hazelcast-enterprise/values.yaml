@@ -52,6 +52,7 @@ hazelcast:
                 <properties>
                   <property name="service-name">${serviceName}</property>
                   <property name="namespace">${namespace}</property>
+                  <property name="resolve-not-ready-addresses">true</property>
                 </properties>
               </discovery-strategy>
             </discovery-strategies>
@@ -66,6 +67,10 @@ hazelcast:
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
 
+gracefulShutdown:
+  enabled: true
+  maxWaitSeconds: 600
+
 # Hazelcast Liveness probe
 livenessProbe:
   # enabled is a flag to used to enable liveness probe
@@ -75,11 +80,11 @@ livenessProbe:
   # periodSeconds decides how often to perform the probe
   periodSeconds: 10
   # timeoutSeconds decides when the probe times out
-  timeoutSeconds: 5
+  timeoutSeconds: 10
   # successThreshold is the minimum consecutive successes for the probe to be considered successful after having failed
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
-  failureThreshold: 3
+  failureThreshold: 10
 
 # Hazelcast Readiness probe
 readinessProbe:
@@ -90,11 +95,11 @@ readinessProbe:
   # periodSeconds decides how often to perform the probe
   periodSeconds: 10
   # timeoutSeconds decides when the probe times out
-  timeoutSeconds: 1
+  timeoutSeconds: 10
   # successThreshold is the minimum consecutive successes for the probe to be considered successful after having failed
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
-  failureThreshold: 3
+  failureThreshold: 10
 
 # Configure resource requests and limits
 # ref: http://kubernetes.io/docs/user-guide/compute-resources/
