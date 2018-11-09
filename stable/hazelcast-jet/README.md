@@ -145,14 +145,17 @@ jet:
             <tcp-ip enabled="false" />
             <discovery-strategies>
               <discovery-strategy enabled="true" class="com.hazelcast.kubernetes.HazelcastKubernetesDiscoveryStrategy">
+                <properties>
+                  <property name="service-name">${serviceName}</property>
+                  <property name="namespace">${namespace}</property>
+                </properties>
               </discovery-strategy>
             </discovery-strategies>
           </join>
         </network>
         <!-- Custom Configuration Placeholder -->
       </hazelcast>
-
-      hazelcast-jet.xml: |-
+    hazelcast-jet.xml: |-
       <?xml version="1.0" encoding="UTF-8"?>
       <hazelcast-jet xsi:schemaLocation="http://www.hazelcast.com/schema/jet-config hazelcast-jet-config-0.8.xsd"
                     xmlns="http://www.hazelcast.com/schema/jet-config"
