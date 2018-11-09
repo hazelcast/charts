@@ -46,16 +46,11 @@ hazelcast:
         <network>
           <join>
             <multicast enabled="false"/>
-            <tcp-ip enabled="false" />
-            <discovery-strategies>
-              <discovery-strategy enabled="true" class="com.hazelcast.kubernetes.HazelcastKubernetesDiscoveryStrategy">
-                <properties>
-                  <property name="service-name">${serviceName}</property>
-                  <property name="namespace">${namespace}</property>
-                  <property name="resolve-not-ready-addresses">true</property>
-                </properties>
-              </discovery-strategy>
-            </discovery-strategies>
+            <kubernetes enabled="true">
+              <service-name>${serviceName}</service-name>
+              <namespace>${namespace}</namespace>
+              <resolve-not-ready-addresses>true</resolve-not-ready-addresses>
+            </kubernetes>
           </join>
         </network>
 
