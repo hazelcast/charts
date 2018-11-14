@@ -1,25 +1,23 @@
-# Hazelcast Jet
+# Hazelcast Jet Enterprise
 
-[Hazelcast Jet](http://jet.hazelcast.org) is a distributed computing
-platform built for high-performance stream processing and fast batch
-processing. It embeds Hazelcast In-Memory Data Grid (IMDG) to provide
-a lightweight, simple-to-deploy package that includes scalable
-in-memory storage.
+The Hazelcast Jet Enterprise provides critical management features for scaling in-memory event stream processing across your IT landscape, including Management Center, Security Suite, Lossless Recovery, Rolling Job upgrades, and Enterprise PaaS Deployment Environments.
 
-Visit [jet.hazelcast.org](http://jet.hazelcast.org) to learn more
-about the architecture and use cases.
+Hazelcast Jet Enterprise is designed to run in any cloud with Discovery Service Provider Interfaces for AWS, Azure, Apache jclouds, Consul, etcd, Eureka, Heroku, Kubernetes, and Zookeeper. It provides native integrations for IaaS environments AWS and Azure Marketplaces as well as PaaS environments Pivotal® Cloud Foundry and Red Hat OpenShift Container Platform. Hazelcast Jet Enterprise also includes deployment integrations for Docker and Kubernetes.
+
+Visit [Hazelcast Jet Enterprise](https://hazelcast.com/products/jet/enterprise/) to learn more
+about the architecture, road-map and use cases.
 
 ## Quick Start
 
 ```bash
 $ helm repo add hazelcast https://hazelcast.github.io/charts/ 
 $ helm repo update
-$ helm install hazelcast/hazelcast-jet
+$ helm install hazelcast/hazelcast-jet-enterprise
 ```
 
 ## Introduction
 
-This chart bootstraps a [Hazelcast Jet](https://github.com/hazelcast/hazelcast-jet-docker) and [Hazelcast Jet Management Center](https://github.com/hazelcast/hazelcast-jet-management-center-docker) deployments on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a [Hazelcast Jet Enterprise](https://github.com/hazelcast/hazelcast-jet-docker) and [Hazelcast Jet Management Center](https://github.com/hazelcast/hazelcast-jet-management-center-docker) deployments on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
@@ -30,10 +28,10 @@ This chart bootstraps a [Hazelcast Jet](https://github.com/hazelcast/hazelcast-j
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm install --name my-release hazelcast/hazelcast-jet
+$ helm install --name my-release hazelcast/hazelcast-jet-enterprise
 ```
 
-The command deploys Hazelcast Jet on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
+The command deploys Hazelcast Jet Enterprise on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
 
 > **Tip**: List all releases using `helm list`
 
@@ -53,11 +51,13 @@ The following table lists the configurable parameters of the Hazelcast chart and
 
 | Parameter                                  | Description                                                                                                    | Default                                              |
 |--------------------------------------------|----------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
-| `image.repository`                         | Hazelcast Jet Image name                                                                                       | `hazelcast/hazelcast-jet`                            |
+| `image.repository`                         | Hazelcast Jet Image name                                                                                       | `hazelcast/hazelcast-jet-enterprise`                 |
 | `image.tag`                                | Hazelcast Jet Image tag                                                                                        | `{VERSION}`                                          |
 | `image.pullPolicy`                         | Image pull policy                                                                                              | `IfNotPresent`                                       |
 | `image.pullSecrets`                        | Specify docker-registry secret names as an array                                                               | `nil`                                                |
 | `cluster.memberCount`                      | Number of Hazelcast Jet members                                                                                | 2                                                    |
+| `jet.licenseKey`                           | License Key for Hazelcast Jet Enterprise                                                                       | `nil`                                                |
+| `jet.licenseKeySecretName`                 | Kubernetes Secret Name, where Hazelcast Jet Enterprise Key is stored (can be used instead of licenseKey)       | `nil`                                                |
 | `jet.rest`                                 | Enable REST endpoints for Hazelcast Jet member                                                                 | `true`                                               |
 | `jet.javaOpts`                             | Additional JAVA_OPTS properties for Hazelcast Jet member                                                       | `nil`                                                |
 | `jet.configurationFiles`                   | Hazelcast configuration files                                                                                  | `{DEFAULT_HAZELCAST_XML}`                            |
@@ -110,7 +110,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 ```bash
 $ helm install --name my-release \
   --set cluster.memberCount=3,serviceAccount.create=false \
-    hazelcast/hazelcast-jet
+    hazelcast/hazelcast-jet-enterprise
 ```
 
 The above command sets number of Hazelcast Jet members to 3 and disables REST endpoints.
@@ -118,7 +118,7 @@ The above command sets number of Hazelcast Jet members to 3 and disables REST en
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
 ```bash
-$ helm install --name my-release -f values.yaml hazelcast/hazelcast-jet
+$ helm install --name my-release -f values.yaml hazelcast/hazelcast-jet-enterprise
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
@@ -139,6 +139,7 @@ jet:
         <properties>
           <property name="hazelcast.discovery.enabled">true</property>
         </properties>
+        <license-key>ENTER LICENSE KEY HERE</license-key>
         <network>
           <join>
             <multicast enabled="false"/>
