@@ -42,12 +42,13 @@ spec:
 {{ toYaml .Values.mancenter.resources | indent 10 }}
         ports:
         - name: mancenter
-          containerPort: 8080
+          containerPort: {{ if .Values.mancenter.ssl }}8443{{ else }}8080{{ end }}
         {{- if .Values.mancenter.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
             path: /hazelcast-mancenter
-            port: 8080
+            port: {{ if .Values.mancenter.ssl }}8443{{ else }}8080{{ end }}
+            scheme: {{ if .Values.mancenter.ssl }}HTTPS{{ else }}HTTP{{ end }}
           initialDelaySeconds: {{ .Values.mancenter.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.mancenter.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.mancenter.livenessProbe.timeoutSeconds }}
@@ -58,7 +59,8 @@ spec:
         readinessProbe:
           httpGet:
             path: /hazelcast-mancenter
-            port: 8080
+            port: {{ if .Values.mancenter.ssl }}8443{{ else }}8080{{ end }}
+            scheme: {{ if .Values.mancenter.ssl }}HTTPS{{ else }}HTTP{{ end }}
           initialDelaySeconds: {{ .Values.mancenter.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.mancenter.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.mancenter.readinessProbe.timeoutSeconds }}
@@ -79,7 +81,7 @@ spec:
           value: {{ .Values.mancenter.licenseKey }}
         {{- end }}
         - name: JAVA_OPTS
-          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} {{ .Values.mancenter.javaOpts }}"
+          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
       volumes:
       - name: mancenter-storage
       {{- if .Values.mancenter.persistence.enabled }}

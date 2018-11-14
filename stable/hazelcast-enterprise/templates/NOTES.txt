@@ -9,9 +9,9 @@ To access Hazelcast within the Kubernetes cluster:
 
 - Use REST endpoint:
   *) Insert Data:
-     $ curl -v -X POST -H "Content-Type: text/plain" -d "bar" http://{{ template "hazelcast.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:5701/hazelcast/rest/maps/mapName/foo
+     $ curl -v -X POST -H "Content-Type: text/plain" -d "bar" {{ if .Values.hazelcast.ssl }}https{{ else }}http{{ end }}://{{ template "hazelcast.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:5701/hazelcast/rest/maps/mapName/foo
   *) Get Data:
-     $ curl http://{{ template "hazelcast.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:5701/hazelcast/rest/maps/mapName/foo
+     $ curl {{ if .Values.hazelcast.ssl }}https{{ else }}http{{ end }}://{{ template "hazelcast.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:5701/hazelcast/rest/maps/mapName/foo
 {{- end }}
 
 -------------------------------------------------------------------------------
@@ -47,25 +47,25 @@ To access Hazelcast from outside the Kubernetes cluster:
   *) Check service external IP:
      $ export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "hazelcast.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
   *) Insert Data:
-     $ curl -v -X POST -H "Content-Type: text/plain" -d "bar" http://$SERVICE_IP:{{ .Values.service.port }}/hazelcast/rest/maps/mapName/foo
+     $ curl -v -X POST -H "Content-Type: text/plain" -d "bar" {{ if .Values.hazelcast.ssl }}https{{ else }}http{{ end }}://$SERVICE_IP:{{ .Values.service.port }}/hazelcast/rest/maps/mapName/foo
   *) Get Data:
-     $ curl http://$SERVICE_IP:{{ .Values.service.port }}/hazelcast/rest/maps/mapName/foo
+     $ curl {{ if .Values.hazelcast.ssl }}https{{ else }}http{{ end }}://$SERVICE_IP:{{ .Values.service.port }}/hazelcast/rest/maps/mapName/foo
 {{- else if contains "ClusterIP" .Values.service.type }}
   *) Forward port from POD:
      $ export POD=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ template "hazelcast.name" . }},role=hazelcast" -o jsonpath="{.items[0].metadata.name}")
      $ kubectl port-forward --namespace {{ .Release.Namespace }} $POD 5701:5701
   *) Insert Data:
-     $ curl -v -X POST -H "Content-Type: text/plain" -d "bar" http://127.0.0.1:5701/hazelcast/rest/maps/mapName/foo
+     $ curl -v -X POST -H "Content-Type: text/plain" -d "bar" {{ if .Values.hazelcast.ssl }}https{{ else }}http{{ end }}://127.0.0.1:5701/hazelcast/rest/maps/mapName/foo
   *) Get Data:
-     $ curl http://127.0.0.1:5701/hazelcast/rest/maps/mapName/foo
+     $ curl {{ if .Values.hazelcast.ssl }}https{{ else }}http{{ end }}://127.0.0.1:5701/hazelcast/rest/maps/mapName/foo
 {{- else if contains "NodePort" .Values.service.type }}
   *) Check Node IP and Port:
      $ export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
      $ export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "hazelcast.fullname" . }})
   *) Insert Data:
-     $ curl -v -X POST -H "Content-Type: text/plain" -d "bar" http://$NODE_IP:$NODE_PORT/hazelcast/rest/maps/mapName/foo
+     $ curl -v -X POST -H "Content-Type: text/plain" -d "bar" {{ if .Values.hazelcast.ssl }}https{{ else }}http{{ end }}://$NODE_IP:$NODE_PORT/hazelcast/rest/maps/mapName/foo
   *) Get Data:
-     $ curl http://$NODE_IP:$NODE_PORT/hazelcast/rest/maps/mapName/foo
+     $ curl {{ if .Values.hazelcast.ssl }}https{{ else }}http{{ end }}://$NODE_IP:$NODE_PORT/hazelcast/rest/maps/mapName/foo
 {{- end }}
 {{- end }}
 
@@ -78,16 +78,16 @@ To access Hazelcast Management Center:
 {{- if contains "LoadBalancer" .Values.mancenter.service.type }}
   *) Check Management Center external IP:
      $ export MANCENTER_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "mancenter.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-  *) Open Browser at: http://$MANCENTER_IP:{{ .Values.mancenter.service.port }}/hazelcast-mancenter
+  *) Open Browser at: {{ if .Values.mancenter.ssl }}https{{ else }}http{{ end }}://$MANCENTER_IP:{{ .Values.mancenter.service.port }}/hazelcast-mancenter
 {{- else if contains "ClusterIP" .Values.mancenter.service.type }}
   *) Forward port from POD:
      $ export POD=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ template "hazelcast.name" . }},role=mancenter" -o jsonpath="{.items[0].metadata.name}")
      $ kubectl port-forward --namespace {{ .Release.Namespace }} $POD 8080:8080
-  *) Open Browser at: http://127.0.0.1:8080/hazelcast-mancenter
+  *) Open Browser at: {{ if .Values.mancenter.ssl }}https{{ else }}http{{ end }}://127.0.0.1:8080/hazelcast-mancenter
 {{- else if contains "NodePort" .Values.mancenter.service.type }}
   *) Check Node IP and Port:
      $ export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
      $ export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "mancenter.fullname" . }})
-  *) Open Browser at: http://$NODE_IP:$NODE_PORT/hazelcast-mancenter
+  *) Open Browser at: {{ if .Values.mancenter.ssl }}https{{ else }}http{{ end }}://$NODE_IP:$NODE_PORT/hazelcast-mancenter
 {{- end }}
 {{- end }}
