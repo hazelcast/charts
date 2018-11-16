@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast image name
   repository: "hazelcast/hazelcast-enterprise"
   # tag is the Hazelcast image tag
-  tag: "3.10.3"
+  tag: "3.11"
   # pullPolicy is the Docker image pull policy
   # It's recommended to change this to 'Always' if the image tag is 'latest'
   # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
@@ -46,15 +46,11 @@ hazelcast:
         <network>
           <join>
             <multicast enabled="false"/>
-            <tcp-ip enabled="false" />
-            <discovery-strategies>
-              <discovery-strategy enabled="true" class="com.hazelcast.kubernetes.HazelcastKubernetesDiscoveryStrategy">
-                <properties>
-                  <property name="service-name">${serviceName}</property>
-                  <property name="namespace">${namespace}</property>
-                </properties>
-              </discovery-strategy>
-            </discovery-strategies>
+            <kubernetes enabled="true">
+              <service-name>${serviceName}</service-name>
+              <namespace>${namespace}</namespace>
+              <resolve-not-ready-addresses>true</resolve-not-ready-addresses>
+            </kubernetes>
           </join>
         </network>
 
@@ -66,6 +62,10 @@ hazelcast:
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
 
+gracefulShutdown:
+  enabled: true
+  maxWaitSeconds: 600
+
 # Hazelcast Liveness probe
 livenessProbe:
   # enabled is a flag to used to enable liveness probe
@@ -75,11 +75,11 @@ livenessProbe:
   # periodSeconds decides how often to perform the probe
   periodSeconds: 10
   # timeoutSeconds decides when the probe times out
-  timeoutSeconds: 5
+  timeoutSeconds: 10
   # successThreshold is the minimum consecutive successes for the probe to be considered successful after having failed
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
-  failureThreshold: 3
+  failureThreshold: 10
 
 # Hazelcast Readiness probe
 readinessProbe:
@@ -90,11 +90,11 @@ readinessProbe:
   # periodSeconds decides how often to perform the probe
   periodSeconds: 10
   # timeoutSeconds decides when the probe times out
-  timeoutSeconds: 1
+  timeoutSeconds: 10
   # successThreshold is the minimum consecutive successes for the probe to be considered successful after having failed
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
-  failureThreshold: 3
+  failureThreshold: 10
 
 # Configure resource requests and limits
 # ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -139,7 +139,7 @@ mancenter:
     # repository is the Hazelcast Management Center image name
     repository: "hazelcast/management-center"
     # tag is the Hazelcast Management Center image tag
-    tag: "3.10.2"
+    tag: "3.11"
     # pullPolicy is the Docker image pull policy
     # It's recommended to change this to 'Always' if the image tag is 'latest'
     # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
