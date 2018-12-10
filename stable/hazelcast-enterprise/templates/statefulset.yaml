@@ -48,6 +48,7 @@ spec:
           httpGet:
             path: /hazelcast/health/node-state
             port: 5701
+            scheme: {{ if .Values.hazelcast.ssl }}HTTPS{{ else }}HTTP{{ end }}
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -59,6 +60,7 @@ spec:
           httpGet:
             path: /hazelcast/health/node-state
             port: 5701
+            scheme: {{ if .Values.hazelcast.ssl }}HTTPS{{ else }}HTTP{{ end }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
@@ -79,7 +81,7 @@ spec:
           value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
         - name: JAVA_OPTS
-          value: "-Dhazelcast.rest.enabled={{ .Values.hazelcast.rest }} -Dhazelcast.config=/data/hazelcast/hazelcast.xml -DserviceName={{ template "hazelcast.fullname" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mancenter.enabled={{ .Values.mancenter.enabled }} -Dhazelcast.mancenter.url=http://{{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}/hazelcast-mancenter {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }}{{ .Values.hazelcast.javaOpts }}"
+          value: "-Dhazelcast.rest.enabled={{ .Values.hazelcast.rest }} -Dhazelcast.config=/data/hazelcast/hazelcast.xml -DserviceName={{ template "hazelcast.fullname" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mancenter.enabled={{ .Values.mancenter.enabled }} -Dhazelcast.ssl={{ .Values.hazelcast.ssl }} -Dhazelcast.mancenter.url={{ if .Values.mancenter.ssl }}https{{ else }}http{{ end }}://{{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}/hazelcast-mancenter {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} {{ .Values.hazelcast.javaOpts }}"
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
       volumes:
       - name: hazelcast-storage
