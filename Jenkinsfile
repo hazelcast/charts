@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label "lab"
+        label "kubernetes"
     }
 
     stages {
