@@ -1,9 +1,14 @@
 pipeline {
     agent {
-        label "kubernetes"
+        label "lab"
     }
 
     stages {
+        stage('Configure Helm') {
+            steps {
+                sh 'export PATH=$PATH:/usr/local/bin && curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash'
+            }
+        }        
         stage('Checkout GH Pages') {
             steps {
                 dir("gh-pages") {
@@ -16,8 +21,8 @@ pipeline {
             steps {
                 dir("gh-pages") {
                     script {
-                        sh 'for CHART in ../stable/*; do helm package --save=false ${CHART}; done'
-                        sh "helm repo index --url=https://hazelcast.github.com/charts/ ."
+                        sh 'for CHART in ../stable/*; do /usr/local/bin/helm package --save=false ${CHART}; done'
+                        sh "/usr/local/bin/helm repo index --url=https://hazelcast.github.com/charts/ ."
                     }
                 }
             }
