@@ -77,11 +77,18 @@ spec:
             secretKeyRef:
               name: {{ .Values.mancenter.licenseKeySecretName }}
               key: key
-        {{- else }}
+        {{- else if .Values.mancenter.licenseKey }}
           value: {{ .Values.mancenter.licenseKey }}
+        {{- else if .Values.hazelcast.licenseKeySecretName }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.hazelcast.licenseKeySecretName }}
+              key: key
+        {{- else }}
+          value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
         - name: JAVA_OPTS
-          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
+          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName .Values.hazelcast.licenseKey .Values.hazelcast.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
       volumes:
       - name: mancenter-storage
       {{- if .Values.mancenter.persistence.enabled }}
