@@ -78,8 +78,15 @@ spec:
             secretKeyRef:
               name: {{ .Values.managementcenter.licenseKeySecretName }}
               key: key
-        {{- else }}
+        {{- else if .Values.managementcenter.licenseKey }}
           value: {{ .Values.managementcenter.licenseKey }}
+        {{- else if .Values.jet.licenseKeySecretName }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.jet.licenseKeySecretName }}
+              key: key
+        {{- else }}
+          value: {{ .Values.jet.licenseKey }}
         {{- end }}
         - name: JAVA_OPTS
           value: " -Djet.clientXml=/data/hazelcast-jet-management-center/hazelcast-client.xml -DserviceName={{ template "hazelcast-jet.fullname" . }} -Dnamespace={{ .Release.Namespace }} {{ .Values.managementcenter.javaOpts }}"
