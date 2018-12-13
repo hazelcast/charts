@@ -32,8 +32,11 @@ spec:
       nodeSelector:
 {{ toYaml .Values.mancenter.nodeSelector | indent 8 }}
       {{- end }}
+      {{- if .Values.securityContext.enabled }}
       securityContext:
-        runAsUser: 0
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+      {{- end }}
       containers:
       - name: {{ template "mancenter.fullname" . }}
         image: "{{ .Values.mancenter.image.repository }}:{{ .Values.mancenter.image.tag }}"

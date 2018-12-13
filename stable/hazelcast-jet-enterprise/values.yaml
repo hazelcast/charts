@@ -165,6 +165,15 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name:
 
+# Security Context properties
+securityContext:
+  # enabled is a flag to enable Security Context
+  enabled: true
+  # runAsUser is the user ID used to run the container
+  runAsUser: 1001
+  # fsGroup is the group ID associated with the container
+  fsGroup: 1001
+
 # Hazelcast Jet Management Center application properties
 managementcenter:
   # enabled is a flag to enable Hazelcast Jet Management Center application
