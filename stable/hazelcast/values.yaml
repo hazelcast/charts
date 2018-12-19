@@ -133,6 +133,9 @@ securityContext:
   # fsGroup is the group ID associated with the container
   fsGroup: 1001
 
+# customVolume is the configuration for any volume mounted as '/data/custom/' (e.g. to mount a volume with custom JARs)
+# customVolume:
+
 # Hazelcast Management Center application properties
 mancenter:
   # enabled is a flag to enable Management Center application
