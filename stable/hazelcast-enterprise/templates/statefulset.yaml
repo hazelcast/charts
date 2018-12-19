@@ -70,6 +70,14 @@ spec:
         volumeMounts:
         - name: hazelcast-storage
           mountPath: /data/hazelcast
+        {{- if .Values.secretsMountName }}
+        - name: hazelcast-secrets
+          mountPath: /data/secrets
+        {{- end }}
+        {{- if .Values.customVolume }}
+        - name: hazelcast-custom
+          mountPath: /data/custom
+        {{- end }}
         env:
         - name: HZ_LICENSE_KEY
         {{- if .Values.hazelcast.licenseKeySecretName }}
@@ -92,3 +100,12 @@ spec:
       - name: hazelcast-storage
         configMap:
           name: {{ template "hazelcast.fullname" . }}-configuration
+      {{- if .Values.secretsMountName }}
+      - name: hazelcast-secrets
+        secret:
+          secretName: {{ .Values.secretsMountName }}
+      {{- end }}
+      {{- if .Values.customVolume }}
+      - name: hazelcast-custom
+{{ toYaml .Values.customVolume | indent 8 }}
+      {{- end }}

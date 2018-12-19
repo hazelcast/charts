@@ -55,11 +55,7 @@ hazelcast:
             </kubernetes>
           </join>
 
-          <ssl enabled="${hazelcast.ssl}">
-            <factory-class-name>
-                com.hazelcast.nio.ssl.BasicSSLContextFactory
-            </factory-class-name>
-          </ssl>
+          <ssl enabled="${hazelcast.ssl}" />
 
         </network>
 
@@ -145,6 +141,12 @@ securityContext:
   runAsUser: 1001
   # fsGroup is the group ID associated with the container
   fsGroup: 1001
+
+# secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
+# secretsMountName:
+
+# customVolume is the configuration for any volume mounted as '/data/custom/' (e.g. to mount a volume with custom JARs)
+# customVolume:
 
 # Hazelcast Management Center application properties
 mancenter:
@@ -240,3 +242,6 @@ mancenter:
     successThreshold: 1
     # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
     failureThreshold: 3
+
+  # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
+  # secretsMountName:

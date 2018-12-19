@@ -81,6 +81,8 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `securityContext.enabled`                  | Enables Security Context for Hazelcast and Management Center                                                   | `true`                                               |
 | `securityContext.runAsUser`                | User ID used to run the Hazelcast and Management Center containers                                             | `1001`                                               |
 | `securityContext.fsGroup`                  | Group ID associated with the Hazelcast and Management Center container                                         | `1001`                                               |
+| `secretsMountName`                         | Secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)                            | `nil`                                                |
+| `customVolume`                             | Configuration for a volume mounted as '/data/custom' (e.g. to mount a volume with custom JARs)                 | `nil`                                                |
 | `mancenter.enabled`                        | Turn on and off Management Center application                                                                  | `true`                                               |
 | `mancenter.image.repository`               | Hazelcast Management Center Image name                                                                         | `hazelcast/management-center`                        |
 | `mancenter.image.tag`                      | Hazelcast Management Center Image tag (NOTE: must be the same or one minor release greater than Hazelcast image version) | `{VERSION}`                                  |
@@ -161,3 +163,26 @@ hazelcast:
         <!-- Custom Configuration Placeholder -->
       </hazelcast>
 ```
+
+## Configuring SSL
+
+To enable SSL-protected communication between members and clients, you need first to generate `keystore`/`truststore` and import them as secrets into your Kubernetes environment.
+```
+$ kubectl create secret generic keystore --from-file=./keystore --from-file=./truststore
+```
+
+Then, run your cluster with SSL enabled and keystore secrets mounted into your PODs.
+```
+$ helm install --name my-release \
+  --set hazelcast.licenseKey=<license_key> \
+  --set hazelcast.ssl=true \
+  --set secretsMountName=keystore \
+  --set hazelcast.javaOpts='-Djavax.net.ssl.keyStore=/data/secrets/keystore -Djavax.net.ssl.keyStorePassword=<keystore_password> -Djavax.net.ssl.trustStore=/data/secrets/truststore -Djavax.net.ssl.trustStorePassword=<truststore_password>' \
+  --set mancenter.ssl=true \
+  --set mancenter.secretsMountName=keystore \
+  --set mancenter.javaOpts='-Dhazelcast.mc.tls.keyStore=/secrets/keystore -Dhazelcast.mc.tls.keyStorePassword=<keystore_password> -Dhazelcast.mc.tls.trustStore=/secrets/truststore -Dhazelcast.mc.tls.trustStorePassword=<truststore_password>' \
+  --set mancenter.service.port=8443 \
+    hazelcast/hazelcast-enterprise
+```
+
+For more information please check [Hazelcast Kubernetes SSL Code Sample](https://github.com/hazelcast/hazelcast-code-samples/tree/master/hazelcast-integration/kubernetes/samples/ssl).

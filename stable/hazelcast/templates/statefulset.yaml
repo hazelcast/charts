@@ -68,6 +68,10 @@ spec:
         volumeMounts:
         - name: hazelcast-storage
           mountPath: /data/hazelcast
+        {{- if .Values.customVolume }}
+        - name: hazelcast-custom
+          mountPath: /data/custom
+        {{- end }}
         env:
         - name: JAVA_OPTS
           value: "-Dhazelcast.rest.enabled={{ .Values.hazelcast.rest }} -Dhazelcast.config=/data/hazelcast/hazelcast.xml -DserviceName={{ template "hazelcast.fullname" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mancenter.enabled={{ .Values.mancenter.enabled }} -Dhazelcast.mancenter.url=http://{{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}/hazelcast-mancenter {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }}{{ .Values.hazelcast.javaOpts }}"
@@ -81,3 +85,7 @@ spec:
       - name: hazelcast-storage
         configMap:
           name: {{ template "hazelcast.fullname" . }}-configuration
+      {{- if .Values.customVolume }}
+      - name: hazelcast-custom
+{{ toYaml .Values.customVolume | indent 8 }}
+      {{- end }}
