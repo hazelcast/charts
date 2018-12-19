@@ -146,6 +146,9 @@ securityContext:
   # fsGroup is the group ID associated with the container
   fsGroup: 1001
 
+# secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
+# secretsMountName:
+
 # Hazelcast Management Center application properties
 mancenter:
   # enabled is a flag to enable Management Center application
