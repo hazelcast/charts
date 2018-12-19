@@ -55,11 +55,7 @@ hazelcast:
             </kubernetes>
           </join>
 
-          <ssl enabled="${hazelcast.ssl}">
-            <factory-class-name>
-                com.hazelcast.nio.ssl.BasicSSLContextFactory
-            </factory-class-name>
-          </ssl>
+          <ssl enabled="${hazelcast.ssl}" />
 
         </network>
 
