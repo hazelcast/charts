@@ -73,6 +73,10 @@ spec:
         volumeMounts:
         - name: mancenter-storage
           mountPath: /data
+        {{- if .Values.mancenter.secretsMountName }}
+        - name: mancenter-secrets
+          mountPath: /secrets
+        {{- end }}
         env:
         - name: MC_LICENSE_KEY
         {{- if .Values.mancenter.licenseKeySecretName }}
@@ -100,4 +104,9 @@ spec:
       {{- else }}
         emptyDir: {}
       {{- end -}}
+      {{- if .Values.mancenter.secretsMountName }}
+      - name: mancenter-secrets
+        secret:
+          secretName: {{ .Values.mancenter.secretsMountName }}
+      {{- end }}
 {{- end -}}

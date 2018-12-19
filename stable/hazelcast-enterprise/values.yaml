@@ -246,3 +246,6 @@ mancenter:
     successThreshold: 1
     # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
     failureThreshold: 3
+
+  # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
+  # secretsMountName:
