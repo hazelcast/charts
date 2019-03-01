@@ -103,6 +103,7 @@ spec:
             drop:
             - ALL
         {{- end }}
+      serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
       volumes:
       - name: hazelcast-storage
         configMap:
