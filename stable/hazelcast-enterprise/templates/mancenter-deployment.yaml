@@ -95,6 +95,7 @@ spec:
         securityContext:
           runAsUser: {{ .Values.securityContext.runAsUser }}
           fsGroup: {{ .Values.securityContext.fsGroup }}
+          allowPrivilegeEscalation: false
           {{- if .Values.securityContext.runAsUser }}
           runAsNonRoot: true
           {{- end }}
