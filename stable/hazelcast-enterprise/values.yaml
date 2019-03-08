@@ -145,6 +145,16 @@ securityContext:
   # fsGroup is the group ID associated with the container
   fsGroup: 100100
 
+# Allows to enable a Prometheus to scrape pods, implemented for Hazelcast version >= 3.12 (or 'latest')
+metrics:
+  enabled: false
+  service:
+    type: ClusterIP
+    port: 8080
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/path: "/metrics"
+
 # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
 # secretsMountName:
 
