@@ -132,9 +132,9 @@ securityContext:
   # enabled is a flag to enable Security Context
   enabled: true
   # runAsUser is the user ID used to run the container
-  runAsUser: 100100
+  runAsUser: 65534
   # fsGroup is the group ID associated with the container
-  fsGroup: 100100
+  fsGroup: 65534
 
 # Allows to enable a Prometheus to scrape pods, implemented for Hazelcast version >= 3.12 (or 'latest')
 metrics:
