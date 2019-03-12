@@ -179,7 +179,7 @@ mancenter:
     # hosts:
     # - hazelcast-mancenter.cluster.domain
     # tls:
-    #   secretName: hazelcast-ingress-tls
+    # - secretName: hazelcast-ingress-tls
     #   hosts:
     #   - hazelcast-mancenter.cluster.domain
 
