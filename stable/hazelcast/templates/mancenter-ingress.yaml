@@ -25,6 +25,7 @@ spec:
 {{- end }}
   rules:
   {{- $serviceName := include "mancenter.fullname" . -}}
+  {{- if .Values.mancenter.ingress.hosts }}
   {{- range $host := .Values.mancenter.ingress.hosts }}
     - host: {{ $host | quote }}
       http:
@@ -33,5 +34,13 @@ spec:
             backend:
               serviceName: {{ $serviceName }}
               servicePort: mancenterport
+  {{- end }}
+  {{- else }}
+  - http:
+      paths:
+      - path: "/hazelcast-mancenter"
+        backend:
+          serviceName: {{ $serviceName }}
+          servicePort: mancenterport
   {{- end }}
 {{- end }}
