@@ -30,16 +30,14 @@ spec:
     - host: {{ $host | quote }}
       http:
         paths:
-          - path: "/*"
-            backend:
+          - backend:
               serviceName: {{ $serviceName }}
               servicePort: mancenterport
   {{- end }}
   {{- else }}
   - http:
       paths:
-      - path: "/*"
-        backend:
+      - backend:
           serviceName: {{ $serviceName }}
           servicePort: mancenterport
   {{- end }}
