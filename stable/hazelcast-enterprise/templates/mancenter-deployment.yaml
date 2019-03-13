@@ -44,7 +44,7 @@ spec:
         {{- if .Values.mancenter.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: /hazelcast-mancenter
+            path: /hazelcast-mancenter/health
             port: {{ if .Values.mancenter.ssl }}8443{{ else }}8080{{ end }}
             scheme: {{ if .Values.mancenter.ssl }}HTTPS{{ else }}HTTP{{ end }}
           initialDelaySeconds: {{ .Values.mancenter.livenessProbe.initialDelaySeconds }}
@@ -56,7 +56,7 @@ spec:
         {{- if .Values.mancenter.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: /hazelcast-mancenter
+            path: /hazelcast-mancenter/health
             port: {{ if .Values.mancenter.ssl }}8443{{ else }}8080{{ end }}
             scheme: {{ if .Values.mancenter.ssl }}HTTPS{{ else }}HTTP{{ end }}
           initialDelaySeconds: {{ .Values.mancenter.readinessProbe.initialDelaySeconds }}

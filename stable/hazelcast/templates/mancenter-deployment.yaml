@@ -44,7 +44,7 @@ spec:
         {{- if .Values.mancenter.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: /hazelcast-mancenter
+            path: /hazelcast-mancenter/health
             port: 8080
           initialDelaySeconds: {{ .Values.mancenter.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.mancenter.livenessProbe.periodSeconds }}
@@ -55,7 +55,7 @@ spec:
         {{- if .Values.mancenter.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: /hazelcast-mancenter
+            path: /hazelcast-mancenter/health
             port: 8080
           initialDelaySeconds: {{ .Values.mancenter.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.mancenter.readinessProbe.periodSeconds }}

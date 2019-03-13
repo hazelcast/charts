@@ -172,6 +172,17 @@ mancenter:
     # pullSecrets:
     # - myRegistryKeySecretName
 
+  # ingress configuration for mancenter
+  ingress:
+    enabled: false
+    annotations: {}
+    # hosts:
+    # - hazelcast-mancenter.cluster.domain
+    # tls:
+    # - secretName: hazelcast-ingress-tls
+    #   hosts:
+    #   - hazelcast-mancenter.cluster.domain
+
   # javaOpts are additional JAVA_OPTS properties for Hazelcast Management Center
   javaOpts:
 
