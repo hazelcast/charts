@@ -116,6 +116,10 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `mancenter.readinessProbe.timeoutSeconds`  | When the probe times out                                                                                       | `1`                                                  |
 | `mancenter.readinessProbe.successThreshold`| Minimum consecutive successes for the probe to be considered successful after having failed                    | `1`                                                  |
 | `mancenter.readinessProbe.failureThreshold`| Minimum consecutive failures for the probe to be considered failed after having succeeded.                     | `3`                                                  |
+| `mancenter.ingress.enabled`                | Enable ingress for the management center                             | `false`                                     |
+| `mancenter.ingress.annotations`            | Any annotations for the ingress                                      | `{}`                                        |
+| `mancenter.ingress.hosts`                  | List of hostnames for ingress, see `values.yaml` for example         | `[]`                                        |
+| `mancenter.ingress.tls`                    | List of TLS configuration for ingress, see `values.yaml` for example | `[]`                                        |  
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
@@ -147,7 +151,7 @@ hazelcast:
       <hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config hazelcast-config-3.10.xsd"
                      xmlns="http://www.hazelcast.com/schema/config"
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    
+
         <properties>
           <property name="hazelcast.discovery.enabled">true</property>
         </properties>
