@@ -30,7 +30,7 @@ spec:
     - host: {{ $host | quote }}
       http:
         paths:
-          - path: "/hazelcast-mancenter"
+          - path: "/*"
             backend:
               serviceName: {{ $serviceName }}
               servicePort: mancenterport
@@ -38,7 +38,7 @@ spec:
   {{- else }}
   - http:
       paths:
-      - path: "/hazelcast-mancenter"
+      - path: "/*"
         backend:
           serviceName: {{ $serviceName }}
           servicePort: mancenterport
