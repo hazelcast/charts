@@ -14,10 +14,13 @@ spec:
       app: {{ template "hazelcast.name" . }}
       release: "{{ .Release.Name }}"
       role: hazelcast
+  serviceName: {{ template "hazelcast.fullname" . }}
   template:
     metadata:
       labels:
         app: {{ template "hazelcast.name" . }}
+        chart: {{ template "hazelcast.chart" . }}
+        heritage: "{{ .Release.Service }}"
         release: "{{ .Release.Name }}"
         role: hazelcast
     spec:
@@ -83,11 +86,9 @@ spec:
         {{- end }}
         - name: JAVA_OPTS
           value: "-Dhazelcast.rest.enabled={{ .Values.hazelcast.rest }} -Dhazelcast.config=/data/hazelcast/hazelcast.xml -DserviceName={{ template "hazelcast.fullname" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mancenter.enabled={{ .Values.mancenter.enabled }} -Dhazelcast.mancenter.url=http://{{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}/hazelcast-mancenter {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.hazelcast.javaOpts }}"
-        serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
         {{- if .Values.securityContext.enabled }}
         securityContext:
           runAsUser: {{ .Values.securityContext.runAsUser }}
-          fsGroup: {{ .Values.securityContext.fsGroup }}
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
           {{- if .Values.securityContext.runAsUser }}
