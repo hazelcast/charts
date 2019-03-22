@@ -19,6 +19,8 @@ spec:
     metadata:
       labels:
         app: {{ template "hazelcast.name" . }}
+        chart: {{ template "hazelcast.chart" . }}
+        heritage: "{{ .Release.Service }}"
         release: "{{ .Release.Name }}"
         role: mancenter
     spec:
@@ -94,7 +96,6 @@ spec:
         {{- if .Values.securityContext.enabled }}
         securityContext:
           runAsUser: {{ .Values.securityContext.runAsUser }}
-          fsGroup: {{ .Values.securityContext.fsGroup }}
           allowPrivilegeEscalation: false
           {{- if .Values.securityContext.runAsUser }}
           runAsNonRoot: true
