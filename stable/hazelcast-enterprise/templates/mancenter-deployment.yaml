@@ -91,6 +91,7 @@ spec:
         {{- end }}
         - name: JAVA_OPTS
           value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName .Values.hazelcast.licenseKey .Values.hazelcast.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
+        serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
         {{- if .Values.securityContext.enabled }}
         securityContext:
           runAsUser: {{ .Values.securityContext.runAsUser }}
@@ -107,6 +108,7 @@ spec:
       securityContext:
         fsGroup: {{ .Values.securityContext.fsGroup }}
       {{- end }}
+      serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
       volumes:
       - name: mancenter-storage
       {{- if .Values.mancenter.persistence.enabled }}
