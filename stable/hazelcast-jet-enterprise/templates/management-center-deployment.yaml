@@ -89,7 +89,7 @@ spec:
           value: {{ .Values.jet.licenseKey }}
         {{- end }}
         - name: JAVA_OPTS
-          value: " -Djet.clientXml=/data/hazelcast-jet-management-center/hazelcast-client.xml -DserviceName={{ template "hazelcast-jet.fullname" . }} -Dnamespace={{ .Release.Namespace }} {{ .Values.managementcenter.javaOpts }}"
+          value: " -Djet.clientConfig=/data/hazelcast-jet-management-center/hazelcast-client.xml -DserviceName={{ template "hazelcast-jet.fullname" . }} -Dnamespace={{ .Release.Namespace }} {{ .Values.managementcenter.javaOpts }}"
       serviceAccountName: {{ template "hazelcast-jet.serviceAccountName" . }}
       volumes:
       - name: hazelcast-jet-management-center-storage
