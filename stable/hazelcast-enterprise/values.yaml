@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast image name
   repository: "hazelcast/hazelcast-enterprise"
   # tag is the Hazelcast image tag
-  tag: "3.11"
+  tag: "3.12"
   # pullPolicy is the Docker image pull policy
   # It's recommended to change this to 'Always' if the image tag is 'latest'
   # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
@@ -34,34 +34,25 @@ hazelcast:
   ssl: false
   # javaOpts are additional JAVA_OPTS properties for Hazelcast member
   javaOpts:
-  # configurationFiles are Hazelcast configuration files
-  configurationFiles:
-    hazelcast.xml: |-
-      <?xml version="1.0" encoding="UTF-8"?>
-      <hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config hazelcast-config-3.10.xsd"
-                     xmlns="http://www.hazelcast.com/schema/config"
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
-        <properties>
-          <property name="hazelcast.discovery.enabled">true</property>
-        </properties>
-        <network>
-          <join>
-            <multicast enabled="false"/>
-            <kubernetes enabled="true">
-              <service-name>${serviceName}</service-name>
-              <namespace>${namespace}</namespace>
-              <resolve-not-ready-addresses>true</resolve-not-ready-addresses>
-            </kubernetes>
-          </join>
-
-          <ssl enabled="${hazelcast.ssl}" />
-
-        </network>
-
-        <management-center enabled="${hazelcast.mancenter.enabled}">${hazelcast.mancenter.url}</management-center>
-      </hazelcast>
-
+  # yaml is the Hazelcast YAML configuration file
+  yaml:
+    hazelcast:
+      network:
+        join:
+          multicast:
+            enabled: false
+          kubernetes:
+            enabled: true
+            service-name: ${serviceName}
+            namespace: ${namespace}
+            resolve-not-ready-addresses: true
+        ssl:
+          enabled: ${hazelcast.ssl}
+      management-center:
+        enabled: ${hazelcast.mancenter.enabled}
+        url: ${hazelcast.mancenter.url}
+  # configurationFiles are any additional Hazelcast configuration files
+  # configurationFiles:
 
 # nodeSelector is an array of Hazelcast Node labels for POD assignments
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
@@ -108,6 +99,9 @@ readinessProbe:
 #   requests:
 #     memory: 256Mi
 #     cpu: 100m
+#   limits:
+#     memory: 1024Mi
+#     cpu: 200m
 
 # Hazelcast Service properties
 service:
@@ -138,9 +132,19 @@ securityContext:
   # enabled is a flag to enable Security Context
   enabled: true
   # runAsUser is the user ID used to run the container
-  runAsUser: 1001
+  runAsUser: 65534
   # fsGroup is the group ID associated with the container
-  fsGroup: 1001
+  fsGroup: 65534
+
+# Allows to enable a Prometheus to scrape pods, implemented for Hazelcast version >= 3.12 (or 'latest')
+metrics:
+  enabled: false
+  service:
+    type: ClusterIP
+    port: 8080
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/path: "/metrics"
 
 # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
 # secretsMountName:
@@ -159,7 +163,7 @@ mancenter:
     # repository is the Hazelcast Management Center image name
     repository: "hazelcast/management-center"
     # tag is the Hazelcast Management Center image tag
-    tag: "3.11"
+    tag: "3.12"
     # pullPolicy is the Docker image pull policy
     # It's recommended to change this to 'Always' if the image tag is 'latest'
     # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
@@ -170,6 +174,17 @@ mancenter:
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
     # pullSecrets:
     # - myRegistryKeySecretName
+
+  # ingress configuration for mancenter
+  ingress:
+    enabled: false
+    annotations: {}
+    # hosts:
+    # - hazelcast-mancenter.cluster.domain
+    # tls:
+    # - secretName: hazelcast-ingress-tls
+    #   hosts:
+    #   - hazelcast-mancenter.cluster.domain
 
   # ssl is a flag to enable SSL for Management Center
   ssl: false
@@ -193,6 +208,9 @@ mancenter:
   #   requests:
   #     memory: 256Mi
   #     cpu: 100m
+  #   limits:
+  #     memory: 1024Mi
+  #     cpu: 200m
 
   # Management Center persistence properties
   persistence:

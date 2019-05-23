@@ -32,11 +32,6 @@ spec:
       nodeSelector:
 {{ toYaml .Values.mancenter.nodeSelector | indent 8 }}
       {{- end }}
-      {{- if .Values.securityContext.enabled }}
-      securityContext:
-        runAsUser: {{ .Values.securityContext.runAsUser }}
-        fsGroup: {{ .Values.securityContext.fsGroup }}
-      {{- end }}
       containers:
       - name: {{ template "mancenter.fullname" . }}
         image: "{{ .Values.mancenter.image.repository }}:{{ .Values.mancenter.image.tag }}"
@@ -49,7 +44,7 @@ spec:
         {{- if .Values.mancenter.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: /hazelcast-mancenter
+            path: /hazelcast-mancenter/health
             port: 8080
           initialDelaySeconds: {{ .Values.mancenter.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.mancenter.livenessProbe.periodSeconds }}
@@ -60,7 +55,7 @@ spec:
         {{- if .Values.mancenter.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: /hazelcast-mancenter
+            path: /hazelcast-mancenter/health
             port: 8080
           initialDelaySeconds: {{ .Values.mancenter.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.mancenter.readinessProbe.periodSeconds }}
@@ -83,6 +78,24 @@ spec:
         {{- end }}
         - name: JAVA_OPTS
           value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} {{ .Values.mancenter.javaOpts }}"
+        serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
+        {{- if .Values.securityContext.enabled }}
+        securityContext:
+          runAsUser: {{ .Values.securityContext.runAsUser }}
+          fsGroup: {{ .Values.securityContext.fsGroup }}
+          allowPrivilegeEscalation: false
+          {{- if .Values.securityContext.runAsUser }}
+          runAsNonRoot: true
+          {{- end }}
+          capabilities:
+            drop:
+            - ALL
+        {{- end }}
+      {{- if .Values.securityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+      {{- end }}
+      serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
       volumes:
       - name: mancenter-storage
       {{- if .Values.mancenter.persistence.enabled }}

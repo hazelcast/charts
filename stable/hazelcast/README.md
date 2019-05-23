@@ -5,7 +5,7 @@
 ## Quick Start
 
 ```bash
-$ helm repo add hazelcast https://hazelcast.github.io/charts/ 
+$ helm repo add hazelcast https://hazelcast.github.io/charts/
 $ helm repo update
 $ helm install hazelcast/hazelcast
 ```
@@ -76,8 +76,12 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `serviceAccount.create`                    | Enable installing Service Account                                                                              | `true`                                               |
 | `serviceAccount.name`                      | Name of Service Account, if not set, the name is generated using the fullname template                         | `nil`                                                |
 | `securityContext.enabled`                  | Enables Security Context for Hazelcast and Management Center                                                   | `true`                                               |
-| `securityContext.runAsUser`                | User ID used to run the Hazelcast and Management Center containers                                             | `1001`                                               |
-| `securityContext.fsGroup`                  | Group ID associated with the Hazelcast and Management Center container                                         | `1001`                                               |
+| `securityContext.runAsUser`                | User ID used to run the Hazelcast and Management Center containers                                             | `65534`                                               |
+| `securityContext.fsGroup`                  | Group ID associated with the Hazelcast and Management Center container                                         | `65534`                                               |
+| `metrics.enabled`                          | Turn on and off JMX Prometheus metrics available at `/metrics`                                                 | `false`                                              |
+| `metrics.service.type`                     | Type of the metrics service                                                                                    | `ClusterIP`                                          |
+| `metrics.service.port`                     | Port of the `/metrics` endpoint and the metrics service                                                        | `8080`                                               |
+| `metrics.service.annotations`              | Annotations for the Prometheus discovery                                                                       |                                                      |
 | `customVolume`                             | Configuration for a volume mounted as '/data/custom' (e.g. to mount a volume with custom JARs)                 | `nil`                                                |
 | `mancenter.enabled`                        | Turn on and off Management Center application                                                                  | `true`                                               |
 | `mancenter.image.repository`               | Hazelcast Management Center Image name                                                                         | `hazelcast/management-center`                        |
@@ -93,7 +97,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `mancenter.persistence.existingClaim`      | Name of the existing Persistence Volume Claim, if not defined, a new is created                                | `nil`                                                |
 | `mancenter.persistence.accessModes`        | Access Modes of the new Persistent Volume Claim                                                                | `ReadWriteOnce`                                      |
 | `mancenter.persistence.size`               | Size of the new Persistent Volume Claim                                                                        | `8Gi`                                                |
-| `mancenter.service.type`                   | Kubernetes service type ('ClusterIP', 'LoadBalancer', or 'NodePort')                                           | `ClusterIP`                                          |
+| `mancenter.service.type`                   | Kubernetes service type ('ClusterIP', 'LoadBalancer', or 'NodePort')                                           | `LoadBalancer`                                       |
 | `mancenter.service.port`                   | Kubernetes service port                                                                                        | `5701`                                               |
 | `mancenter.livenessProbe.enabled`          | Turn on and off liveness probe                                                                                 | `true`                                               |
 | `mancenter.livenessProbe.initialDelaySeconds` | Delay before liveness probe is initiated                                                                    | `30`                                                 |
@@ -107,6 +111,10 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `mancenter.readinessProbe.timeoutSeconds`  | When the probe times out                                                                                       | `1`                                                  |
 | `mancenter.readinessProbe.successThreshold`| Minimum consecutive successes for the probe to be considered successful after having failed                    | `1`                                                  |
 | `mancenter.readinessProbe.failureThreshold`| Minimum consecutive failures for the probe to be considered failed after having succeeded.                     | `3`                                                  |
+| `mancenter.ingress.enabled`                | Enable ingress for the management center                             | `false`                                     |
+| `mancenter.ingress.annotations`            | Any annotations for the ingress                                      | `{}`                                        |
+| `mancenter.ingress.hosts`                  | List of hostnames for ingress, see `values.yaml` for example         | `[]`                                        |
+| `mancenter.ingress.tls`                    | List of TLS configuration for ingress, see `values.yaml` for example | `[]`                                        |  
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
@@ -138,7 +146,7 @@ hazelcast:
       <hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config hazelcast-config-3.10.xsd"
                      xmlns="http://www.hazelcast.com/schema/config"
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    
+
         <properties>
           <property name="hazelcast.discovery.enabled">true</property>
         </properties>
