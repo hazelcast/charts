@@ -8,6 +8,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
+  serviceName: {{ template "hazelcast.fullname" . }}
   replicas: {{ .Values.cluster.memberCount }}
   selector:
     matchLabels:
@@ -87,7 +88,6 @@ spec:
         {{- if .Values.securityContext.enabled }}
         securityContext:
           runAsUser: {{ .Values.securityContext.runAsUser }}
-          fsGroup: {{ .Values.securityContext.fsGroup }}
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
           {{- if .Values.securityContext.runAsUser }}
