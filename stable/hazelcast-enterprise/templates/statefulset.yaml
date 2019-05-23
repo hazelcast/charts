@@ -93,6 +93,10 @@ spec:
         {{- else }}
           value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         {{- if .Values.metrics.enabled }}
         - name: PROMETHEUS_PORT
           value: "{{ .Values.metrics.service.port }}"
