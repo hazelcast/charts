@@ -103,7 +103,6 @@ spec:
         {{- end }}
         - name: JAVA_OPTS
           value: "-Dhazelcast.rest.enabled={{ .Values.hazelcast.rest }} -Dhazelcast.config=/data/hazelcast/hazelcast.yaml -DserviceName={{ template "hazelcast.fullname" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mancenter.enabled={{ .Values.mancenter.enabled }} -Dhazelcast.ssl={{ .Values.hazelcast.ssl }} -Dhazelcast.mancenter.url={{ if .Values.mancenter.ssl }}https{{ else }}http{{ end }}://{{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}/hazelcast-mancenter {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.hazelcast.javaOpts }}"
-        serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
         {{- if .Values.securityContext.enabled }}
         securityContext:
           {{- if .Values.securityContext.runAsUser }}
