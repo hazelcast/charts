@@ -91,12 +91,12 @@ spec:
         serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
         {{- if .Values.securityContext.enabled }}
         securityContext:
-          runAsUser: {{ .Values.securityContext.runAsUser }}
-          readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false
           {{- if .Values.securityContext.runAsUser }}
+          runAsUser: {{ .Values.securityContext.runAsUser }}
           runAsNonRoot: true
           {{- end }}
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
           capabilities:
             drop:
             - ALL
