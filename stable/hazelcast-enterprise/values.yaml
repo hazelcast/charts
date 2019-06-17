@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast image name
   repository: "hazelcast/hazelcast-enterprise"
   # tag is the Hazelcast image tag
-  tag: "3.12"
+  tag: "3.12.1"
   # pullPolicy is the Docker image pull policy
   # It's recommended to change this to 'Always' if the image tag is 'latest'
   # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
@@ -32,6 +32,8 @@ hazelcast:
   rest: true
   # ssl is a flag used to enable SSL for Hazelcast
   ssl: false
+  # version-auto-upgrade is a flag used to automatically increase the Hazelcast cluster version of the rolling upgrade procedure
+  versionAutoUpgrade: true
   # javaOpts are additional JAVA_OPTS properties for Hazelcast member
   javaOpts:
   # yaml is the Hazelcast YAML configuration file
