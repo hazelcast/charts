@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Configure Helm') {
             steps {
-                sh 'export PATH=$PATH:/usr/local/bin && curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash'
+                sh 'export PATH=$PATH:/usr/local/bin && curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash || true'
             }
         }        
         stage('Checkout GH Pages') {
