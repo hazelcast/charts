@@ -4,10 +4,10 @@ kind: Ingress
 metadata:
   name: "{{ include "mancenter.fullname" . }}"
   labels:
-    app: "{{ include "hazelcast.name" . }}"
-    chart: "{{ include "hazelcast.chart" . }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+    helm.sh/chart: {{ template "hazelcast.chart" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
 {{- if .Values.mancenter.ingress.annotations }}
   annotations:
 {{ toYaml .Values.mancenter.ingress.annotations | indent 4 }}
