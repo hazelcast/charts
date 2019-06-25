@@ -1,0 +1,26 @@
+{{- if and .Values.hotRestart.enabled (not .Values.hotRestart.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "hazelcast.fullname" . }}
+  labels:
+    app: {{ template "hazelcast.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  accessModes:
+  {{- range .Values.hotRestart.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.hotRestart.size | quote }}
+{{- if .Values.hotRestart.storageClass }}
+{{- if (eq "-" .Values.hotRestart.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.hotRestart.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}

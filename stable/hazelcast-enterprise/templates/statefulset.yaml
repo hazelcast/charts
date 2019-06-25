@@ -84,6 +84,10 @@ spec:
         volumeMounts:
         - name: hazelcast-storage
           mountPath: /data/hazelcast
+        {{- if .Values.hotRestart.enabled }}
+        - name: hot-restart-persistence
+          mountPath: /data/hot-restart
+        {{- end }}
         {{- if .Values.secretsMountName }}
         - name: hazelcast-secrets
           mountPath: /data/secrets
@@ -111,13 +115,13 @@ spec:
           value: "{{ .Values.metrics.service.port }}"
         {{- end }}
         - name: JAVA_OPTS
-          value: "-Dhazelcast.rest.enabled={{ .Values.hazelcast.rest }} -Dhazelcast.config=/data/hazelcast/hazelcast.yaml -DserviceName={{ template "hazelcast.fullname" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mancenter.enabled={{ .Values.mancenter.enabled }} -Dhazelcast.ssl={{ .Values.hazelcast.ssl }} -Dhazelcast.mancenter.url={{ if .Values.mancenter.ssl }}https{{ else }}http{{ end }}://{{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}/hazelcast-mancenter {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} -Dhazelcast.cluster.version.auto.upgrade.enabled={{ .Values.hazelcast.updateClusterVersionAfterRollingUpgrade }} {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.hazelcast.javaOpts }}"
+          value: "-Dhazelcast.rest.enabled={{ .Values.hazelcast.rest }} -Dhazelcast.config=/data/hazelcast/hazelcast.yaml -DserviceName={{ template "hazelcast.fullname" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mancenter.enabled={{ .Values.mancenter.enabled }} -Dhazelcast.ssl={{ .Values.hazelcast.ssl }} -Dhazelcast.hotRestart={{ .Values.hotRestart.enabled }} -Dhazelcast.mancenter.url={{ if .Values.mancenter.ssl }}https{{ else }}http{{ end }}://{{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}/hazelcast-mancenter {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} -Dhazelcast.cluster.version.auto.upgrade.enabled={{ .Values.hazelcast.updateClusterVersionAfterRollingUpgrade }} {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.hazelcast.javaOpts }}"
         {{- if .Values.securityContext.enabled }}
         securityContext:
           runAsNonRoot: true
           runAsUser: {{ .Values.securityContext.runAsUser }}
           privileged: false
-          readOnlyRootFilesystem: true
+          readOnlyRootFilesystem: {{ not .Values.hotRestart.enabled }}
           allowPrivilegeEscalation: false
           capabilities:
             drop:
@@ -128,6 +132,11 @@ spec:
       - name: hazelcast-storage
         configMap:
           name: {{ template "hazelcast.fullname" . }}-configuration
+      {{- if .Values.hotRestart.enabled }}
+      - name: hot-restart-persistence
+        persistentVolumeClaim:
+          claimName: {{ .Values.hotRestart.existingClaim | default (include "hazelcast.fullname" .) }}
+      {{- end }}
       {{- if .Values.secretsMountName }}
       - name: hazelcast-secrets
         secret:
