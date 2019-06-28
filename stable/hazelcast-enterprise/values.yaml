@@ -50,6 +50,12 @@ hazelcast:
             resolve-not-ready-addresses: true
         ssl:
           enabled: ${hazelcast.ssl}
+      hot-restart-persistence:
+        enabled: ${hazelcast.hotRestart}
+        base-dir: /data/hot-restart
+        validation-timeout-seconds: 1200
+        data-load-timeout-seconds: 900
+        auto-remove-stale-data: true
       management-center:
         enabled: ${hazelcast.mancenter.enabled}
         url: ${hazelcast.mancenter.url}
@@ -137,6 +143,19 @@ securityContext:
   runAsUser: 65534
   # fsGroup is the group ID associated with the container
   fsGroup: 65534
+
+# Hazelcast Hot Restart persistence feature
+hotRestart:
+  # enabled is a flag to enabled Hot Restart feature
+  enabled: false
+  # existingClaim is a name of the existing Persistence Volume Claim that will be used for the Hot Restart persistence
+  # if not defined, a new Persistent Value Claim is created with the default name
+  # existingClaim:
+  # accessModes defines the access modes for the created Persistent Volume Claim
+  accessModes:
+  - ReadWriteMany
+  # size is the size of Persistent Volume Claim
+  size: 8Gi
 
 # Allows to enable a Prometheus to scrape pods, implemented for Hazelcast version >= 3.12 (or 'latest')
 metrics:
