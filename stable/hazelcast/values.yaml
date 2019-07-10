@@ -28,6 +28,8 @@ hazelcast:
   rest: true
   # javaOpts are additional JAVA_OPTS properties for Hazelcast member
   javaOpts:
+  # existingConfigMap defines a ConfigMap which contains Hazelcast configuration file(s) that are used instead hazelcast.yaml configuration below
+  # existingConfigMap
   # yaml is the Hazelcast YAML configuration file
   yaml:
     hazelcast:
@@ -50,6 +52,9 @@ hazelcast:
 # nodeSelector is an array of Hazelcast Node labels for POD assignments
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
+
+# hostPort is a port under which Hazelcast PODs are exposed on the host machines
+# hostPort:
 
 gracefulShutdown:
   enabled: true
