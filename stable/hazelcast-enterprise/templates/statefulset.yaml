@@ -132,7 +132,11 @@ spec:
       volumes:
       - name: hazelcast-storage
         configMap:
+          {{- if .Values.hazelcast.existingConfigMap }}
+          name: {{ .Values.hazelcast.existingConfigMap }}
+          {{- else }}
           name: {{ template "hazelcast.fullname" . }}-configuration
+          {{- end }}
       {{- if .Values.hotRestart.enabled }}
       - name: hot-restart-persistence
         persistentVolumeClaim:
