@@ -68,7 +68,7 @@ hazelcast:
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
 
-# hostPort is a port under which Hazelcast PODs are exposed on the host machine
+# hostPort is a port under which Hazelcast PODs are exposed on the host machines
 # hostPort:
 
 gracefulShutdown:

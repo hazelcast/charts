@@ -57,8 +57,11 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `hazelcast.ssl`                            | Enable SSL for Hazelcast                                                                                       | `false`                                              |
 | `hazelcast.updateClusterVersionAfterRollingUpgrade` | Enable Hazelcast cluster auto version upgrade after the rolling upgrade procedure                              | `true`                                               |
 | `hazelcast.javaOpts`                       | Additional JAVA_OPTS properties for Hazelcast member                                                           | `nil`                                                |
-| `hazelcast.configurationFiles`             | Hazelcast configuration files                                                                                  | `{DEFAULT_HAZELCAST_XML}`                            |
+| `hazelcast.existingConfigMap`              | ConfigMap which contains Hazelcast configuration file(s) that are used instead hazelcast.yaml embedded into values.yaml | `nil`                                                |
+| `hazelcast.yaml`                           | Hazelcast YAML Configuration (`hazelcast.yaml` embedded into `values.yaml`)                                    | `{DEFAULT_HAZELCAST_YAML}`                           |
+| `hazelcast.configurationFiles`             | Hazelcast configuration files                                                                                  | `nil`                                                |
 | `nodeSelector`                             | Hazelcast Node labels for pod assignment                                                                       | `nil`                                                |
+| `hostPort`                                 | Port under which Hazelcast PODs are exposed on the host machines                                               | `nil`                                                |
 | `gracefulShutdown.enabled`                 | Turn on and off Graceful Shutdown                                                                              | `true`                                               |
 | `gracefulShutdown.maxWaitSeconds`          | Maximum time to wait for the Hazelcast POD to shut down                                                        | `600`                                                |
 | `livenessProbe.enabled`                    | Turn on and off liveness probe                                                                                 | `true`                                               |
@@ -149,35 +152,22 @@ $ helm install --name my-release -f values.yaml hazelcast/hazelcast-enterprise
 
 ## Custom Hazelcast configuration
 
-Custom Hazelcast configuration can be specified inside `values.yaml`, as the `hazelcast.configurationFiles.hazelcast.xml` property.
+Custom Hazelcast configuration can be specified inside `values.yaml`, as the `hazelcast.yaml` property.
 
 ```yaml
 hazelcast:
-  configurationFiles:
-    hazelcast.xml: |-
-      <?xml version="1.0" encoding="UTF-8"?>
-      <hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config hazelcast-config-3.10.xsd"
-                     xmlns="http://www.hazelcast.com/schema/config"
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
-        <properties>
-          <property name="hazelcast.discovery.enabled">true</property>
-        </properties>
-        <network>
-          <join>
-            <multicast enabled="false"/>
-            <tcp-ip enabled="false" />
-            <discovery-strategies>
-              <discovery-strategy enabled="true" class="com.hazelcast.kubernetes.HazelcastKubernetesDiscoveryStrategy">
-              </discovery-strategy>
-            </discovery-strategies>
-          </join>
-        </network>
-
-        <management-center enabled="${hazelcast.mancenter.enabled}">${hazelcast.mancenter.url}</management-center>
-
+   yaml:
+    hazelcast:
+      network:
+        join:
+          multicast:
+            enabled: false
+          kubernetes:
+            enabled: true
+            service-name: ${serviceName}
+            namespace: ${namespace}
+            resolve-not-ready-addresses: true
         <!-- Custom Configuration Placeholder -->
-      </hazelcast>
 ```
 
 ## Configuring SSL
