@@ -53,6 +53,7 @@ spec:
         ports:
         - name: hazelcast
           containerPort: 5701
+          hostPort: {{ .Values.hostPort }}
         {{- if .Values.metrics.enabled }}
         - name: metrics
           containerPort: {{ .Values.metrics.service.port }}
