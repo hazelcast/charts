@@ -85,6 +85,10 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `securityContext.enabled`                  | Enables Security Context for Hazelcast Jet and Hazelcast Jet Management Center                                 | `true`                                               |
 | `securityContext.runAsUser`                | User ID used to run the Hazelcast Jet and Hazelcast Jet Management Center containers                           | `1001`                                               |
 | `securityContext.fsGroup`                  | Group ID associated with the Hazelcast Jet and Hazelcast Jet Management Center container                       | `1001`                                               |
+| `metrics.enabled`                          | Turn on and off JMX Prometheus metrics available at `/metrics`                                                 | `false`                                              |
+| `metrics.service.type`                     | Type of the metrics service                                                                                    | `ClusterIP`                                          |
+| `metrics.service.port`                     | Port of the `/metrics` endpoint and the metrics service                                                        | `8080`                                               |
+| `metrics.service.annotations`              | Annotations for the Prometheus discovery                                                                       |                                                      |
 | `managementcenter.enabled`                        | Turn on and off Hazelcast Jet Management Center application                                             | `true`                                               |
 | `managementcenter.image.repository`               | Hazelcast Jet Management Center Image name                                                              | `hazelcast/hazelcast-jet-management-center`                        |
 | `managementcenter.image.tag`                      | Hazelcast Jet Management Center Image tag (NOTE: must be the same or one minor release greater than Hazelcast image version) | `{VERSION}`                                  |
@@ -130,71 +134,56 @@ $ helm install --name my-release -f values.yaml hazelcast/hazelcast-jet
 
 ## Custom Hazelcast IMDG and Jet configuration
 
-Custom Hazelcast IMDG and Hazelcast Jet configuration can be specified inside `values.yaml`, as the `jet.configurationFiles.hazelcast.xml` and `jet.configurationFiles.hazelcast-jet.xml` properties.
+Custom Hazelcast IMDG and Hazelcast Jet configuration can be specified inside `values.yaml`, as the `jet.configurationFiles.hazelcast.yaml` and `jet.configurationFiles.hazelcast-jet.yaml` properties.
 
 ```yaml
 jet:
   configurationFiles:
-    hazelcast.xml: |-
-      <?xml version="1.0" encoding="UTF-8"?>
-      <hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config hazelcast-config-3.10.xsd"
-                     xmlns="http://www.hazelcast.com/schema/config"
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    
-        <properties>
-          <property name="hazelcast.discovery.enabled">true</property>
-        </properties>
-        <network>
-          <join>
-            <multicast enabled="false"/>
-            <tcp-ip enabled="false" />
-            <discovery-strategies>
-              <discovery-strategy enabled="true" class="com.hazelcast.kubernetes.HazelcastKubernetesDiscoveryStrategy">
-                <properties>
-                  <property name="service-name">${serviceName}</property>
-                  <property name="namespace">${namespace}</property>
-                </properties>
-              </discovery-strategy>
-            </discovery-strategies>
-          </join>
-        </network>
-        <!-- Custom Configuration Placeholder -->
-      </hazelcast>
-    hazelcast-jet.xml: |-
-      <?xml version="1.0" encoding="UTF-8"?>
-      <hazelcast-jet xsi:schemaLocation="http://www.hazelcast.com/schema/jet-config hazelcast-jet-config-0.8.xsd"
-                    xmlns="http://www.hazelcast.com/schema/jet-config"
-                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-          <instance>
-              <!-- number of threads in the cooperative thread pool -->
-            <cooperative-thread-count>8</cooperative-thread-count>
-              <!-- period between flow control packets in milliseconds -->
-            <flow-control-period>100</flow-control-period>
-              <!-- number of backup copies to configure for Hazelcast IMaps used internally in a Jet job -->
-            <backup-count>1</backup-count>
-          </instance>
-          <!-- custom properties which can be read in the user code -->
-          <properties>
-            <property name="custom.property">custom property</property>
-          </properties>
-          <edge-defaults>
-              <!-- capacity of the concurrent SPSC queue between each two processors -->
-            <queue-size>1024</queue-size>
-              <!-- network packet size limit in bytes, only applies to distributed edges -->
-            <packet-size-limit>16384</packet-size-limit>
-              <!-- receive window size multiplier, only applies to distributed edges -->
-            <receive-window-multiplier>3</receive-window-multiplier>
-          </edge-defaults>
-          <!-- whether metrics collection is enabled -->
-          <metrics enabled="true">
-              <!-- the number of seconds the metrics will be retained on the instance -->
-              <retention-seconds>120</retention-seconds>
-              <!-- the metrics collection interval in seconds -->
-              <collection-interval-seconds>5</collection-interval-seconds>
-              <!-- whether metrics should be collected for data structures. Metrics
-                  collection can have some overhead if there is a large number of data
-                  structures -->
-              <metrics-for-data-structures>false</metrics-for-data-structures>
-          </metrics>
-      </hazelcast-jet>
+    hazelcast.yaml: |-
+      hazelcast:
+        network:
+          join:
+            multicast:
+              enabled: false
+            kubernetes:
+              enabled: true
+              namespace: ${namespace}
+              service-name: ${serviceName}
+              resolve-not-ready-addresses: true
+    hazelcast-jet.yaml: |-
+      hazelcast-jet:
+        instance:
+          # period between flow control packets in milliseconds
+          flow-control-period: 100
+          # number of backup copies to configure for Hazelcast IMaps used internally in a Jet job
+          backup-count: 1
+          # the delay after which auto-scaled jobs will restart if a new member is added to the
+          # cluster. The default is 10 seconds. Has no effect on jobs with auto scaling disabled
+          scale-up-delay-millis: 10000
+          # Sets whether lossless job restart is enabled for the node. With
+          # lossless restart you can restart the whole cluster without losing the
+          # jobs and their state. The feature is implemented on top of the Hot
+          # Restart feature of Hazelcast IMDG which persists the data to disk.
+          lossless-restart-enabled: false
+        edge-defaults:
+          # capacity of the concurrent SPSC queue between each two processors
+          queue-size: 1024
+          # network packet size limit in bytes, only applies to distributed edges
+          packet-size-limit: 16384
+          # receive window size multiplier, only applies to distributed edges
+          receive-window-multiplier: 3
+        metrics:
+          # whether metrics collection is enabled
+          enabled: true
+          # whether jmx mbean metrics collection is enabled
+          jmx-enabled: true
+          # the number of seconds the metrics will be retained on the instance
+          retention-seconds: 120
+          # the metrics collection interval in seconds
+          collection-interval-seconds: 5
+          # whether metrics should be collected for data structures. Metrics
+          # collection can have some overhead if there is a large number of data
+          # structures
+          metrics-for-data-structures: false
+      
 ```
