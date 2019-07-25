@@ -3,16 +3,16 @@
 -------------------------------------------------------------------------------
 To access Hazelcast Jet within the Kubernetes cluster:
 
-- Use Hazelcast Jet Client with Kubernetes Discovery Strategy pointing to DNS: {{ template "hazelcast-jet.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local. Read more at: https://github.com/hazelcast/hazelcast-kubernetes.
+- Use Hazelcast Jet Client with Kubernetes Discovery Strategy. Read more at: https://github.com/hazelcast/hazelcast-kubernetes.
 
 {{- if .Values.jet.rest }}
 - Use REST healtcheck endpoint:
-  $ curl http://{{ template "hazelcast-jet.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:5701/hazelcast/health
+  $ curl http://{{ template "hazelcast-jet.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}/hazelcast/health
 {{- end }}
 
 -------------------------------------------------------------------------------
 
-To access Hazelcast from outside the Kubernetes cluster:
+To access Hazelcast Jet from outside the Kubernetes cluster:
 
 - Use Hazelcast Jet Client with Smart Routing disabled:
 {{- if contains "LoadBalancer" .Values.service.type }}
@@ -23,8 +23,8 @@ To access Hazelcast from outside the Kubernetes cluster:
      clientConfig.getNetworkConfig().addAddress("$SERVICE_IP:{{ .Values.service.port }}");
 {{- else if contains "ClusterIP" .Values.service.type }}
   *) Forward port from POD:
-     $ export POD=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ template "hazelcast-jet.name" . }}" -o jsonpath="{.items[0].metadata.name}")
-     $ kubectl port-forward --namespace {{ .Release.Namespace }} $POD 5701:5701
+     $ export POD=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ template "hazelcast-jet.name" . }}" -o jsonpath="{.items[0].metadata.name}")
+     $ kubectl port-forward --namespace {{ .Release.Namespace }} $POD 5701:{{ .Values.service.port }}
   *) In Hazelcast Jet Client configure:
      clientConfig.getNetworkConfig().setSmartRouting(false);
      clientConfig.getNetworkConfig().addAddress("127.0.0.1:5701");
@@ -47,8 +47,8 @@ To access Hazelcast from outside the Kubernetes cluster:
      $ curl http://$SERVICE_IP:{{ .Values.service.port }}/hazelcast/health
 {{- else if contains "ClusterIP" .Values.service.type }}
   *) Forward port from POD:
-     $ export POD=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ template "hazelcast-jet.name" . }}" -o jsonpath="{.items[0].metadata.name}")
-     $ kubectl port-forward --namespace {{ .Release.Namespace }} $POD 5701:5701
+     $ export POD=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ template "hazelcast-jet.name" . }}" -o jsonpath="{.items[0].metadata.name}")
+     $ kubectl port-forward --namespace {{ .Release.Namespace }} $POD 5701:{{ .Values.service.port }}
   *) Get health info:
      $ curl http://127.0.0.1:5701/hazelcast/health
 {{- else if contains "NodePort" .Values.service.type }}
@@ -73,7 +73,7 @@ To access Hazelcast Jet Management Center:
   *) Open Browser at: http://$MANAGEMENT_CENTER_IP:{{ .Values.managementcenter.service.port }}/
 {{- else if contains "ClusterIP" .Values.managementcenter.service.type }}
   *) Forward port from POD:
-     $ export POD=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ template "hazelcast-jet.name" . }},role=hazelcast-jet-management-center" -o jsonpath="{.items[0].metadata.name}")
+     $ export POD=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ template "hazelcast-jet.name" . }},role=hazelcast-jet-management-center" -o jsonpath="{.items[0].metadata.name}")
      $ kubectl port-forward --namespace {{ .Release.Namespace }} $POD 8081:8081
   *) Open Browser at: http://127.0.0.1:8081
 {{- else if contains "NodePort" .Values.managementcenter.service.type }}
