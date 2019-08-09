@@ -47,7 +47,7 @@ Create the name of the service to use
 */}}
 {{- define "hazelcast.serviceName" -}}
 {{- if .Values.service.create -}}
-    {{ default (include "hazelcast.fullname" .) .Values.service.name }}
+    {{ template "hazelcast.fullname" .}}
 {{- else -}}
     {{ default "default" .Values.service.name }}
 {{- end -}}
