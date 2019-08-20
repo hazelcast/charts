@@ -103,6 +103,12 @@ readinessProbe:
 
 # Hazelcast Service properties
 service:
+  # Specifies whether a Service should be created
+  create: true
+  # The name of the Service to use.
+  # The name is used for service discovery by Hazelcast K8S discovery plugin.
+  # If not set and create is true, a name is generated using the fullname template
+  # name:
   # type defines the Kubernetes service type ('ClusterIP', 'LoadBalancer', or 'NodePort')
   type: ClusterIP
   # port is the Kubernetes service port
