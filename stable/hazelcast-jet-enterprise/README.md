@@ -172,3 +172,11 @@ jet:
 
 
 ```
+
+Alternatively, above parameters can be modified directly via `helm` commands. For example,
+
+```bash
+$ helm install --name my-jet-release \
+  --set jet.yaml.hazelcast-jet.instance.backup-count=2,jet.yaml.hazelcast.network.kubernetes.service-name=jet-service \
+    hazelcast/hazelcast-jet
+```
