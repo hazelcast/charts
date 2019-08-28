@@ -4,11 +4,11 @@ set -e
 set -o pipefail
 
 kubectl version
-helm version --client
+helm version --client --tls
 
 function cleanup() {
-    helm ls --all --short | xargs -L1 helm delete --purge || true
-    helm reset || true
+    helm ls --all --short --tls | xargs -L1 helm delete --purge || true
+    helm reset --tls || true
     #remove helm test pods
     kubectl get pods | grep Completed | awk '{print $1}' | xargs kubectl delete pod || true
 }
@@ -19,7 +19,7 @@ cleanup
 # kubectl create serviceaccount -n kube-system tiller
 # kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 
-helm init --service-account tiller --wait
+helm init --service-account tiller --tiller-tls-verify --wait
 
 for chart in ${WORKSPACE}/stable/*; do
     helm package --save=false ${chart};
@@ -28,14 +28,14 @@ done
 HAZELCAST_HELM_PATH=$(find ${WORKSPACE} -regex '.*hazelcast-[0-9].[0-9].[0-9].tgz?')
 JET_HELM_PATH=$(find ${WORKSPACE} -regex '.*hazelcast-jet-[0-9].[0-9].[0-9].tgz?')
 
-helm install --debug --name hz-release --set nodeSelector.pool=standard,hazelcast.yaml.hazelcast.network.kubernetes.service-name=hz-helm-service,mancenter.nodeSelector.pool=standard --wait --timeout=360 --tiller-connection-timeout=600 ${HAZELCAST_HELM_PATH}
+helm install --debug --name hz-release --set nodeSelector.pool=standard,hazelcast.yaml.hazelcast.network.kubernetes.service-name=hz-helm-service,mancenter.nodeSelector.pool=standard --wait --timeout=360 --tls ${HAZELCAST_HELM_PATH}
 helm lint ${HAZELCAST_HELM_PATH}
-helm test --tiller-connection-timeout=600 hz-release
+helm test hz-release --cleanup --tls
 
 #cleanup?
 
-helm install --debug --name jet-release --set nodeSelector.pool=standard,jet.yaml.hazelcast.network.kubernetes.service-name=jet-helm-service,managementcenter.nodeSelector.pool=standard --wait --timeout=360 --tiller-connection-timeout=600 ${JET_HELM_PATH}
+helm install --debug --name jet-release --set nodeSelector.pool=standard,jet.yaml.hazelcast.network.kubernetes.service-name=jet-helm-service,managementcenter.nodeSelector.pool=standard --wait --timeout=360 --tls ${JET_HELM_PATH}
 helm lint ${JET_HELM_PATH}
-helm test --tiller-connection-timeout=600 jet-release
+helm test jet-release --cleanup --tls
 
 
