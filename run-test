@@ -19,8 +19,7 @@ cleanup
 # kubectl create serviceaccount -n kube-system tiller
 # kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 
-helm init --service-account tiller
-kubectl -n kube-system wait --for=condition=Ready pod -l name=tiller --timeout=60s
+helm init --service-account tiller --wait
 
 for chart in ${WORKSPACE}/stable/*; do
     helm package --save=false ${chart};
@@ -29,14 +28,14 @@ done
 HAZELCAST_HELM_PATH=$(find ${WORKSPACE} -regex '.*hazelcast-[0-9].[0-9].[0-9].tgz?')
 JET_HELM_PATH=$(find ${WORKSPACE} -regex '.*hazelcast-jet-[0-9].[0-9].[0-9].tgz?')
 
-helm install --debug --name hz-release --set nodeSelector.pool=standard,hazelcast.yaml.hazelcast.network.kubernetes.service-name=hz-helm-service,mancenter.nodeSelector.pool=standard --wait --timeout=360 ${HAZELCAST_HELM_PATH}
+helm install --debug --name hz-release --set nodeSelector.pool=standard,hazelcast.yaml.hazelcast.network.kubernetes.service-name=hz-helm-service,mancenter.nodeSelector.pool=standard --wait --timeout=360 --tiller-connection-timeout=600 ${HAZELCAST_HELM_PATH}
 helm lint ${HAZELCAST_HELM_PATH}
-helm test hz-release
+helm test --tiller-connection-timeout=600 hz-release
 
 #cleanup?
 
-helm install --debug --name jet-release --set nodeSelector.pool=standard,jet.yaml.hazelcast.network.kubernetes.service-name=jet-helm-service,managementcenter.nodeSelector.pool=standard --wait --timeout=360 ${JET_HELM_PATH}
+helm install --debug --name jet-release --set nodeSelector.pool=standard,jet.yaml.hazelcast.network.kubernetes.service-name=jet-helm-service,managementcenter.nodeSelector.pool=standard --wait --timeout=360 --tiller-connection-timeout=600 ${JET_HELM_PATH}
 helm lint ${JET_HELM_PATH}
-helm test jet-release
+helm test --tiller-connection-timeout=600 jet-release
 
 
