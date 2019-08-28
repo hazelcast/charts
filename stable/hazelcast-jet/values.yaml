@@ -28,55 +28,59 @@ jet:
   rest: true
   # javaOpts are additional JAVA_OPTS properties for Hazelcast Jet member
   javaOpts:
-  # configurationFiles are Hazelcast Jet configuration files
-  configurationFiles:
-    hazelcast.yaml: |-
-      hazelcast:
-        network:
-          join:
-            multicast:
-              enabled: false
-            kubernetes:
-              enabled: true
-              namespace: ${namespace}
-              service-name: ${serviceName}
-              resolve-not-ready-addresses: true
-    hazelcast-jet.yaml: |-
-      hazelcast-jet:
-        instance:
-          # period between flow control packets in milliseconds
-          flow-control-period: 100
-          # number of backup copies to configure for Hazelcast IMaps used internally in a Jet job
-          backup-count: 1
-          # the delay after which auto-scaled jobs will restart if a new member is added to the
-          # cluster. The default is 10 seconds. Has no effect on jobs with auto scaling disabled
-          scale-up-delay-millis: 10000
-          # Sets whether lossless job restart is enabled for the node. With
-          # lossless restart you can restart the whole cluster without losing the
-          # jobs and their state. The feature is implemented on top of the Hot
-          # Restart feature of Hazelcast IMDG which persists the data to disk.
-          lossless-restart-enabled: false
-        edge-defaults:
-          # capacity of the concurrent SPSC queue between each two processors
-          queue-size: 1024
-          # network packet size limit in bytes, only applies to distributed edges
-          packet-size-limit: 16384
-          # receive window size multiplier, only applies to distributed edges
-          receive-window-multiplier: 3
-        metrics:
-          # whether metrics collection is enabled
-          enabled: true
-          # whether jmx mbean metrics collection is enabled
-          jmx-enabled: true
-          # the number of seconds the metrics will be retained on the instance
-          retention-seconds: 120
-          # the metrics collection interval in seconds
-          collection-interval-seconds: 5
-          # whether metrics should be collected for data structures. Metrics
-          # collection can have some overhead if there is a large number of data
-          # structures
-          metrics-for-data-structures: false
-      
+  # Jet and Hazelcast IMDG YAML configuration files
+  yaml:
+    hazelcast:
+      network:
+        join:
+          multicast:
+            enabled: false
+          kubernetes:
+            enabled: true
+            service-name: ${serviceName}
+            namespace: ${namespace}
+            resolve-not-ready-addresses: true
+      management-center:
+        enabled: ${hazelcast.mancenter.enabled}
+        url: ${hazelcast.mancenter.url}
+    hazelcast-jet:
+      instance:
+        # period between flow control packets in milliseconds
+        flow-control-period: 100
+        # number of backup copies to configure for Hazelcast IMaps used internally in a Jet job
+        backup-count: 1
+        # the delay after which auto-scaled jobs will restart if a new member is added to the
+        # cluster. The default is 10 seconds. Has no effect on jobs with auto scaling disabled
+        scale-up-delay-millis: 10000
+        # Sets whether lossless job restart is enabled for the node. With
+        # lossless restart you can restart the whole cluster without losing the
+        # jobs and their state. The feature is implemented on top of the Hot
+        # Restart feature of Hazelcast IMDG which persists the data to disk.
+        lossless-restart-enabled: false
+      edge-defaults:
+        # capacity of the concurrent SPSC queue between each two processors
+        queue-size: 1024
+        # network packet size limit in bytes, only applies to distributed edges
+        packet-size-limit: 16384
+        # receive window size multiplier, only applies to distributed edges
+        receive-window-multiplier: 3
+      metrics:
+        # whether metrics collection is enabled
+        enabled: true
+        # whether jmx mbean metrics collection is enabled
+        jmx-enabled: true
+        # the number of seconds the metrics will be retained on the instance
+        retention-seconds: 120
+        # the metrics collection interval in seconds
+        collection-interval-seconds: 5
+        # whether metrics should be collected for data structures. Metrics
+        # collection can have some overhead if there is a large number of data
+        # structures
+        metrics-for-data-structures: false
+
+  # configurationFiles are any additional Hazelcast Jet configuration files
+  # configurationFiles:
+
 # nodeSelector is an array of Hazelcast Node labels for POD assignments
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
@@ -202,16 +206,18 @@ managementcenter:
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
   nodeSelector: {}
 
-  # configurationFiles are Hazelcast Jet Client configuration files which will be used by Hazelcast Jet Management Center
-  configurationFiles:
-    hazelcast-client.yaml: |-
-      hazelcast-client:
-        network:
-          kubernetes:
-            enabled: true
-            namespace: ${namespace}
-            service-name: ${serviceName}
-            resolve-not-ready-addresses: true
+  # Jet Client configuration YAML file which will be used by Hazelcast Jet Management Center
+  yaml:
+    hazelcast-client:
+      network:
+        kubernetes:
+          enabled: true
+          namespace: ${namespace}
+          service-name: ${serviceName}
+          resolve-not-ready-addresses: true
+
+  # configurationFiles are any additional Hazelcast Jet Client configuration files
+  # configurationFiles:
 
   # Configure resource requests and limits
   # ref: http://kubernetes.io/docs/user-guide/compute-resources/

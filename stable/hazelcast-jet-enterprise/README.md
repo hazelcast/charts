@@ -10,7 +10,7 @@ about the architecture, road-map and use cases.
 ## Quick Start
 
 ```bash
-$ helm repo add hazelcast https://hazelcast.github.io/charts/ 
+$ helm repo add hazelcast https://hazelcast.github.io/charts/
 $ helm repo update
 $ helm install hazelcast/hazelcast-jet-enterprise
 ```
@@ -60,7 +60,8 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `jet.licenseKeySecretName`                 | Kubernetes Secret Name, where Hazelcast Jet Enterprise Key is stored (can be used instead of licenseKey)       | `nil`                                                |
 | `jet.rest`                                 | Enable REST endpoints for Hazelcast Jet member                                                                 | `true`                                               |
 | `jet.javaOpts`                             | Additional JAVA_OPTS properties for Hazelcast Jet member                                                       | `nil`                                                |
-| `jet.configurationFiles`                   | Hazelcast configuration files                                                                                  | `{DEFAULT_HAZELCAST_XML}`                            |
+| `jet.yaml.hazelcast-jet` and `jet.yaml.hazelcast`                   | Hazelcast Jet and IMDG YAML configurations (`hazelcast-jet.yaml` and `hazelcast.yaml` embedded into `values.yaml`)                                                                                | `{DEFAULT_JET_YAML}` and `{DEFAULT_HAZELCAST_YAML}`                  |
+| `jet.configurationFiles`                   | Hazelcast configuration files                                                                                  | `nil`                           |
 | `nodeSelector`                             | Hazelcast Node labels for pod assignment                                                                       | `nil`                                                |
 | `gracefulShutdown.enabled`                 | Turn on and off Graceful Shutdown                                                                              | `true`                                               |
 | `gracefulShutdown.maxWaitSeconds`          | Maximum time to wait for the Hazelcast Jet POD to shut down                                                    | `600`                                                |
@@ -134,57 +135,48 @@ $ helm install --name my-release -f values.yaml hazelcast/hazelcast-jet-enterpri
 
 ## Custom Hazelcast IMDG and Jet configuration
 
-Custom Hazelcast IMDG and Hazelcast Jet configuration can be specified inside `values.yaml`, as the `jet.configurationFiles.hazelcast.yaml` and `jet.configurationFiles.hazelcast-jet.yaml` properties.
+Custom Hazelcast IMDG and Hazelcast Jet configuration can be specified inside `values.yaml`, as the `jet.yaml.hazelcast` and `jet.yaml.hazelcast-jet` properties.
 
 ```yaml
 jet:
-  configurationFiles:
-    hazelcast.yaml: |-
-      hazelcast:
-        license-key: Your Hazelcast Jet Enterprise License Key
-        network:
-          join:
-            multicast:
-              enabled: false
-            kubernetes:
-              enabled: true
-              namespace: ${namespace}
-              service-name: ${serviceName}
-              resolve-not-ready-addresses: true
-    hazelcast-jet.yaml: |-
-      hazelcast-jet:
-        instance:
-          # period between flow control packets in milliseconds
-          flow-control-period: 100
-          # number of backup copies to configure for Hazelcast IMaps used internally in a Jet job
-          backup-count: 1
-          # the delay after which auto-scaled jobs will restart if a new member is added to the
-          # cluster. The default is 10 seconds. Has no effect on jobs with auto scaling disabled
-          scale-up-delay-millis: 10000
-          # Sets whether lossless job restart is enabled for the node. With
-          # lossless restart you can restart the whole cluster without losing the
-          # jobs and their state. The feature is implemented on top of the Hot
-          # Restart feature of Hazelcast IMDG which persists the data to disk.
-          lossless-restart-enabled: false
-        edge-defaults:
-          # capacity of the concurrent SPSC queue between each two processors
-          queue-size: 1024
-          # network packet size limit in bytes, only applies to distributed edges
-          packet-size-limit: 16384
-          # receive window size multiplier, only applies to distributed edges
-          receive-window-multiplier: 3
-        metrics:
-          # whether metrics collection is enabled
-          enabled: true
-          # whether jmx mbean metrics collection is enabled
-          jmx-enabled: true
-          # the number of seconds the metrics will be retained on the instance
-          retention-seconds: 120
-          # the metrics collection interval in seconds
-          collection-interval-seconds: 5
-          # whether metrics should be collected for data structures. Metrics
-          # collection can have some overhead if there is a large number of data
-          # structures
-          metrics-for-data-structures: false
-      
+  yaml:
+    hazelcast:
+      network:
+        join:
+          multicast:
+            enabled: false
+          kubernetes:
+            enabled: true
+            service-name: ${serviceName}
+            namespace: ${namespace}
+            resolve-not-ready-addresses: true
+      management-center:
+        enabled: ${hazelcast.mancenter.enabled}
+        url: ${hazelcast.mancenter.url}
+    hazelcast-jet:
+      instance:
+        flow-control-period: 100
+        backup-count: 1
+        scale-up-delay-millis: 10000
+        lossless-restart-enabled: false
+      edge-defaults:
+        queue-size: 1024
+        packet-size-limit: 16384
+        receive-window-multiplier: 3
+      metrics:
+        enabled: true
+        jmx-enabled: true
+        retention-seconds: 120
+        collection-interval-seconds: 5
+        metrics-for-data-structures: false
+
+
+```
+
+Alternatively, above parameters can be modified directly via `helm` commands. For example,
+
+```bash
+$ helm install --name my-jet-release \
+  --set jet.yaml.hazelcast-jet.instance.backup-count=2,jet.yaml.hazelcast.network.kubernetes.service-name=jet-service \
+    hazelcast/hazelcast-jet
 ```
