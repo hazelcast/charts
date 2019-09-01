@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+#hazelcast or hazelcast-jet
+CHARTS=(hazelcast hazelcast-jet);
+if [[ " "${CHARTS[@]}" " == *" "$1" "* ]] ;then
+    echo "$1: chart is valid"
+else
+    echo "$1: not recognized. Valid charts are:"
+    echo "${CHARTS[@]/%/,}"
+    exit 1
+fi
+CHART_NAME=$1
+
+cp -TRv ${WORKSPACE}/hz-charts/stable/${CHART_NAME}/ ${WORKSPACE}/helm-charts/stable/${CHART_NAME}/
+
+echo "Configuring ssh-key and e-mail for git commands..."
+git config --global user.email "${GITHUB_EMAIL}"
+git config --global user.name "${GITHUB_USERNAME}"
+ssh -o StrictHostKeyChecking=no git@github.com || true
+
+pushd ${WORKSPACE}/hz-charts
+    LATEST_COMMIT_MESSAGE=$(git log --oneline --format=%B -n 1 HEAD | head -n 1)
+popd
+
+pushd ${WORKSPACE}/helm-charts
+    git status
+    git checkout -b ${BRANCH_NAME}
+    git remote add devops-helm git@github.com:devOpsHazelcast/charts.git
+    git remote -v
+    git add ./stable/${CHART_NAME} && git commit -s -m "[sync] ${LATEST_COMMIT_MESSAGE}"
+    git push -u devops-helm ${BRANCH_NAME}
+
+    echo ${GITHUB_TOKEN}
+    OFFICIAL_HELM_PR_ISSUE_NUMBER=$(hub pull-request -m "[stable/${CHART_NAME}] ${LATEST_COMMIT_MESSAGE}" -b ${HELM_REPOSITORY}:master -h devOpsHazelcast/charts:${BRANCH_NAME} | awk -F/ '{print $7}')
+    hub api repos/${HELM_REPOSITORY}/issues/${OFFICIAL_HELM_PR_ISSUE_NUMBER}/comments -f body='/ok-to-test'
+    hub api repos/${HELM_REPOSITORY}/issues/${OFFICIAL_HELM_PR_ISSUE_NUMBER}/comments -f body='/lgtm'
+
+    export GITHUB_TOKEN=${APPROVER_GITHUB_TOKEN}
+    echo ${GITHUB_TOKEN}
+    hub api repos/${HELM_REPOSITORY}/issues/${OFFICIAL_HELM_PR_ISSUE_NUMBER}/comments -f body='/lgtm'
+popd
