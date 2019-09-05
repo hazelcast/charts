@@ -26,6 +26,7 @@ pushd ${WORKSPACE}/hz-charts
 popd
 
 pushd ${WORKSPACE}/helm-charts
+    sed -i 's#:repo:.*#:repo: helm/charts#g' ./stable/${CHART_NAME}/README.adoc
     git status
     git checkout -b ${BRANCH_NAME}
     git remote add devops-helm git@github.com:devOpsHazelcast/charts.git
