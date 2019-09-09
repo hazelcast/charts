@@ -18,8 +18,20 @@ function cleanup() {
 trap cleanup EXIT ERR INT TERM
 cleanup
 
-# kubectl create serviceaccount -n kube-system tiller
-# kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+TILLER_SA="tiller"
+if kubectl get serviceaccounts -n kube-system | grep "${TILLER_SA}" | tail -n 1; then
+    echo "tiller serviceaccount is already created."
+    TILLER_BOUND_ROLE=$(kubectl get -n kube-system clusterrolebinding tiller-cluster-rule -o jsonpath='{.roleRef.name}')
+    if [ "$TILLER_BOUND_ROLE" != "cluster-admin" ]; then
+        kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:${TILLER_SA}
+        echo "cluster-admin role is bound to existing tiller serviceaccount."
+    fi
+else
+    echo "tiller serviceaccount is not found. Creating..."
+    kubectl create serviceaccount -n kube-system ${TILLER_SA}
+    kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:${TILLER_SA}
+    echo "tiller serviceaccount created and cluster-admin role is bound to it."
+fi
 
 echo "Initializing the Helm/Tiller..."
 helm init --service-account tiller --wait
