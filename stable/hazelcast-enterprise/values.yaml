@@ -264,7 +264,7 @@ mancenter:
     # port is the Kubernetes service port
     port: 8080
     # service https port
-    httpsport: 443
+    httpsPort: 443
     # service annotations for management center
     annotations: {}
 
