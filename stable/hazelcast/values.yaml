@@ -230,6 +230,10 @@ mancenter:
     type: LoadBalancer
     # port is the Kubernetes service port
     port: 8080
+    # service https port
+    httpsPort: 443
+    # service annotations for management center
+    annotations: {}
 
   # Hazelcast Management Center Liveness probe
   livenessProbe:
