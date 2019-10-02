@@ -26,9 +26,9 @@ spec:
   - protocol: TCP
     port: {{ .Values.mancenter.service.port }}
     targetPort: mancenter
-    name: mancenterhttp
+    name: http
   - protocol: TCP
     port: {{ .Values.mancenter.service.httpsPort }}
     targetPort: mancenter
-    name: mancenterhttps
+    name: https
 {{- end }}
