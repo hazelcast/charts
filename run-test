@@ -34,7 +34,7 @@ else
 fi
 
 echo "Initializing the Helm/Tiller..."
-helm init --service-account tiller --wait
+helm init --service-account tiller --wait --node-selectors pool=standard
 
 echo "Packaging local Helm charts..."
 for chart in ${WORKSPACE}/stable/*; do
