@@ -34,10 +34,5 @@ pushd ${WORKSPACE}/helm-charts
     git push -u devops-helm ${BRANCH_NAME}
 
     OFFICIAL_HELM_PR_ISSUE_NUMBER=$(hub pull-request -m "[stable/${CHART_NAME}] ${LATEST_COMMIT_MESSAGE}" -b ${HELM_REPOSITORY}:master -h devOpsHelm/charts:${BRANCH_NAME} | awk -F/ '{print $7}')
-    # hub api repos/${HELM_REPOSITORY}/issues/${OFFICIAL_HELM_PR_ISSUE_NUMBER}/comments -f body='/ok-to-test'
-    # hub api repos/${HELM_REPOSITORY}/issues/${OFFICIAL_HELM_PR_ISSUE_NUMBER}/comments -f body='/lgtm'
     hub api repos/${HELM_REPOSITORY}/issues/${OFFICIAL_HELM_PR_ISSUE_NUMBER}/comments -f body='Please approve @hasancelik @leszko @mesutcelik @googlielmo @eminn'
-
-    # export GITHUB_TOKEN=${APPROVER_GITHUB_TOKEN}
-    # hub api repos/${HELM_REPOSITORY}/issues/${OFFICIAL_HELM_PR_ISSUE_NUMBER}/comments -f body='/lgtm'
 popd
