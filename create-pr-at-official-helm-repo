@@ -3,6 +3,25 @@
 set -e
 set -o pipefail
 
+git --version 2>&1 >/dev/null
+GIT_IS_AVAILABLE=$?
+
+hub --version 2>&1 >/dev/null
+HUB_IS_AVAILABLE=$?
+
+wget --version 2>&1 >/dev/null
+WGET_IS_AVAILABLE=$?
+
+which ssh 2>&1 >/dev/null
+SSH_IS_AVAILABLE=$?
+
+if [ $GIT_IS_AVAILABLE -eq 0 ] && [ $HUB_IS_AVAILABLE -eq 0 ] && [ $WGET_IS_AVAILABLE -eq 0 ] && [ $SSH_IS_AVAILABLE -eq 0 ]; then
+    echo "All necessary tools are avaliable at current environment."
+else
+    echo "Tool(s) are missing. Check git, hub, wget and ssh installed at the environment!!"
+    exit 1
+fi
+
 #hazelcast or hazelcast-jet
 CHARTS=(hazelcast hazelcast-jet);
 if [[ " "${CHARTS[@]}" " == *" "$1" "* ]] ;then
