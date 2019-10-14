@@ -42,6 +42,14 @@ spec:
         runAsNonRoot: true
         runAsUser: {{ .Values.securityContext.runAsUser }}
         fsGroup: {{ .Values.securityContext.fsGroup }}
+      {{- if .Values.mancenter.affinity }}
+      affinity:
+{{ toYaml .Values.mancenter.affinity | indent 8 }}
+      {{- end }}
+      {{- if .Values.mancenter.tolerations }}
+      tolerations:
+{{ toYaml .Values.mancenter.tolerations | indent 8 }}
+      {{- end }}
       containers:
       - name: {{ template "mancenter.fullname" . }}
         image: "{{ .Values.mancenter.image.repository }}:{{ .Values.mancenter.image.tag }}"

@@ -66,6 +66,9 @@ affinity:
 #          - hazelcast
 #      topologyKey: kubernetes.io/hostname
 
+# tolerations specifies the way to ensure Hazelcast PODs are run only on specific nodes
+# tolerations:
+
 # nodeSelector is an array of Hazelcast Node labels for POD assignments
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
@@ -212,6 +215,12 @@ mancenter:
   licenseKey:
   # licenseKeySecretName is the name of the secret where the Hazelcast Management Center License Key is stored (can be used instead of licenseKey)
   # licenseKeySecretName:
+
+  # affinity specifies the affinity/anti-affinity of different pods
+  # affinity:
+
+  # tolerations specifies the way to ensure Management Center POD is run only on specific nodes
+  # tolerations:
 
   # nodeSelector is an array of Hazelcast Management Center Node labels for POD assignments
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
