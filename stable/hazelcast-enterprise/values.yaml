@@ -82,6 +82,9 @@ affinity:
 #          - hazelcast
 #      topologyKey: kubernetes.io/hostname
 
+# tolerations enable Hazelcast PODs to be able to run on nodes with taints
+# tolerations:
+
 # nodeSelector is an array of Hazelcast Node labels for POD assignments
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
@@ -178,13 +181,16 @@ hotRestart:
   # enabled is a flag to enabled Hot Restart feature
   enabled: false
   # existingClaim is a name of the existing Persistence Volume Claim that will be used for the Hot Restart persistence
-  # if not defined, a new Persistent Value Claim is created with the default name
+  # if not defined, a new Persistent Volume Claim is created with the default name
   # existingClaim:
   # accessModes defines the access modes for the created Persistent Volume Claim
   accessModes:
   - ReadWriteMany
   # size is the size of Persistent Volume Claim
   size: 8Gi
+  # hostPath is the path of the node machine directory that is used for persistent storage
+  # if defined, it's used instead of Persistent Volume Claim
+  # hostPath:
 
 # Allows to enable a Prometheus to scrape pods, implemented for Hazelcast version >= 3.12 (or 'latest')
 metrics:
@@ -246,6 +252,12 @@ mancenter:
   licenseKey:
   # licenseKeySecretName is the name of the secret where the Hazelcast Management Center License Key is stored (can be used instead of licenseKey)
   # licenseKeySecretName:
+
+  # affinity specifies the Management Center affinity/anti-affinity of different pods
+  # affinity:
+
+  # tolerations enable Management Center POD to be able to run on nodes with taints
+  # tolerations:
 
   # nodeSelector is an array of Hazelcast Management Center Node labels for POD assignments
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector

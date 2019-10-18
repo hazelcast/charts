@@ -1,4 +1,4 @@
-{{- if and .Values.hotRestart.enabled (not .Values.hotRestart.existingClaim) }}
+{{- if and .Values.hotRestart.enabled (not .Values.hotRestart.existingClaim) (not .Values.hotRestart.hostPath) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
