@@ -44,6 +44,11 @@ pushd ${WORKSPACE}/hz-charts
     LATEST_COMMIT_MESSAGE=$(git log --oneline --format=%B -n 1 HEAD | head -n 1)
 popd
 
+if [[ ${LATEST_COMMIT_MESSAGE} == *"[not-sync]"* ]]; then
+  echo "Latest commit message contains [not-sync] flag so aborting the job..."
+  exit 1
+fi
+
 pushd ${WORKSPACE}/helm-charts
     sed -i 's#:repo:.*#:repo: helm/charts#g' ./stable/${CHART_NAME}/README.adoc
     git checkout -b ${BRANCH_NAME}
