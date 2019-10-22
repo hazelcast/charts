@@ -81,7 +81,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /hazelcast/health/node-state
-            port: 5701
+            port: {{ .Values.containerPort }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
