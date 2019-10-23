@@ -118,8 +118,8 @@ into `+values.yaml+`) |`+{DEFAULT_HAZELCAST_YAML}+`
 |`+hostPort+` |Port under which Hazelcast PODs are exposed on the host machines
 |`+nil+`
 
-| `+containerPort+` | Number of port to expose on the Hazelcast PODs IP address. This must be a valid port number, 0 < x < 65536.
-| `+nil+`                                               |
+| `+containerPort+` |containerPort is a port number to expose on the Hazelcast PODs; this must be a valid port number, 0 < x < 65536.
+| `+5701+`                                               |
 
 |`+gracefulShutdown.enabled+` |Turn on and off Graceful Shutdown |`+true+`
 
