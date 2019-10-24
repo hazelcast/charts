@@ -92,9 +92,6 @@ nodeSelector: {}
 # hostPort is a port under which Hazelcast PODs are exposed on the host machines
 # hostPort:
 
-# Number of port to expose on the Hazelcast PODs IP address. This must be a valid port number, 0 < x < 65536.
-containerPort: 5701
-
 gracefulShutdown:
   enabled: true
   maxWaitSeconds: 600
