@@ -63,7 +63,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `affinity`                                 | Hazelcast Node affinity                                                                                        | `nil`                                                |
 | `tolerations`                              | Hazelcast Node tolerations                                                                                     | `nil`                                                |
 | `nodeSelector`                             | Hazelcast Node labels for pod assignment                                                                       | `nil`                                                |
-| `hostPort`                                 | Port under which Hazelcast PODs are exposed on the host machines                                               | `nil`                                                |                                         |
+| `hostPort`                                 | Port under which Hazelcast PODs are exposed on the host machines                                               | `nil`                                                |
 | `gracefulShutdown.enabled`                 | Turn on and off Graceful Shutdown                                                                              | `true`                                               |
 | `gracefulShutdown.maxWaitSeconds`          | Maximum time to wait for the Hazelcast POD to shut down                                                        | `600`                                                |
 | `livenessProbe.enabled`                    | Turn on and off liveness probe                                                                                 | `true`                                               |
@@ -137,7 +137,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `mancenter.ingress.enabled`                | Enable ingress for the management center                             | `false`                                     |
 | `mancenter.ingress.annotations`            | Any annotations for the ingress                                      | `{}`                                        |
 | `mancenter.ingress.hosts`                  | List of hostnames for ingress, see `values.yaml` for example         | `[]`                                        |
-| `mancenter.ingress.tls`                    | List of TLS configuration for ingress, see `values.yaml` for example | `[]`                                        |  
+| `mancenter.ingress.tls`                    | List of TLS configuration for ingress, see `values.yaml` for example | `[]`                                        |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
