@@ -63,7 +63,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /hazelcast-mancenter/health
-            port: {{ if .Values.mancenter.ssl }}8443{{ else }}8080{{ end }}
+            port: 8081
             scheme: {{ if .Values.mancenter.ssl }}HTTPS{{ else }}HTTP{{ end }}
           initialDelaySeconds: {{ .Values.mancenter.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.mancenter.livenessProbe.periodSeconds }}
@@ -75,7 +75,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /hazelcast-mancenter/health
-            port: {{ if .Values.mancenter.ssl }}8443{{ else }}8080{{ end }}
+            port: 8081
             scheme: {{ if .Values.mancenter.ssl }}HTTPS{{ else }}HTTP{{ end }}
           initialDelaySeconds: {{ .Values.mancenter.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.mancenter.readinessProbe.periodSeconds }}
@@ -108,7 +108,7 @@ spec:
           value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
         - name: JAVA_OPTS
-          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName .Values.hazelcast.licenseKey .Values.hazelcast.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
+          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName .Values.hazelcast.licenseKey .Values.hazelcast.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} {{ if or .Values.mancenter.readinessProbe.enabled .Values.mancenter.livenessProbe.enabled }}-Dhazelcast.mc.healthCheck.enable=true{{ end }} {{ .Values.mancenter.javaOpts }}"
         serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
         {{- if .Values.securityContext.enabled }}
         securityContext:
