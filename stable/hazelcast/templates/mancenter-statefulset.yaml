@@ -81,10 +81,28 @@ spec:
           successThreshold: {{ .Values.mancenter.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.mancenter.readinessProbe.failureThreshold }}
         {{- end }}
+        {{- if .Values.mancenter.adminCredentialsSecretName }}
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "./mc-conf.sh create-user -H=${MC_DATA} -n=${MC_ADMIN_USER} -p=${MC_ADMIN_PASSWORD} -r=admin"]
+        {{- end }}
         volumeMounts:
         - name: mancenter-storage
           mountPath: /data
         env:
+        {{- if .Values.mancenter.adminCredentialsSecretName }}
+        - name: MC_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mancenter.adminCredentialsSecretName }}
+              key: username
+        - name: MC_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mancenter.adminCredentialsSecretName }}
+              key: password
+        {{- end }}
         - name: MC_LICENSE_KEY
         {{- if .Values.mancenter.licenseKeySecretName }}
           valueFrom:

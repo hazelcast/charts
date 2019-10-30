@@ -112,6 +112,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `mancenter.javaOpts`                       | Additional JAVA_OPTS properties for Hazelcast Management Center                                                | `nil`                                                |
 | `mancenter.licenseKey`                     | License Key for Hazelcast Management Center, if not provided, can be filled in the web interface               | `nil`                                                |
 | `mancenter.licenseKeySecretName`           | Kubernetes Secret Name, where Management Center License Key is stored (can be used instead of licenseKey)      | `nil`                                                |
+|`+mancenter.adminCredentialsSecretName+` |Kubernetes Secret Name for admin credentials. Secret has to contain `username` and `password` literals. please check Management Center documentation for password requirements  |`+nil+`
 | `mancenter.affinity`                       | Management Center Node affinity                                                                                | `nil`                                                |
 | `mancenter.tolerations`                    | Management Center Node tolerations                                                                             | `nil`                                                |
 | `mancenter.nodeSelector`                   | Hazelcast Management Center node labels for pod assignment                                                     | `nil`                                                |
@@ -175,6 +176,20 @@ hazelcast:
             namespace: ${namespace}
             resolve-not-ready-addresses: true
         <!-- Custom Configuration Placeholder -->
+```
+
+## Management Center Credentials
+You have an option to store Management Center Credentials in Kubernetes Secret before installing 
+hazelcast helm chart. To create Management Center secret, simply run following command. 
+Please note that you need to provide Management Center compatible password.
+
+```
+$ kubectl create secret generic admincredentials --from-literal=username='admin' --from-literal=password='p@ssw0rd'
+```
+
+Then use the same secret with the parameter `mancenter.adminCredentialsSecretName` to install hazelcast-enterprise helm chart.
+```
+$ helm install --name hazelcast --set mancenter.adminCredentialsSecretName=admincredentials hazelcast/hazelcast-enterprise
 ```
 
 ## Configuring SSL
