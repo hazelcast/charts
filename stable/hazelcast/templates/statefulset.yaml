@@ -69,8 +69,8 @@ spec:
         {{- if .Values.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: /hazelcast/health/node-state
-            port: {{ if .Values.hostPort }}{{ .Values.hostPort }}{{ else }}5701{{ end }}
+            path: {{ if .Values.livenessProbe.endpoint }}{{ .Values.livenessProbe.endpoint }}{{ else }}/hazelcast/health/node-state{{ end }}
+            port: {{ if .Values.livenessProbe.port }}{{ .Values.livenessProbe.port }}{{ else if .Values.hostPort }}{{ .Values.hostPort }}{{ else }}5701{{ end }}
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -80,8 +80,8 @@ spec:
         {{- if .Values.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: /hazelcast/health/node-state
-            port: {{ if .Values.hostPort }}{{ .Values.hostPort }}{{ else }}5701{{ end }}
+            path: {{ if .Values.readinessProbe.endpoint }}{{ .Values.readinessProbe.endpoint }}{{ else }}/hazelcast/health/node-state{{ end }}
+            port: {{ if .Values.readinessProbe.port }}{{ .Values.readinessProbe.port }}{{ else if .Values.hostPort }}{{ .Values.hostPort }}{{ else }}5701{{ end }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}

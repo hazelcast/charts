@@ -110,6 +110,12 @@ livenessProbe:
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
   failureThreshold: 10
+  # url that will be called to check liveness
+  # endpoint:
+  # port that will be used in liveness probe calls
+  # port:
+  # HTTPS or HTTP scheme
+  # scheme:
 
 # Hazelcast Readiness probe
 readinessProbe:
@@ -125,6 +131,12 @@ readinessProbe:
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
   failureThreshold: 10
+  # url that will be called to check readiness
+  # endpoint:
+  # port that will be used in readiness probe calls
+  # port:
+  # HTTPS or HTTP scheme
+  # scheme:
 
 # Configure resource requests and limits
 # ref: http://kubernetes.io/docs/user-guide/compute-resources/
