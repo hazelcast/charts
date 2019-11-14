@@ -138,7 +138,7 @@ to be considered successful after having failed |`+1+`
 |`+livenessProbe.failureThreshold+` |Minimum consecutive failures for the probe
 to be considered failed after having succeeded. |`+3+`
 
-|`+livenessProbe.endpoint+` |URL path that will be called to check liveness. |`+/hazelcast/health/node-state+`
+|`+livenessProbe.path+` |URL path that will be called to check liveness. |`+/hazelcast/health/node-state+`
 
 |`+livenessProbe.port+` |Port that will be used in liveness probe calls. |`+5701+`
 
@@ -157,7 +157,7 @@ probe to be considered successful after having failed |`+1+`
 |`+readinessProbe.failureThreshold+` |Minimum consecutive failures for the probe
 to be considered failed after having succeeded. |`+3+`
 
-|`+readinessProbe.endpoint+` |URL path that will be called to check readiness. |`+/hazelcast/health/node-state+`
+|`+readinessProbe.path+` |URL path that will be called to check readiness. |`+/hazelcast/health/node-state+`
 
 |`+readinessProbe.port+` |Port that will be used in readiness probe calls. |`+5701+`
 

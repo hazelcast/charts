@@ -94,8 +94,8 @@ livenessProbe:
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
   failureThreshold: 10
-  # url that will be called to check liveness
-  # endpoint:
+  # url path that will be called to check liveness
+  # path:
   # port that will be used in liveness probe calls
   # port:
 
@@ -113,8 +113,8 @@ readinessProbe:
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
   failureThreshold: 10
-  # url that will be called to check readiness
-  # endpoint:
+  # url path that will be called to check readiness
+  # path:
   # port that will be used in readiness probe calls
   # port:
 
