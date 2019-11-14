@@ -111,11 +111,11 @@ livenessProbe:
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
   failureThreshold: 10
   # url path that will be called to check liveness
-  path: /hazelcast/health/ready
+  # path:
   # port that will be used in liveness probe calls
-  port: 5701
+  # port:
   # HTTPS or HTTP scheme
-  scheme: HTTP
+  # scheme:
 
 # Hazelcast Readiness probe
 readinessProbe:
@@ -132,11 +132,11 @@ readinessProbe:
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
   failureThreshold: 10
   # url path that will be called to check readiness
-  path: /hazelcast/health/ready
+  # path:
   # port that will be used in readiness probe calls
-  port: 5701
+  # port:
   # HTTPS or HTTP scheme
-  scheme: HTTP
+  # scheme:
 
 # Configure resource requests and limits
 # ref: http://kubernetes.io/docs/user-guide/compute-resources/
