@@ -28,8 +28,6 @@ hazelcast:
   licenseKey:
   # licenseKeySecretName is the name of the secret where the Hazelcast Enterprise License Key is stored (can be used instead of licenseKey)
   # licenseKeySecretName:
-  # rest is a flag used to enable REST endpoints for Hazelcast member
-  rest: true
   # ssl is a flag used to enable SSL for Hazelcast
   ssl: false
   # updateClusterVersionAfterRollingUpgrade is a flag used to automatically update the Hazelcast cluster version of the rolling upgrade procedure
@@ -52,6 +50,11 @@ hazelcast:
             resolve-not-ready-addresses: true
         ssl:
           enabled: ${hazelcast.ssl}
+        rest-api:
+          enabled: true
+          endpoint-groups:
+            HEALTH_CHECK:
+              enabled: true
       hot-restart-persistence:
         enabled: ${hazelcast.hotRestart}
         base-dir: /data/hot-restart

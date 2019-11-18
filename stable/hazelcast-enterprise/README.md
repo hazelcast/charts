@@ -53,7 +53,6 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `cluster.memberCount`                      | Number of Hazelcast members                                                                                    | 2                                                    |
 | `hazelcast.licenseKey`                     | Hazelcast Enterprise License Key                                                                               | `nil`                                                |
 | `hazelcast.licenseKeySecretName`           | Kubernetes Secret Name, where Hazelcast Enterprise License Key is stored (can be used instead of licenseKey)   | `nil`                                                |
-| `hazelcast.rest`                           | Enable REST endpoints for Hazelcast member                                                                     | `true`                                               |
 | `hazelcast.ssl`                            | Enable SSL for Hazelcast                                                                                       | `false`                                              |
 | `hazelcast.updateClusterVersionAfterRollingUpgrade` | Enable Hazelcast cluster auto version upgrade after the rolling upgrade procedure                              | `true`                                               |
 | `hazelcast.javaOpts`                       | Additional JAVA_OPTS properties for Hazelcast member                                                           | `nil`                                                |
@@ -149,11 +148,11 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```bash
 $ helm install --name my-release \
-  --set hazelcast.licenseKey=<license_key>,cluster.memberCount=3,hazelcast.rest=false \
+  --set hazelcast.licenseKey=<license_key>,cluster.memberCount=3 \
     hazelcast/hazelcast-enterprise
 ```
 
-The above command sets number of Hazelcast members to 3 and disables REST endpoints.
+The above command sets number of Hazelcast members to 3.
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
