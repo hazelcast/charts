@@ -95,8 +95,6 @@ their default values.
 
 |`+cluster.memberCount+` |Number of Hazelcast members |2
 
-|`+hazelcast.rest+` |Enable REST endpoints for Hazelcast member |`+true+`
-
 |`+hazelcast.javaOpts+` |Additional JAVA_OPTS properties for Hazelcast member
 |`+nil+`
 
@@ -309,7 +307,7 @@ ifeval::["{repo}"=="hazelcast/charts"]
 [source,bash]
 ----
 $ helm install --name my-release \
-  --set cluster.memberCount=3,hazelcast.rest=false \
+  --set cluster.memberCount=3 \
     hazelcast/hazelcast
 ----
 endif::[]
@@ -318,13 +316,12 @@ ifeval::["{repo}"=="helm/charts"]
 [source,bash]
 ----
 $ helm install --name my-release \
-  --set cluster.memberCount=3,hazelcast.rest=false \
+  --set cluster.memberCount=3 \
     stable/hazelcast
 ----
 endif::[]
 
-The above command sets number of Hazelcast members to 3 and disables REST
-endpoints.
+The above command sets number of Hazelcast members to 3.
 
 Alternatively, a YAML file that specifies the values for the parameters can be
 provided while installing the chart. For example,
