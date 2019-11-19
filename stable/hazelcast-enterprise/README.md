@@ -53,7 +53,6 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `cluster.memberCount`                      | Number of Hazelcast members                                                                                    | 2                                                    |
 | `hazelcast.licenseKey`                     | Hazelcast Enterprise License Key                                                                               | `nil`                                                |
 | `hazelcast.licenseKeySecretName`           | Kubernetes Secret Name, where Hazelcast Enterprise License Key is stored (can be used instead of licenseKey)   | `nil`                                                |
-| `hazelcast.rest`                           | Enable REST endpoints for Hazelcast member                                                                     | `true`                                               |
 | `hazelcast.ssl`                            | Enable SSL for Hazelcast                                                                                       | `false`                                              |
 | `hazelcast.updateClusterVersionAfterRollingUpgrade` | Enable Hazelcast cluster auto version upgrade after the rolling upgrade procedure                              | `true`                                               |
 | `hazelcast.javaOpts`                       | Additional JAVA_OPTS properties for Hazelcast member                                                           | `nil`                                                |
@@ -72,12 +71,18 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `livenessProbe.timeoutSeconds`             | When the probe times out                                                                                       | `5`                                                  |
 | `livenessProbe.successThreshold`           | Minimum consecutive successes for the probe to be considered successful after having failed                    | `1`                                                  |
 | `livenessProbe.failureThreshold`           | Minimum consecutive failures for the probe to be considered failed after having succeeded.                     | `3`                                                  |
+| `livenessProbe.path`                       | URL path that will be called to check liveness.                                                                | `/hazelcast/health/node-state`                       |
+| `livenessProbe.port`                       | Port that will be used in liveness probe calls.                                                                | `nil`                                               |
+| `livenessProbe.scheme`                     | HTTPS or HTTP scheme.                                                                                          | `HTTP`                                               |
 | `readinessProbe.enabled`                   | Turn on and off readiness probe                                                                                | `true`                                               |
 | `readinessProbe.initialDelaySeconds`       | Delay before readiness probe is initiated                                                                      | `30`                                                 |
 | `readinessProbe.periodSeconds`             | How often to perform the probe                                                                                 | `10`                                                 |
 | `readinessProbe.timeoutSeconds`            | When the probe times out                                                                                       | `1`                                                  |
 | `readinessProbe.successThreshold`          | Minimum consecutive successes for the probe to be considered successful after having failed                    | `1`                                                  |
 | `readinessProbe.failureThreshold`          | Minimum consecutive failures for the probe to be considered failed after having succeeded.                     | `3`                                                  |
+| `readinessProbe.path`                      | URL path that will be called to check readiness.                                                               | `/hazelcast/health/ready`                       |
+| `readinessProbe.port`                      | Port that will be used in readiness probe calls.                                                               | `nil`                                               |
+| `readinessProbe.scheme`                    | HTTPS or HTTP scheme.                                                                                          | `HTTP`                                               |
 | `resources.limits.cpu`                     | CPU resource limit                                                                                             | `default`                                            |
 | `resources.limits.memory`                  | Memory resource limit                                                                                          | `default`                                            |
 | `resources.requests.cpu`                   | CPU resource requests                                                                                          | `default`                                            |
@@ -143,11 +148,11 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```bash
 $ helm install --name my-release \
-  --set hazelcast.licenseKey=<license_key>,cluster.memberCount=3,hazelcast.rest=false \
+  --set hazelcast.licenseKey=<license_key>,cluster.memberCount=3 \
     hazelcast/hazelcast-enterprise
 ```
 
-The above command sets number of Hazelcast members to 3 and disables REST endpoints.
+The above command sets number of Hazelcast members to 3.
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
@@ -199,3 +204,21 @@ $ helm install --name my-release \
 ```
 
 For more information please check [Hazelcast Kubernetes SSL Code Sample](https://github.com/hazelcast/hazelcast-code-samples/tree/master/hazelcast-integration/kubernetes/samples/ssl).
+
+## Notable changes
+
+### 2.8.0
+
+Hazelcast REST Endpoints are no longer enabled by default and the parameter `hazelcast.rest` is no longer available. If you want to enable REST, please add the related `endpoint-groups` to the Hazelcast Configuration. For example:
+
+```yaml
+rest-api:
+  enabled: true
+  endpoint-groups:
+    HEALTH_CHECK:
+      enabled: true
+    CLUSTER_READ:
+      enabled: true
+    CLUSTER_WRITE:
+      enabled: true
+```
