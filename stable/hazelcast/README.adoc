@@ -367,9 +367,9 @@ hazelcast:
         <!-- Custom Configuration Placeholder -->
 ----
 
-=== Notable changes
+== Notable changes
 
-==== 2.8.0
+=== 2.8.0
 
 Hazelcast REST Endpoints are no longer enabled by default and the parameter `hazelcast.rest` is no longer available. If you want to enable REST, please add the related `endpoint-groups` to the Hazelcast Configuration. For example:
 
