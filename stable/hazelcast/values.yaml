@@ -117,7 +117,7 @@ readinessProbe:
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
   failureThreshold: 10
   # url path that will be called to check readiness
-  path: /hazelcast/health/node-state
+  path: /hazelcast/health/ready
   # port that will be used in readiness probe calls
   # port:
 
