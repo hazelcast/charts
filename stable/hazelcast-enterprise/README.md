@@ -204,3 +204,21 @@ $ helm install --name my-release \
 ```
 
 For more information please check [Hazelcast Kubernetes SSL Code Sample](https://github.com/hazelcast/hazelcast-code-samples/tree/master/hazelcast-integration/kubernetes/samples/ssl).
+
+## Notable changes
+
+### 2.8.0
+
+Hazelcast REST Endpoints are no longer enabled by default and the parameter `hazelcast.rest` is no longer available. If you want to enable REST, please add the related `endpoint-groups` to the Hazelcast Configuration. For example:
+
+```yaml
+rest-api:
+  enabled: true
+  endpoint-groups:
+    HEALTH_CHECK:
+      enabled: true
+    CLUSTER_READ:
+      enabled: true
+    CLUSTER_WRITE:
+      enabled: true
+```

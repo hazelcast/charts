@@ -366,3 +366,22 @@ hazelcast:
             resolve-not-ready-addresses: true
         <!-- Custom Configuration Placeholder -->
 ----
+
+=== Notable changes
+
+==== 2.8.0
+
+Hazelcast REST Endpoints are no longer enabled by default and the parameter `hazelcast.rest` is no longer available. If you want to enable REST, please add the related `endpoint-groups` to the Hazelcast Configuration. For example:
+
+[source,yaml]
+----
+rest-api:
+  enabled: true
+  endpoint-groups:
+    HEALTH_CHECK:
+      enabled: true
+    CLUSTER_READ:
+      enabled: true
+    CLUSTER_WRITE:
+      enabled: true
+---
