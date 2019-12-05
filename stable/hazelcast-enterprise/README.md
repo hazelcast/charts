@@ -184,6 +184,8 @@ hazelcast:
         <!-- Custom Configuration Placeholder -->
 ```
 
+Note that some of the Hazelcast Enterprise features requires setting `securityContext.readOnlyRootFilesystem` parameter to `false`. This is the case for the Hot Restart feature or enabling security with OpenSSL.
+
 ## Configuring SSL
 
 To enable SSL-protected communication between members and clients, you need first to generate `keystore`/`truststore` and import them as secrets into your Kubernetes environment.
