@@ -41,8 +41,8 @@ for chart in ${WORKSPACE}/stable/*; do
     helm package --save=false ${chart};
 done
 
-HAZELCAST_HELM_PATH=$(find ${WORKSPACE} -regex '.*hazelcast-[0-9].[0-9].[0-9].tgz?')
-JET_HELM_PATH=$(find ${WORKSPACE} -regex '.*hazelcast-jet-[0-9].[0-9].[0-9].tgz?')
+HAZELCAST_HELM_PATH=$(find ${WORKSPACE} -regex '.*hazelcast-[0-9]+.[0-9]+.[0-9]+.tgz?')
+JET_HELM_PATH=$(find ${WORKSPACE} -regex '.*hazelcast-jet-[0-9]+.[0-9]+.[0-9]+.tgz?')
 
 echo "Testing Hazelcast IMDG Chart..."
 helm install --debug --name hz-release --set nodeSelector.pool=standard,hazelcast.yaml.hazelcast.network.kubernetes.service-name=hz-helm-service,mancenter.nodeSelector.pool=standard --wait --timeout=360 ${HAZELCAST_HELM_PATH}
