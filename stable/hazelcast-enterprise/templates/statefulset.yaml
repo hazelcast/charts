@@ -125,6 +125,10 @@ spec:
         {{- end }}
         - name: JAVA_OPTS
           value: "-Dhazelcast.config=/data/hazelcast/hazelcast.yaml -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mancenter.enabled={{ .Values.mancenter.enabled }} -Dhazelcast.ssl={{ .Values.hazelcast.ssl }} -Dhazelcast.hotRestart={{ .Values.hotRestart.enabled }} -Dhazelcast.mancenter.url={{ if .Values.mancenter.ssl }}https{{ else }}http{{ end }}://{{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}/hazelcast-mancenter {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} -Dhazelcast.cluster.version.auto.upgrade.enabled={{ .Values.hazelcast.updateClusterVersionAfterRollingUpgrade }} {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.hazelcast.javaOpts }}"
+        {{- if .Values.hazelcast.loggingLevel }}
+        - name: LOGGING_LEVEL
+          value: {{ .Values.hazelcast.loggingLevel }}
+        {{- end }}
         {{- if .Values.securityContext.enabled }}
         securityContext:
           runAsNonRoot: {{ if eq (int .Values.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}

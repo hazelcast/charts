@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast image name
   repository: "hazelcast/hazelcast-enterprise"
   # tag is the Hazelcast image tag
-  tag: "3.12.4"
+  tag: "3.12.5"
   # pullPolicy is the Docker image pull policy
   # It's recommended to change this to 'Always' if the image tag is 'latest'
   # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
@@ -34,8 +34,11 @@ hazelcast:
   updateClusterVersionAfterRollingUpgrade: true
   # javaOpts are additional JAVA_OPTS properties for Hazelcast member
   javaOpts:
+  # loggingLevel is the level of Hazelcast logs (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, and FINEST)
+  # Note that changing this value requires setting securityContext.runAsUser to 0 and securityContext.readOnlyRootFilesystem to false
+  # loggingLevel:
   # existingConfigMap defines a ConfigMap which contains Hazelcast configuration file(s) that are used instead hazelcast.yaml configuration below
-  # existingConfigMap
+  # existingConfigMap:
   # yaml is the Hazelcast YAML configuration file
   yaml:
     hazelcast:
