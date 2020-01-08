@@ -198,6 +198,9 @@ Center containers |`+65534+`
 |`+securityContext.fsGroup+` |Group ID associated with the Hazelcast and
 Management Center container |`+65534+`
 
+|`+securityContext.readOnlyRootFilesystem+` | Enables readOnlyRootFilesystem in
+the Hazelcast security context |`true`
+
 |`+metrics.enabled+` |Turn on and off JMX Prometheus metrics available at
 `+/metrics+` |`+false+`
 
