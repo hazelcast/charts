@@ -110,6 +110,8 @@ YAML configurations (`+hazelcast-jet.yaml+` and `+hazelcast.yaml+` embedded into
 
 |`+jet.configurationFiles+` |Hazelcast configuration files |`+nil+`
 
+|`+affinity+` |Hazelcast Node affinity |`+nil+`
+
 |`+nodeSelector+` |Hazelcast Node labels for pod assignment |`+nil+`
 
 |`+gracefulShutdown.enabled+` |Turn on and off Graceful Shutdown |`+true+`
