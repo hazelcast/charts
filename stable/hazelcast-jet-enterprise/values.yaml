@@ -240,6 +240,10 @@ managementcenter:
     type: LoadBalancer
     # port is the Kubernetes service port
     port: 8081
+    # service https port
+    httpsPort: 443
+    # service annotations for management center
+    annotations: {}
 
   # Hazelcast Jet Management Center Liveness probe
   livenessProbe:
