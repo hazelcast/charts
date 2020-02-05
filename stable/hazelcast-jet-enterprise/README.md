@@ -58,7 +58,6 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `cluster.memberCount`                      | Number of Hazelcast Jet members                                                                                | 2                                                    |
 | `jet.licenseKey`                           | License Key for Hazelcast Jet Enterprise                                                                       | `nil`                                                |
 | `jet.licenseKeySecretName`                 | Kubernetes Secret Name, where Hazelcast Jet Enterprise Key is stored (can be used instead of licenseKey)       | `nil`                                                |
-| `jet.rest`                                 | Enable REST endpoints for Hazelcast Jet member                                                                 | `true`                                               |
 | `jet.javaOpts`                             | Additional JAVA_OPTS properties for Hazelcast Jet member                                                       | `nil`                                                |
 | `jet.yaml.hazelcast-jet` and `jet.yaml.hazelcast`  | Hazelcast Jet and IMDG YAML configurations (`hazelcast-jet.yaml` and `hazelcast.yaml` embedded into `values.yaml`) | `{DEFAULT_JET_YAML}` and `{DEFAULT_HAZELCAST_YAML}` |
 | `jet.configurationFiles`                   | Hazelcast configuration files                                                                                  | `nil`                                                |
@@ -74,12 +73,18 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `livenessProbe.timeoutSeconds`             | When the probe times out                                                                                       | `5`                                                  |
 | `livenessProbe.successThreshold`           | Minimum consecutive successes for the probe to be considered successful after having failed                    | `1`                                                  |
 | `livenessProbe.failureThreshold`           | Minimum consecutive failures for the probe to be considered failed after having succeeded.                     | `3`                                                  |
+| `livenessProbe.path`                       | URL path that will be called to check liveness.                                                                | `/hazelcast/health/node-state`                       |
+| `livenessProbe.port`                       | Port that will be used in liveness probe calls.                                                                | `nil`                                                |
+| `livenessProbe.scheme`                     | HTTPS or HTTP scheme.                                                                                          | `HTTP`                                               |
 | `readinessProbe.enabled`                   | Turn on and off readiness probe                                                                                | `true`                                               |
 | `readinessProbe.initialDelaySeconds`       | Delay before readiness probe is initiated                                                                      | `30`                                                 |
 | `readinessProbe.periodSeconds`             | How often to perform the probe                                                                                 | `10`                                                 |
 | `readinessProbe.timeoutSeconds`            | When the probe times out                                                                                       | `1`                                                  |
 | `readinessProbe.successThreshold`          | Minimum consecutive successes for the probe to be considered successful after having failed                    | `1`                                                  |
 | `readinessProbe.failureThreshold`          | Minimum consecutive failures for the probe to be considered failed after having succeeded.                     | `3`                                                  |
+| `readinessProbe.path`                      | URL path that will be called to check readiness.                                                               | `/hazelcast/health/ready`                            |
+| `readinessProbe.port`                      | Port that will be used in readiness probe calls.                                                               | `nil`                                                |
+| `readinessProbe.scheme`                    | HTTPS or HTTP scheme.                                                                                          | `HTTP`                                               |
 | `resources`                                | CPU/Memory resource requests/limits                                                                            | `nil`                                                |
 | `service.type`                             | Kubernetes service type ('ClusterIP', 'LoadBalancer', or 'NodePort')                                           | `ClusterIP`                                          |
 | `service.port`                             | Kubernetes service port                                                                                        | `5701`                                               |
@@ -185,4 +190,25 @@ Alternatively, above parameters can be modified directly via `helm` commands. Fo
 $ helm install --name my-jet-release \
   --set jet.yaml.hazelcast-jet.instance.backup-count=2,jet.yaml.hazelcast.network.kubernetes.service-name=jet-service \
     hazelcast/hazelcast-jet
+```
+
+## Notable changes
+
+### 1.3.0
+
+Hazelcast REST Endpoints are no longer enabled by default and the
+parameter `jet.rest` is no longer available. If you want to  enable
+REST, please add the related `endpoint-groups` to the Hazelcast
+Configuration (`jet.yaml.hazelcast`). For example:
+
+```yaml
+rest-api:
+  enabled: true
+  endpoint-groups:
+    HEALTH_CHECK:
+      enabled: true
+    CLUSTER_READ:
+      enabled: true
+    CLUSTER_WRITE:
+      enabled: true
 ```

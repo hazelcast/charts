@@ -24,8 +24,6 @@ cluster:
 
 # Hazelcast Jet properties
 jet:
-  # rest is a flag used to enable REST endpoints for Hazelcast Jet member
-  rest: true
   # javaOpts are additional JAVA_OPTS properties for Hazelcast Jet member
   javaOpts:
   # Jet and Hazelcast IMDG YAML configuration files
@@ -40,6 +38,11 @@ jet:
             service-name: ${serviceName}
             namespace: ${namespace}
             resolve-not-ready-addresses: true
+        rest-api:
+          enabled: true
+          endpoint-groups:
+            HEALTH_CHECK:
+              enabled: true
       management-center:
         enabled: ${hazelcast.mancenter.enabled}
         url: ${hazelcast.mancenter.url}
@@ -127,6 +130,12 @@ livenessProbe:
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
   failureThreshold: 3
+  # url path that will be called to check liveness
+  path: /hazelcast/health/node-state
+  # port that will be used in liveness probe calls
+  # port:
+  # HTTPS or HTTP scheme
+  scheme: HTTP
 
 # Hazelcast Readiness probe
 readinessProbe:
@@ -142,6 +151,12 @@ readinessProbe:
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
   failureThreshold: 3
+  # url path that will be called to check readiness
+  path: /hazelcast/health/ready
+  # port that will be used in readiness probe calls
+  # port:
+  # HTTPS or HTTP scheme
+  scheme: HTTP
 
 # Configure resource requests and limits
 # ref: http://kubernetes.io/docs/user-guide/compute-resources/
