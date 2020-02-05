@@ -84,7 +84,7 @@ jet:
 # affinity specifies the affinity/anti-affinity of different pods. The commented out
 # example below shows how you could ensure your hazelcast jet pods are scheduled on
 # different Kubernetes nodes
-affinity:
+#affinity:
 #  podAntiAffinity:
 #    requiredDuringSchedulingIgnoredDuringExecution:
 #    - labelSelector:
@@ -98,6 +98,9 @@ affinity:
 #          values:
 #          - hazelcast-jet
 #      topologyKey: kubernetes.io/hostname
+
+# tolerations enable Hazelcast Jet PODs to be able to run on nodes with taints
+#tolerations:
 
 # nodeSelector is an array of Hazelcast Node labels for POD assignments
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
@@ -221,7 +224,13 @@ managementcenter:
   # if not provided, it can be filled in the Management Center web interface
   licenseKey:
   # licenseKeySecretName is the name of the secret where the Hazelcast Jet Management Center License Key is stored (can be used instead of licenseKey)
-  # licenseKeySecretName:
+  #licenseKeySecretName:
+
+  # affinity specifies the Hazelcast Jet Management Center affinity/anti-affinity of different pods
+  #affinity:
+
+  # tolerations enable Hazelcast Jet Management Center POD to be able to run on nodes with taints
+  #tolerations:
 
   # nodeSelector is an array of Hazelcast Jet Management Center Node labels for POD assignments
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector

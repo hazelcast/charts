@@ -112,6 +112,8 @@ YAML configurations (`+hazelcast-jet.yaml+` and `+hazelcast.yaml+` embedded into
 
 |`+affinity+` |Hazelcast Node affinity |`+nil+`
 
+|`+tolerations+` |Hazelcast Node tolerations |`+nil+`
+
 |`+nodeSelector+` |Hazelcast Node labels for pod assignment |`+nil+`
 
 |`+gracefulShutdown.enabled+` |Turn on and off Graceful Shutdown |`+true+`
@@ -209,6 +211,12 @@ Center |`+nil+`
 |`+managementcenter.licenseKeySecretName+` |Kubernetes Secret Name, where Jet
 Management Center License Key is stored (can be used instead of licenseKey)
 |`+nil+`
+
+|`+managementcenter.affinity+` |Hazelcast Jet Management Center node affinity
+|`+nil+`
+
+|`+managementcenter.tolerations+` |Hazelcast Jet Management Center node
+tolerations |`+nil+`
 
 |`+managementcenter.nodeSelector+` |Hazelcast Jet Management Center node labels
 for pod assignment |`+nil+`
