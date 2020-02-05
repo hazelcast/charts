@@ -173,6 +173,9 @@ to be considered failed after having succeeded. |`+3+`
 
 |`+service.port+` |Kubernetes service port |`+5701+`
 
+|`+service.clusterIP+` | IP of the service, "None" makes the service
+headless | `+None+`
+
 |`+rbac.create+` |Enable installing RBAC Role authorization |`+true+`
 
 |`+serviceAccount.create+` |Enable installing Service Account |`+true+`
