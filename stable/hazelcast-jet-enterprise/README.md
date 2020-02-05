@@ -196,7 +196,7 @@ $ helm install --name my-jet-release \
 
 ## Notable changes
 
-### 1.3.0
+### 1.4.0
 
 Hazelcast REST Endpoints are no longer enabled by default and the
 parameter `jet.rest` is no longer available. If you want to  enable
