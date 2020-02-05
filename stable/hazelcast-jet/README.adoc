@@ -102,6 +102,10 @@ their default values.
 |`+jet.javaOpts+` |Additional JAVA_OPTS properties for Hazelcast Jet member
 |`+nil+`
 
+|`jet.loggingLevel` |Level of Hazelcast Jet logs (SEVERE, WARNING,
+INFO, CONFIG, FINE, FINER, and FINEST); note that changing this value
+requires setting `securityContext.runAsUser` to `0` |`nil`
+
 |`+jet.yaml.hazelcast-jet+` and `+jet.yaml.hazelcast+` |Hazelcast Jet and IMDG
 YAML configurations (`+hazelcast-jet.yaml+` and `+hazelcast.yaml+` embedded into
 `+values.yaml+`) |`+{DEFAULT_JET_YAML}+` and `+{DEFAULT_HAZELCAST_YAML}+`
@@ -137,12 +141,12 @@ to be considered successful after having failed |`+1+`
 |`+livenessProbe.failureThreshold+` |Minimum consecutive failures for the probe
 to be considered failed after having succeeded. |`+3+`
 
-| `livenessProbe.path` | URL path that will be called to check liveness. |
+|`livenessProbe.path` |URL path that will be called to check liveness. |
 `/hazelcast/health/node-state`
 
-| `livenessProbe.port` | Port that will be used in liveness probe calls. | `nil`
+|`livenessProbe.port` |Port that will be used in liveness probe calls. |`nil`
 
-| `livenessProbe.scheme` | HTTPS or HTTP scheme. | `HTTP`
+|`livenessProbe.scheme` |HTTPS or HTTP scheme. |`HTTP`
 
 |`+readinessProbe.enabled+` |Turn on and off readiness probe |`+true+`
 
@@ -159,12 +163,12 @@ probe to be considered successful after having failed |`+1+`
 |`+readinessProbe.failureThreshold+` |Minimum consecutive failures for the probe
 to be considered failed after having succeeded. |`+3+`
 
-| `readinessProbe.path` | URL path that will be called to check readiness. |
+|`readinessProbe.path` |URL path that will be called to check readiness. |
 `/hazelcast/health/ready`
 
-| `readinessProbe.port` | Port that will be used in readiness probe calls. | `nil`
+|`readinessProbe.port` |Port that will be used in readiness probe calls. |`nil`
 
-| `readinessProbe.scheme` | HTTPS or HTTP scheme. | `HTTP`
+|`readinessProbe.scheme` |HTTPS or HTTP scheme. |`HTTP`
 
 |`+resources+` |CPU/Memory resource requests/limits |`+nil+`
 
@@ -173,8 +177,8 @@ to be considered failed after having succeeded. |`+3+`
 
 |`+service.port+` |Kubernetes service port |`+5701+`
 
-|`+service.clusterIP+` | IP of the service, "None" makes the service
-headless | `+None+`
+|`+service.clusterIP+` |IP of the service, "None" makes the service
+headless |`+None+`
 
 |`+rbac.create+` |Enable installing RBAC Role authorization |`+true+`
 

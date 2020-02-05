@@ -26,6 +26,12 @@ cluster:
 jet:
   # javaOpts are additional JAVA_OPTS properties for Hazelcast Jet member
   javaOpts:
+
+  # loggingLevel is the level of Hazelcast logs (SEVERE, WARNING, INFO,
+  # CONFIG, FINE, FINER, and FINEST) Note that changing this value
+  # requires setting securityContext.runAsUser to 0.
+  # loggingLevel:
+
   # Jet and Hazelcast IMDG YAML configuration files
   yaml:
     hazelcast:
@@ -87,7 +93,7 @@ jet:
 # affinity specifies the affinity/anti-affinity of different pods. The commented out
 # example below shows how you could ensure your hazelcast jet pods are scheduled on
 # different Kubernetes nodes
-#affinity:
+# affinity:
 #  podAntiAffinity:
 #    requiredDuringSchedulingIgnoredDuringExecution:
 #    - labelSelector:
@@ -103,14 +109,14 @@ jet:
 #      topologyKey: kubernetes.io/hostname
 
 # tolerations enable Hazelcast Jet PODs to be able to run on nodes with taints
-#tolerations:
+# tolerations:
 
 # nodeSelector is an array of Hazelcast Node labels for POD assignments
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
 
 # hostPort is a port under which Hazelcast Jet PODs are exposed on the host machines
-#hostPort:
+# hostPort:
 
 gracefulShutdown:
   enabled: true
@@ -245,10 +251,10 @@ managementcenter:
   #licenseKeySecretName:
 
   # affinity specifies the Hazelcast Jet Management Center affinity/anti-affinity of different pods
-  #affinity:
+  # affinity:
 
   # tolerations enable Hazelcast Jet Management Center POD to be able to run on nodes with taints
-  #tolerations:
+  # tolerations:
 
   # nodeSelector is an array of Hazelcast Jet Management Center Node labels for POD assignments
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector

@@ -95,6 +95,10 @@ spec:
         {{- end }}
         - name: JAVA_OPTS
           value: "-Dhazelcast.config=/data/hazelcast-jet/hazelcast.yaml -Dhazelcast.jet.config=/data/hazelcast-jet/hazelcast-jet.yaml -DserviceName={{ template "hazelcast-jet.fullname" . }} -Dnamespace={{ .Release.Namespace }}  {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }}  {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.jet.javaOpts }}"
+        {{- if .Values.jet.loggingLevel }}
+        - name: LOGGING_LEVEL
+          value: {{ .Values.jet.loggingLevel }}
+        {{- end }}
       serviceAccountName: {{ template "hazelcast-jet.serviceAccountName" . }}
       {{- if .Values.securityContext.enabled }}
       securityContext:
