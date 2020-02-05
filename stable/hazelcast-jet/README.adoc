@@ -110,6 +110,9 @@ YAML configurations (`+hazelcast-jet.yaml+` and `+hazelcast.yaml+` embedded into
 
 |`+jet.configurationFiles+` |Hazelcast configuration files |`+nil+`
 
+|`+hostPort+` |Port under which Hazelcast Jet PODs are exposed on the host
+machines |`+nil+`
+
 |`+affinity+` |Hazelcast Node affinity |`+nil+`
 
 |`+tolerations+` |Hazelcast Node tolerations |`+nil+`
