@@ -208,16 +208,6 @@ mancenter:
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
     # pullSecrets:
     # - myRegistryKeySecretName
-  # existingClientConfigMap defines a ConfigMap which contains Hazelcast Client configuration file(s) that are used instead hazelcast-client.yaml configuration below
-  # existingClientConfigMap:
-  # yaml is the Hazelcast YAML configuration file
-  client:
-    yaml:
-      hazelcast-client:
-        network:
-          kubernetes:
-            enabled: true
-            resolve-not-ready-addresses: true
 
   # ingress configuration for mancenter
   ingress:
