@@ -95,7 +95,7 @@ spec:
           value: {{ .Values.mancenter.licenseKey }}
         {{- end }}
         - name: MC_INIT_CMD
-          value: "./mc-conf.sh cluster add -H /data -cn dev -ma {{ template "hazelcast.serviceName" . }}"
+          value: "./mc-conf.sh cluster add -H /data -cn {{ if index .Values "hazelcast" "yaml" "hazelcast" "cluster-name" }}{{ index .Values "hazelcast" "yaml" "hazelcast" "cluster-name" }}{{ else }}dev{{ end }} -ma {{ template "hazelcast.serviceName" . }}"
         - name: HAZELCAST_KUBERNETES_SERVICE_NAME
           value: {{ template "hazelcast.serviceName" . }}
         - name: JAVA_OPTS
