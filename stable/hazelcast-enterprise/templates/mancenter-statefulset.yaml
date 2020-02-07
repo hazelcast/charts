@@ -24,6 +24,10 @@ spec:
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
         role: mancenter
+      annotations:
+        productID: {{ template "mancenter.fullname" . }}
+        productName: Hazelcast Management Center
+        productVersion: {{ .Values.mancenter.image.tag }}
     spec:
       {{- if .Values.mancenter.image.pullSecrets }}
       imagePullSecrets:
