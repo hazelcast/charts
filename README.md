@@ -62,7 +62,7 @@ service/littering-pig-hazelcast-enterprise             ClusterIP      10.98.41.2
 service/littering-pig-hazelcast-enterprise-mancenter   LoadBalancer   10.104.97.143   <pending>     8080:30145/TCP   3h
 ```
 
-However, you can still reach Hazelcast Management Center with the http://MINIKUBE_IP:30145/hazelcast-mancenter for the case above. `$(minikube ip)` is the command to retrieve minikube IP address.
+However, you can still reach Hazelcast Management Center with the http://MINIKUBE_IP:30145 for the case above. `$(minikube ip)` is the command to retrieve minikube IP address.
 
 ### "cluster-admin" not found
 
