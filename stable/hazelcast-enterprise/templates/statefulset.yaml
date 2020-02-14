@@ -23,6 +23,10 @@ spec:
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
         role: hazelcast
+      annotations:
+        productID: {{ template "hazelcast.fullname" . }}
+        productName: Hazelcast Enterprise
+        productVersion: {{ .Values.image.tag }}
     spec:
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
