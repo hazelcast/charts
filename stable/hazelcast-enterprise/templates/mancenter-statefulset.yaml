@@ -62,7 +62,7 @@ spec:
         {{- if .Values.mancenter.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: /health
+            path: {{ if .Values.mancenter.contextPath }}{{ .Values.mancenter.contextPath }}{{ end }}/health
             port: 8081
             scheme: {{ if .Values.mancenter.ssl }}HTTPS{{ else }}HTTP{{ end }}
           initialDelaySeconds: {{ .Values.mancenter.livenessProbe.initialDelaySeconds }}
@@ -74,7 +74,7 @@ spec:
         {{- if .Values.mancenter.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: /health
+            path: {{ if .Values.mancenter.contextPath }}{{ .Values.mancenter.contextPath }}{{ end }}/health
             port: 8081
             scheme: {{ if .Values.mancenter.ssl }}HTTPS{{ else }}HTTP{{ end }}
           initialDelaySeconds: {{ .Values.mancenter.readinessProbe.initialDelaySeconds }}
@@ -91,6 +91,10 @@ spec:
           mountPath: /secrets
         {{- end }}
         env:
+        {{- if .Values.mancenter.contextPath }}
+        - name: MC_CONTEXT_PATH
+          value: {{ .Values.mancenter.contextPath }}
+        {{- end }}
         - name: MC_LICENSE_KEY
         {{- if .Values.mancenter.licenseKeySecretName }}
           valueFrom:
