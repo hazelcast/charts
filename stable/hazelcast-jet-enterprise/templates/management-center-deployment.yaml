@@ -40,6 +40,7 @@ spec:
       securityContext:
         runAsUser: {{ .Values.securityContext.runAsUser }}
         fsGroup: {{ .Values.securityContext.fsGroup }}
+        runAsGroup: {{ .Values.securityContext.runAsGroup }}
       {{- end }}
       containers:
       - name: {{ template "hazelcast-jet-management-center.fullname" . }}

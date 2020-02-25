@@ -19,6 +19,7 @@ spec:
   securityContext:
     runAsNonRoot: true
     runAsUser: 1001
+    runAsGroup: 1001
   containers:
   - name: "{{ template "mancenter.fullname" . }}-test"
     image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -34,6 +35,7 @@ spec:
     securityContext:
       runAsNonRoot: true
       runAsUser: 1001
+      runAsGroup: 1001
       privileged: false
       readOnlyRootFilesystem: true
       allowPrivilegeEscalation: false
