@@ -218,6 +218,7 @@ metrics:
     annotations:
       prometheus.io/scrape: "true"
       prometheus.io/path: "/metrics"
+      prometheus.io/port: "8080"
 
 # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
 # secretsMountName:
