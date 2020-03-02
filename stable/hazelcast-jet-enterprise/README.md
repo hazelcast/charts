@@ -58,10 +58,13 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `cluster.memberCount`                      | Number of Hazelcast Jet members                                                                                | 2                                                    |
 | `jet.licenseKey`                           | License Key for Hazelcast Jet Enterprise                                                                       | `nil`                                                |
 | `jet.licenseKeySecretName`                 | Kubernetes Secret Name, where Hazelcast Jet Enterprise Key is stored (can be used instead of licenseKey)       | `nil`                                                |
-| `jet.rest`                                 | Enable REST endpoints for Hazelcast Jet member                                                                 | `true`                                               |
 | `jet.javaOpts`                             | Additional JAVA_OPTS properties for Hazelcast Jet member                                                       | `nil`                                                |
-| `jet.yaml.hazelcast-jet` and `jet.yaml.hazelcast`                   | Hazelcast Jet and IMDG YAML configurations (`hazelcast-jet.yaml` and `hazelcast.yaml` embedded into `values.yaml`)                                                                                | `{DEFAULT_JET_YAML}` and `{DEFAULT_HAZELCAST_YAML}`                  |
-| `jet.configurationFiles`                   | Hazelcast configuration files                                                                                  | `nil`                           |
+| `jet.loggingLevel`                         | Level of Hazelcast Jet logs (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, and FINEST); note that changing this value requires setting `securityContext.runAsUser` to `0` | `nil` |
+| `jet.yaml.hazelcast-jet` and `jet.yaml.hazelcast`  | Hazelcast Jet and IMDG YAML configurations (`hazelcast-jet.yaml` and `hazelcast.yaml` embedded into `values.yaml`) | `{DEFAULT_JET_YAML}` and `{DEFAULT_HAZELCAST_YAML}` |
+| `jet.configurationFiles`                   | Hazelcast configuration files                                                                                  | `nil`                                                |
+| `hostPort`                                 | Port under which Hazelcast Jet PODs are exposed on the host machines                                           | `nil`                                                |
+| `affinity`                                 | Hazelcast Node affinity                                                                                        | `nil`                                                |
+| `tolerations`                              | Hazelcast Node tolerations                                                                                     | `nil`                                                |
 | `nodeSelector`                             | Hazelcast Node labels for pod assignment                                                                       | `nil`                                                |
 | `gracefulShutdown.enabled`                 | Turn on and off Graceful Shutdown                                                                              | `true`                                               |
 | `gracefulShutdown.maxWaitSeconds`          | Maximum time to wait for the Hazelcast Jet POD to shut down                                                    | `600`                                                |
@@ -71,14 +74,21 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `livenessProbe.timeoutSeconds`             | When the probe times out                                                                                       | `5`                                                  |
 | `livenessProbe.successThreshold`           | Minimum consecutive successes for the probe to be considered successful after having failed                    | `1`                                                  |
 | `livenessProbe.failureThreshold`           | Minimum consecutive failures for the probe to be considered failed after having succeeded.                     | `3`                                                  |
+| `livenessProbe.path`                       | URL path that will be called to check liveness.                                                                | `/hazelcast/health/node-state`                       |
+| `livenessProbe.port`                       | Port that will be used in liveness probe calls.                                                                | `nil`                                                |
+| `livenessProbe.scheme`                     | HTTPS or HTTP scheme.                                                                                          | `HTTP`                                               |
 | `readinessProbe.enabled`                   | Turn on and off readiness probe                                                                                | `true`                                               |
 | `readinessProbe.initialDelaySeconds`       | Delay before readiness probe is initiated                                                                      | `30`                                                 |
 | `readinessProbe.periodSeconds`             | How often to perform the probe                                                                                 | `10`                                                 |
 | `readinessProbe.timeoutSeconds`            | When the probe times out                                                                                       | `1`                                                  |
 | `readinessProbe.successThreshold`          | Minimum consecutive successes for the probe to be considered successful after having failed                    | `1`                                                  |
 | `readinessProbe.failureThreshold`          | Minimum consecutive failures for the probe to be considered failed after having succeeded.                     | `3`                                                  |
+| `readinessProbe.path`                      | URL path that will be called to check readiness.                                                               | `/hazelcast/health/ready`                            |
+| `readinessProbe.port`                      | Port that will be used in readiness probe calls.                                                               | `nil`                                                |
+| `readinessProbe.scheme`                    | HTTPS or HTTP scheme.                                                                                          | `HTTP`                                               |
 | `resources`                                | CPU/Memory resource requests/limits                                                                            | `nil`                                                |
 | `service.type`                             | Kubernetes service type ('ClusterIP', 'LoadBalancer', or 'NodePort')                                           | `ClusterIP`                                          |
+|`+service.clusterIP+`                       | IP of the service, "None" makes the service headless                                                           | `+None+`                                             |
 | `service.port`                             | Kubernetes service port                                                                                        | `5701`                                               |
 | `rbac.create`                              | Enable installing RBAC Role authorization                                                                      | `true`                                               |
 | `serviceAccount.create`                    | Enable installing Service Account                                                                              | `true`                                               |
@@ -92,13 +102,15 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `metrics.service.port`                     | Port of the `/metrics` endpoint and the metrics service                                                        | `8080`                                               |
 | `metrics.service.annotations`              | Annotations for the Prometheus discovery                                                                       |                                                      |
 | `managementcenter.enabled`                        | Turn on and off Hazelcast Jet Management Center application                                             | `true`                                               |
-| `managementcenter.image.repository`               | Hazelcast Jet Management Center Image name                                                              | `hazelcast/hazelcast-jet-management-center`                        |
-| `managementcenter.image.tag`                      | Hazelcast Jet Management Center Image tag (NOTE: must be the same or one minor release greater than Hazelcast image version) | `{VERSION}`                                  |
+| `managementcenter.image.repository`               | Hazelcast Jet Management Center Image name                                                              | `hazelcast/hazelcast-jet-management-center`                 |
+| `managementcenter.image.tag`                      | Hazelcast Jet Management Center Image tag (NOTE: must be the same or one minor release greater than Hazelcast image version) | `{VERSION}`                            |
 | `managementcenter.image.pullPolicy`               | Image pull policy                                                                                              | `IfNotPresent`                                       |
 | `managementcenter.image.pullSecrets`              | Specify docker-registry secret names as an array                                                               | `nil`                                                |
 | `managementcenter.javaOpts`                       | Additional JAVA_OPTS properties for Hazelcast Jet Management Center                                            | `nil`                                                |
 | `managementcenter.licenseKey`                     | License Key for Hazelcast Jet Management Center                                                                | `nil`                                                |
 | `managementcenter.licenseKeySecretName`           | Kubernetes Secret Name, where Jet Management Center License Key is stored (can be used instead of licenseKey)  | `nil`                                                |
+| `managementcenter.affinity`                       | Hazelcast Jet Management Center node affinity                                                                  | `nil`                                                |
+| `managementcenter.tolerations`                    | Hazelcast Jet Management Center node tolerations                                                               | `nil`                                                |
 | `managementcenter.nodeSelector`                   | Hazelcast Jet Management Center node labels for pod assignment                                                 | `nil`                                                |
 | `managementcenter.resources`                      | CPU/Memory resource requests/limits                                                                            | `nil`                                                |
 | `managementcenter.service.type`                   | Kubernetes service type ('ClusterIP', 'LoadBalancer', or 'NodePort')                                           | `ClusterIP`                                          |
@@ -180,4 +192,25 @@ Alternatively, above parameters can be modified directly via `helm` commands. Fo
 $ helm install --name my-jet-release \
   --set jet.yaml.hazelcast-jet.instance.backup-count=2,jet.yaml.hazelcast.network.kubernetes.service-name=jet-service \
     hazelcast/hazelcast-jet
+```
+
+## Notable changes
+
+### 1.4.0
+
+Hazelcast REST Endpoints are no longer enabled by default and the
+parameter `jet.rest` is no longer available. If you want to  enable
+REST, please add the related `endpoint-groups` to the Hazelcast
+Configuration (`jet.yaml.hazelcast`). For example:
+
+```yaml
+rest-api:
+  enabled: true
+  endpoint-groups:
+    HEALTH_CHECK:
+      enabled: true
+    CLUSTER_READ:
+      enabled: true
+    CLUSTER_WRITE:
+      enabled: true
 ```
