@@ -1,17 +1,15 @@
-# Hazelcast Enterprise Helm Charts
+# Hazelcast Helm Charts
 
-This is a repository for Hazelcast Enterprise Helm Charts. For more information about installing and using Helm, see its
+This is a repository for Hazelcast Helm Charts. For more information about installing and using Helm, see its
 [README.md](https://github.com/kubernetes/helm/tree/master/README.md). To get a quick introduction to Charts see this [chart document](https://github.com/kubernetes/helm/blob/master/docs/charts.md).
 
 Note that the structure and style of this repository and the Helm Charts themselves is similar to the [Official Helm Chart repository](https://github.com/helm/charts).
-
-The Helm Chart for Hazelcast Open Source in the the official [Helm Repository](https://github.com/helm/charts/tree/master/stable/hazelcast).  
 
 We also have specific instructions for [IBM Cloud](IBM_Cloud.md).
 
 ## Quick Start
 
-Add the Hazelcast Enterprise repository:
+Add the Hazelcast repository:
 
     $ helm repo add hazelcast https://hazelcast.github.io/charts/
     $ helm repo update
@@ -22,32 +20,20 @@ Then, you can install the charts by:
     
 The available list of charts can be found in the [stable](stable) directory.
 
-Please note that if `hazelcast-enterprise` chart is used, hazelcast enterprise license key must be passed to the helm chart as below. You can contact sales@hazelcast.com for a trial license key.
+Please note that if `hazelcast-enterprise` or `hazelcast-jet-enterprise` chart is used, hazelcast enterprise license key must be passed to the helm chart as below. You can contact sales@hazelcast.com for a trial license key.
 
 ```
 helm install --set hazelcast.licenseKey=$HAZELCAST_ENTERPRISE_LICENSE_KEY hazelcast/hazelcast-enterprise
 ```
 
-## Helm & Tiller
+## Helm
 
 If you don't have `helm` in your system, you can download and install it from [helm github project page](https://github.com/helm/helm#install).
-
-Once you install helm command line tool, you need a Tiller service running in your kubernetes cluster. Installing Tiller as simple as executing `init` command. 
-
-```
-$ helm init
-```
-
-Verify that Tiller Version is returned.
-
-```
-$ helm version --server
-```
 
 
 ## Troubleshooting in Kubernetes Environments
 
-If you have Helm and Tiller is installed in your system. You can start deploying Hazelcast Helm Charts to your kubernetes cluster. This is the list of some common problems you might face while deploying Hazelcast.
+If you have Helm installed in your system, you can start deploying Hazelcast Helm Charts to your kubernetes cluster. This is the list of some common problems you might face while deploying Hazelcast.
 
 ### Why is Management Center EXTERNAL-IP not assigned?
 
