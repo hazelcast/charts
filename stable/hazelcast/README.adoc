@@ -247,7 +247,7 @@ Center License Key is stored (can be used instead of licenseKey) |`+nil+`
 
 |`+mancenter.existingConfigMap+` |ConfigMap which contains Hazelcast Client configuration file(s) that are used instead hazelcast-client.yaml embedded into values.yaml |`+{DEFAULT_HAZELCAST_CLIENT_YAML}+`
 
-|`+mancenter.yaml+` |Hazelcast Client YAML Configuration (`hazelcast-client.yaml` used to connect to Hazelcast cluster |`+nil+`                          |
+|`+mancenter.yaml+` |Hazelcast Client YAML Configuration (`hazelcast-client.yaml` used to connect to Hazelcast cluster |`+nil+`
 
 |`+mancenter.affinity+` |Management Center Node affinity |`+nil+`
 
