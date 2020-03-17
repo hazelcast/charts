@@ -35,7 +35,7 @@ hazelcast:
   # loggingLevel is the level of Hazelcast logs (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, and FINEST)
   # Note that changing this value requires setting securityContext.runAsUser to 0 and securityContext.readOnlyRootFilesystem to false
   # loggingLevel:
-  # existingConfigMap defines a ConfigMap which contains Hazelcast configuration file(s) that are used instead hazelcast.yaml configuration below
+  # existingConfigMap defines a ConfigMap which contains Hazelcast configuration file(s) that are used instead of hazelcast.yaml configuration below
   # existingConfigMap:
   # yaml is the Hazelcast YAML configuration file
   yaml:
@@ -271,7 +271,7 @@ mancenter:
   # licenseKeySecretName is the name of the secret where the Hazelcast Management Center License Key is stored (can be used instead of licenseKey)
   # licenseKeySecretName:
 
-  # existingConfigMap defines a ConfigMap which contains Hazelcast Client configuration file(s) that are used instead hazelcast-client.yaml configuration below
+  # existingConfigMap defines a ConfigMap which contains Hazelcast Client configuration file(s) that are used instead of hazelcast-client.yaml configuration below
   # existingConfigMap:
   # yaml is the Hazelcast Client YAML configuration file
   yaml:
