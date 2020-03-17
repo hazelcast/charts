@@ -222,10 +222,14 @@ $ helm install --name my-release \
 Additionally, if you need Mutual Authentication for Management Center, you can add the following parameters to `mancenter.javaOpts`.
 
 ```
--Dhazelcast.mc.tls.trustStore=path to your truststore -Dhazelcast.mc.tls.trustStorePassword=password for your truststore -Dhazelcast.mc.tls.mutualAuthentication=REQUIRED
+-Dhazelcast.mc.tls.trustStore=/secrets/truststore -Dhazelcast.mc.tls.trustStorePassword=<truststore_password> -Dhazelcast.mc.tls.mutualAuthentication=REQUIRED
 ```
 
-For more information please check [Hazelcast Kubernetes SSL Code Sample](https://github.com/hazelcast/hazelcast-code-samples/tree/master/hazelcast-integration/kubernetes/samples/ssl).
+For more information on Hazelcast Security check the following resources:
+
+* [Hazelcast Reference Manual - Security](https://docs.hazelcast.org/docs/latest/manual/html-single/#security)
+* [Management Center Reference Manual - Security](https://docs.hazelcast.org/docs/management-center/latest/manual/html/index.html#configuring-and-enabling-security)
+* [Hazelcast Code Sample - Hazelcast with SSL on Kubernetes](https://github.com/hazelcast/hazelcast-code-samples/tree/master/hazelcast-integration/kubernetes/samples/ssl)
 
 ## Notable changes
 
