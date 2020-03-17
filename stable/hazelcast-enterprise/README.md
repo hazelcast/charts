@@ -150,6 +150,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `mancenter.ingress.annotations`            | Any annotations for the ingress                                      | `{}`                                        |
 | `mancenter.ingress.hosts`                  | List of hostnames for ingress, see `values.yaml` for example         | `[]`                                        |
 | `mancenter.ingress.tls`                    | List of TLS configuration for ingress, see `values.yaml` for example | `[]`                                        |
+| `mancenter.secretsMountName`               | Secret name that is mounted as '/secrets/' (e.g. with keystore/trustore files)                            | `nil`                                                |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
