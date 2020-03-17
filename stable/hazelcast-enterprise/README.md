@@ -194,10 +194,15 @@ Note that some of the Hazelcast Enterprise features requires setting `securityCo
 
 ## Configuring SSL
 
-To enable SSL-protected communication between members and clients, you need first to generate `keystore`/`truststore` and import them as secrets into your Kubernetes environment.
+By default the communication is not secured. To enable SSL-protected communication between members and clients, you need first to provide the keys and certificates as a secret.
+
+For example, if you use keystore/truststore, then you can import them with the following Kubernetes command.
+
 ```
 $ kubectl create secret generic keystore --from-file=./keystore --from-file=./truststore
 ```
+
+Instead of manually creating keystore/truststore, you can use cert-manager to automatically create a secret with related keys (note that dynamic keys update is supported only while using `OpenSSL`, check more [here](https://docs.hazelcast.org/docs/latest/manual/html-single/#integrating-openssl-boringssl)).
 
 Then, run your cluster with SSL enabled and keystore secrets mounted into your PODs.
 ```
