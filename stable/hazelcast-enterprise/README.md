@@ -208,14 +208,22 @@ $ helm install --name my-release \
   --set hazelcast.yaml.hazelcast.network.ssl.properties.trustStorePassword=<truststore_password> \
   --set livenessProbe.scheme=HTTPS \
   --set readinessProbe.scheme=HTTPS \
-  --set mancenter.ssl=true \
   --set mancenter.secretsMountName=keystore \
   --set mancenter.yaml.hazelcast-client.network.ssl.enabled=true \
   --set mancenter.yaml.hazelcast-client.network.ssl.properties.keyStore=/secrets/keystore \
   --set mancenter.yaml.hazelcast-client.network.ssl.properties.keyStorePassword=<keystore_password> \
   --set mancenter.yaml.hazelcast-client.network.ssl.properties.trustStore=/secrets/truststore \
   --set mancenter.yaml.hazelcast-client.network.ssl.properties.trustStorePassword=<truststore_password> \
+  --set mancenter.ssl=true \
+  --set mancenter.javaOpts='-Dhazelcast.mc.tls.keyStore=/secrets/keystore -Dhazelcast.mc.tls.keyStorePassword=<keystore_password>' \
+  --set mancenter.service.httpsPort=8443 \
     hazelcast/hazelcast-enterprise
+```
+
+Additionally, if you need Mutual Authentication for Management Center, you can add the following parameters to `mancenter.javaOpts`.
+
+```
+-Dhazelcast.mc.tls.trustStore=path to your truststore -Dhazelcast.mc.tls.trustStorePassword=password for your truststore -Dhazelcast.mc.tls.mutualAuthentication=REQUIRED
 ```
 
 For more information please check [Hazelcast Kubernetes SSL Code Sample](https://github.com/hazelcast/hazelcast-code-samples/tree/master/hazelcast-integration/kubernetes/samples/ssl).
