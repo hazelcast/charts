@@ -200,13 +200,21 @@ Then, run your cluster with SSL enabled and keystore secrets mounted into your P
 ```
 $ helm install --name my-release \
   --set hazelcast.licenseKey=<license_key> \
-  --set hazelcast.ssl=true \
   --set secretsMountName=keystore \
-  --set hazelcast.javaOpts='-Djavax.net.ssl.keyStore=/data/secrets/keystore -Djavax.net.ssl.keyStorePassword=<keystore_password> -Djavax.net.ssl.trustStore=/data/secrets/truststore -Djavax.net.ssl.trustStorePassword=<truststore_password>' \
+  --set hazelcast.yaml.hazelcast.network.ssl.enabled=true \
+  --set hazelcast.yaml.hazelcast.network.ssl.properties.keyStore=/data/secrets/keystore \
+  --set hazelcast.yaml.hazelcast.network.ssl.properties.keyStorePassword=<keystore_password> \
+  --set hazelcast.yaml.hazelcast.network.ssl.properties.trustStore=/data/secrets/truststore \
+  --set hazelcast.yaml.hazelcast.network.ssl.properties.trustStorePassword=<truststore_password> \
+  --set livenessProbe.scheme=HTTPS \
+  --set readinessProbe.scheme=HTTPS \
   --set mancenter.ssl=true \
   --set mancenter.secretsMountName=keystore \
-  --set mancenter.javaOpts='-Dhazelcast.mc.tls.keyStore=/secrets/keystore -Dhazelcast.mc.tls.keyStorePassword=<keystore_password> -Dhazelcast.mc.tls.trustStore=/secrets/truststore -Dhazelcast.mc.tls.trustStorePassword=<truststore_password>' \
-  --set mancenter.service.port=8443 \
+  --set mancenter.yaml.hazelcast-client.network.ssl.enabled=true \
+  --set mancenter.yaml.hazelcast-client.network.ssl.properties.keyStore=/secrets/keystore \
+  --set mancenter.yaml.hazelcast-client.network.ssl.properties.keyStorePassword=<keystore_password> \
+  --set mancenter.yaml.hazelcast-client.network.ssl.properties.trustStore=/secrets/truststore \
+  --set mancenter.yaml.hazelcast-client.network.ssl.properties.trustStorePassword=<truststore_password> \
     hazelcast/hazelcast-enterprise
 ```
 
