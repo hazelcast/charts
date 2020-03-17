@@ -53,7 +53,6 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `cluster.memberCount`                      | Number of Hazelcast members                                                                                    | 2                                                    |
 | `hazelcast.licenseKey`                     | Hazelcast Enterprise License Key                                                                               | `nil`                                                |
 | `hazelcast.licenseKeySecretName`           | Kubernetes Secret Name, where Hazelcast Enterprise License Key is stored (can be used instead of licenseKey)   | `nil`                                                |
-| `hazelcast.ssl`                            | Enable SSL for Hazelcast                                                                                       | `false`                                              |
 | `hazelcast.updateClusterVersionAfterRollingUpgrade` | Enable Hazelcast cluster auto version upgrade after the rolling upgrade procedure                              | `true`                                               |
 | `hazelcast.javaOpts`                       | Additional JAVA_OPTS properties for Hazelcast member                                                           | `nil`                                                |
 | `hazelcast.loggingLevel`                   |Level of Hazelcast logs (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, and FINEST); note that changing this value requires setting `securityContext.runAsUser` to `0` and `securityContext.readOnlyRootFilesystem` to `false` | `nil` |
@@ -229,6 +228,10 @@ Additionally, if you need Mutual Authentication for Management Center, you can a
 For more information please check [Hazelcast Kubernetes SSL Code Sample](https://github.com/hazelcast/hazelcast-code-samples/tree/master/hazelcast-integration/kubernetes/samples/ssl).
 
 ## Notable changes
+
+### 3.1.0
+
+Parameter `hazelcast.ssl` is no longer available. To encrypt the communication in Hazelcast member, please use `hazelcast.yaml.hazelcast.network.ssl.enabled`.
 
 ### 2.8.0
 
