@@ -53,11 +53,10 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `cluster.memberCount`                      | Number of Hazelcast members                                                                                    | 2                                                    |
 | `hazelcast.licenseKey`                     | Hazelcast Enterprise License Key                                                                               | `nil`                                                |
 | `hazelcast.licenseKeySecretName`           | Kubernetes Secret Name, where Hazelcast Enterprise License Key is stored (can be used instead of licenseKey)   | `nil`                                                |
-| `hazelcast.ssl`                            | Enable SSL for Hazelcast                                                                                       | `false`                                              |
 | `hazelcast.updateClusterVersionAfterRollingUpgrade` | Enable Hazelcast cluster auto version upgrade after the rolling upgrade procedure                              | `true`                                               |
 | `hazelcast.javaOpts`                       | Additional JAVA_OPTS properties for Hazelcast member                                                           | `nil`                                                |
 | `hazelcast.loggingLevel`                   |Level of Hazelcast logs (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, and FINEST); note that changing this value requires setting `securityContext.runAsUser` to `0` and `securityContext.readOnlyRootFilesystem` to `false` | `nil` |
-| `hazelcast.existingConfigMap`              | ConfigMap which contains Hazelcast configuration file(s) that are used instead hazelcast.yaml embedded into values.yaml | `nil`                                                |
+| `hazelcast.existingConfigMap`              | ConfigMap which contains Hazelcast configuration file(s) that are used instead of hazelcast.yaml file embedded into values.yaml | `nil`                                                |
 | `hazelcast.yaml`                           | Hazelcast YAML Configuration (`hazelcast.yaml` embedded into `values.yaml`)                                    | `{DEFAULT_HAZELCAST_YAML}`                           |
 | `hazelcast.configurationFiles`             | Hazelcast configuration files                                                                                  | `nil`                                                |
 | `affinity`                                 | Hazelcast Node affinity                                                                                        | `nil`                                                |
@@ -122,6 +121,8 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `mancenter.javaOpts`                       | Additional JAVA_OPTS properties for Hazelcast Management Center                                                | `nil`                                                |
 | `mancenter.licenseKey`                     | License Key for Hazelcast Management Center, if not provided, can be filled in the web interface               | `nil`                                                |
 | `mancenter.licenseKeySecretName`           | Kubernetes Secret Name, where Management Center License Key is stored (can be used instead of licenseKey)      | `nil`                                                |
+| `mancenter.existingConfigMap`              | ConfigMap which contains Hazelcast Client configuration file(s) that are used instead of hazelcast-client.yaml file embedded into values.yaml | `nil`                                                |
+| `mancenter.yaml`                           | Hazelcast Client YAML Configuration (`hazelcast-client.yaml` used to connect to Hazelcast cluster              | `{DEFAULT_HAZELCAST_CLIENT_YAML}`                           |
 | `mancenter.affinity`                       | Management Center Node affinity                                                                                | `nil`                                                |
 | `mancenter.tolerations`                    | Management Center Node tolerations                                                                             | `nil`                                                |
 | `mancenter.nodeSelector`                   | Hazelcast Management Center node labels for pod assignment                                                     | `nil`                                                |
@@ -132,6 +133,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `mancenter.persistence.size`               | Size of the new Persistent Volume Claim                                                                        | `8Gi`                                                |
 | `mancenter.service.type`                   | Kubernetes service type ('ClusterIP', 'LoadBalancer', or 'NodePort')                                           | `LoadBalancer`                                       |
 | `mancenter.service.port`                   | Kubernetes service port                                                                                        | `5701`                                               |
+| `mancenter.service.httpsPort`              | Kubernetes service HTTPS port                                                                                        | `5701`                                               |
 | `mancenter.livenessProbe.enabled`          | Turn on and off liveness probe                                                                                 | `true`                                               |
 | `mancenter.livenessProbe.initialDelaySeconds` | Delay before liveness probe is initiated                                                                    | `30`                                                 |
 | `mancenter.livenessProbe.periodSeconds`    | How often to perform the probe                                                                                 | `10`                                                 |
@@ -148,6 +150,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | `mancenter.ingress.annotations`            | Any annotations for the ingress                                      | `{}`                                        |
 | `mancenter.ingress.hosts`                  | List of hostnames for ingress, see `values.yaml` for example         | `[]`                                        |
 | `mancenter.ingress.tls`                    | List of TLS configuration for ingress, see `values.yaml` for example | `[]`                                        |
+| `mancenter.secretsMountName`               | Secret name that is mounted as '/secrets/' (e.g. with keystore/trustore files)                            | `nil`                                                |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
@@ -191,28 +194,57 @@ Note that some of the Hazelcast Enterprise features requires setting `securityCo
 
 ## Configuring SSL
 
-To enable SSL-protected communication between members and clients, you need first to generate `keystore`/`truststore` and import them as secrets into your Kubernetes environment.
+By default the communication is not secured. To enable SSL-protected communication between members and clients, you need first to provide the keys and certificates as a secret.
+
+For example, if you use keystore/truststore, then you can import them with the following Kubernetes command.
+
 ```
 $ kubectl create secret generic keystore --from-file=./keystore --from-file=./truststore
 ```
+
+Instead of manually creating keystore/truststore, you can use cert-manager to automatically create a secret with related keys (note that dynamic keys update is supported only while using `OpenSSL`, check more [here](https://docs.hazelcast.org/docs/latest/manual/html-single/#integrating-openssl-boringssl)).
 
 Then, run your cluster with SSL enabled and keystore secrets mounted into your PODs.
 ```
 $ helm install --name my-release \
   --set hazelcast.licenseKey=<license_key> \
-  --set hazelcast.ssl=true \
   --set secretsMountName=keystore \
-  --set hazelcast.javaOpts='-Djavax.net.ssl.keyStore=/data/secrets/keystore -Djavax.net.ssl.keyStorePassword=<keystore_password> -Djavax.net.ssl.trustStore=/data/secrets/truststore -Djavax.net.ssl.trustStorePassword=<truststore_password>' \
-  --set mancenter.ssl=true \
+  --set hazelcast.yaml.hazelcast.network.ssl.enabled=true \
+  --set hazelcast.yaml.hazelcast.network.ssl.properties.keyStore=/data/secrets/keystore \
+  --set hazelcast.yaml.hazelcast.network.ssl.properties.keyStorePassword=<keystore_password> \
+  --set hazelcast.yaml.hazelcast.network.ssl.properties.trustStore=/data/secrets/truststore \
+  --set hazelcast.yaml.hazelcast.network.ssl.properties.trustStorePassword=<truststore_password> \
+  --set livenessProbe.scheme=HTTPS \
+  --set readinessProbe.scheme=HTTPS \
   --set mancenter.secretsMountName=keystore \
-  --set mancenter.javaOpts='-Dhazelcast.mc.tls.keyStore=/secrets/keystore -Dhazelcast.mc.tls.keyStorePassword=<keystore_password> -Dhazelcast.mc.tls.trustStore=/secrets/truststore -Dhazelcast.mc.tls.trustStorePassword=<truststore_password>' \
-  --set mancenter.service.port=8443 \
+  --set mancenter.yaml.hazelcast-client.network.ssl.enabled=true \
+  --set mancenter.yaml.hazelcast-client.network.ssl.properties.keyStore=/secrets/keystore \
+  --set mancenter.yaml.hazelcast-client.network.ssl.properties.keyStorePassword=<keystore_password> \
+  --set mancenter.yaml.hazelcast-client.network.ssl.properties.trustStore=/secrets/truststore \
+  --set mancenter.yaml.hazelcast-client.network.ssl.properties.trustStorePassword=<truststore_password> \
+  --set mancenter.ssl=true \
+  --set mancenter.javaOpts='-Dhazelcast.mc.tls.keyStore=/secrets/keystore -Dhazelcast.mc.tls.keyStorePassword=<keystore_password>' \
+  --set mancenter.service.httpsPort=8443 \
     hazelcast/hazelcast-enterprise
 ```
 
-For more information please check [Hazelcast Kubernetes SSL Code Sample](https://github.com/hazelcast/hazelcast-code-samples/tree/master/hazelcast-integration/kubernetes/samples/ssl).
+Additionally, if you need Mutual Authentication for Management Center, you can add the following parameters to `mancenter.javaOpts`.
+
+```
+-Dhazelcast.mc.tls.trustStore=/secrets/truststore -Dhazelcast.mc.tls.trustStorePassword=<truststore_password> -Dhazelcast.mc.tls.mutualAuthentication=REQUIRED
+```
+
+For more information on Hazelcast Security check the following resources:
+
+* [Hazelcast Reference Manual - Security](https://docs.hazelcast.org/docs/latest/manual/html-single/#security)
+* [Management Center Reference Manual - Security](https://docs.hazelcast.org/docs/management-center/latest/manual/html/index.html#configuring-and-enabling-security)
+* [Hazelcast Code Sample - Hazelcast with SSL on Kubernetes](https://github.com/hazelcast/hazelcast-code-samples/tree/master/hazelcast-integration/kubernetes/samples/ssl)
 
 ## Notable changes
+
+### 3.1.0
+
+Parameter `hazelcast.ssl` is no longer available. To encrypt the communication in Hazelcast member, please use `hazelcast.yaml.hazelcast.network.ssl.enabled`.
 
 ### 2.8.0
 
