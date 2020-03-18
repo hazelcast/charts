@@ -33,7 +33,7 @@ else
 fi
 CHART_NAME=$1
 
-cp -TRv ${WORKSPACE}/hz-charts/stable/${CHART_NAME}/ ${WORKSPACE}/helm-charts/stable/${CHART_NAME}/
+rsync -av --progress ${WORKSPACE}/hz-charts/stable/${CHART_NAME}/ ${WORKSPACE}/helm-charts/stable/${CHART_NAME}/ --exclude ci
 
 echo "Configuring ssh-key and e-mail for git commands..."
 git config --global user.email "${GITHUB_EMAIL}"

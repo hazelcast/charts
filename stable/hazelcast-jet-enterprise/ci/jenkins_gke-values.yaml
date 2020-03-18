@@ -1,0 +1,7 @@
+jet:
+  licenseKey: JET_ENTERPRISE_LICENSE
+nodeSelector:
+  pool: standard
+managementcenter:
+  nodeSelector:
+    pool: standard
