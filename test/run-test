@@ -11,9 +11,14 @@ gcloud auth configure-docker --quiet
 echo "Configuring kubectl..."
 gcloud container clusters get-credentials jenkins --zone us-central1-a --project hazelcast-33
 
-echo "Modifying Enterprise CI yaml before testing..."
-sed -i "s/HAZELCAST_ENTERPRISE_LICENSE/\"${HAZELCAST_ENTERPRISE_LICENSE}\"/g" ${WORKSPACE}/stable/hazelcast-enterprise/ci/jenkins_gke-values.yaml
-sed -i "s/JET_ENTERPRISE_LICENSE/\"${JET_ENTERPRISE_LICENSE}\"/g" ${WORKSPACE}/stable/hazelcast-jet-enterprise/ci/jenkins_gke-values.yaml
+MODIFIED_CHARTS=$(ct list-changed --config ${WORKSPACE}/test/ct.yaml | tr '\n' ' ')
+if [[ "$MODIFIED_CHARTS" == *"hazelcast-enterprise"* ]]; then
+    sed -i "s/HAZELCAST_ENTERPRISE_LICENSE/\"${HAZELCAST_ENTERPRISE_LICENSE}\"/g" ${WORKSPACE}/stable/hazelcast-enterprise/ci/jenkins_gke-values.yaml
+fi
 
-echo "Testing Hazelcast IMDG Chart and JET..."
-ct lint-and-install --config ${WORKSPACE}/test/ct.yaml
+if [[ "$MODIFIED_CHARTS" == *"hazelcast-jet-enterprise"* ]]; then
+    sed -i "s/JET_ENTERPRISE_LICENSE/\"${JET_ENTERPRISE_LICENSE}\"/g" ${WORKSPACE}/stable/hazelcast-jet-enterprise/ci/jenkins_gke-values.yaml
+fi
+
+ct lint --config ${WORKSPACE}/test/ct.yaml
+ct install --config ${WORKSPACE}/test/ct.yaml
