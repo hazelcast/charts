@@ -43,6 +43,7 @@ jet:
   # Jet and Hazelcast IMDG YAML configuration files
   yaml:
     hazelcast:
+      cluster-name: jet
       network:
         join:
           multicast:
@@ -190,7 +191,6 @@ service:
   # It is required if DNS Lookup is used (https://github.com/hazelcast/hazelcast-kubernetes#dns-lookup)
   clusterIP: "None"
 
-
 # Role-based Access Control
 rbac:
   # Specifies whether RBAC resources should be created
@@ -275,6 +275,7 @@ managementcenter:
   # Jet Client configuration YAML file which will be used by Hazelcast Jet Management Center
   yaml:
     hazelcast-client:
+      cluster-name: jet
       network:
         kubernetes:
           enabled: true
