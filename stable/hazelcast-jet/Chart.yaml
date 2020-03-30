@@ -9,7 +9,7 @@ keywords:
   - hazelcast
   - jet
   - streaming
-home: http://jet.hazelcast.org/
+home: https://jet-start.sh
 icon: http://hazelcast.com/images/logos/Hazelcast-Jet-Logo-Orange_Dark_Icon_200px.png
 sources:
   - https://github.com/hazelcast/hazelcast-jet

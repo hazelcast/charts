@@ -9,7 +9,7 @@ keywords:
   - hazelcast
   - jet
   - streaming
-home: https://hazelcast.com/products/jet/enterprise/
+home: https://jet-start.sh
 icon: http://hazelcast.com/images/logos/Hazelcast-Jet-Logo-Blue_Dark_Icon_200px.png
 maintainers:
   - name: emin
