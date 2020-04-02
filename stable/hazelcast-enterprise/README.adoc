@@ -12,7 +12,8 @@ performance.
 ----
 $ helm repo add hazelcast https://hazelcast.github.io/charts/
 $ helm repo update
-$ helm install --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise
+$ helm install my-release --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise        # Helm 3
+$ helm install --name my-release --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise # Helm 2
 ----
 
 === Introduction
@@ -34,7 +35,8 @@ To install the chart with the release name `my-release`:
 
 [source,bash]
 ----
-$ helm install --set hazelcast.licenseKey=<license_key> --name my-release hazelcast/hazelcast-enterprise
+$ helm install my-release --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise        # Helm 3
+$ helm install --name my-release --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise # Helm 2
 ----
 
 The command deploys Hazelcast on the Kubernetes cluster in the default
@@ -354,6 +356,12 @@ to `helm install`. For example,
 
 [source,bash]
 ----
+# Helm 3
+$ helm install my-release \
+  --set hazelcast.licenseKey=<license_key>,cluster.memberCount=3 \
+    hazelcast/hazelcast-enterprise
+
+# Helm 2
 $ helm install --name my-release \
   --set hazelcast.licenseKey=<license_key>,cluster.memberCount=3 \
     hazelcast/hazelcast-enterprise
@@ -366,7 +374,8 @@ can be provided while installing the chart. For example,
 
 [source,bash]
 ----
-$ helm install --name my-release -f values.yaml hazelcast/hazelcast-enterprise
+$ helm install my-release -f values.yaml hazelcast/hazelcast-enterprise        # Helm 3
+$ helm install --name my-release -f values.yaml hazelcast/hazelcast-enterprise # Helm 2
 ----
 
 _________________________________________________________________________________
@@ -414,6 +423,19 @@ Then, run your cluster with SSL enabled and keystore secrets mounted
 into your PODs.
 
 ....
+# Helm 3
+$ helm install --my-release \
+  --set hazelcast.licenseKey=<license_key> \
+  --set hazelcast.ssl=true \
+  --set secretsMountName=keystore \
+  --set hazelcast.javaOpts='-Djavax.net.ssl.keyStore=/data/secrets/keystore -Djavax.net.ssl.keyStorePassword=<keystore_password> -Djavax.net.ssl.trustStore=/data/secrets/truststore -Djavax.net.ssl.trustStorePassword=<truststore_password>' \
+  --set mancenter.ssl=true \
+  --set mancenter.secretsMountName=keystore \
+  --set mancenter.javaOpts='-Dhazelcast.mc.tls.keyStore=/secrets/keystore -Dhazelcast.mc.tls.keyStorePassword=<keystore_password> -Dhazelcast.mc.tls.trustStore=/secrets/truststore -Dhazelcast.mc.tls.trustStorePassword=<truststore_password>' \
+  --set mancenter.service.port=8443 \
+    hazelcast/hazelcast-enterprise
+
+# Helm 2
 $ helm install --name my-release \
   --set hazelcast.licenseKey=<license_key> \
   --set hazelcast.ssl=true \
