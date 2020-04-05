@@ -134,31 +134,27 @@ spec:
         fsGroup: {{ .Values.securityContext.fsGroup }}
       {{- end }}
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
-      volumeClaimTemplates:
-      - metadata:
-          name: mancenter-storage
-          labels:
-            app.kubernetes.io/name: {{ template "hazelcast.name" . }}
-            helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-            app.kubernetes.io/instance: "{{ .Release.Name }}"
-            app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-        spec:
-          accessModes:
-          {{- range .Values.mancenter.persistence.accessModes }}
-          - {{ . | quote }}
-          {{- end }}
-          {{- if .Values.mancenter.persistence.storageClass }}
-          {{- if (eq "-" .Values.mancenter.persistence.storageClass) }}
-          storageClassName: ""
-          {{- else }}
-          storageClassName: "{{ .Values.mancenter.persistence.storageClass }}"
-          {{- end }}
-          {{- end }}
-          resources:
-            requests:
-              storage: {{ .Values.mancenter.persistence.size | quote }}
-      volumes:
-      - name: mancenter-secrets
-        secret:
-          secretName: {{ .Values.mancenter.secretsMountName }}
+  volumeClaimTemplates:
+  - metadata:
+      name: mancenter-storage
+      labels:
+         app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+         app.kubernetes.io/instance: "{{ .Release.Name }}"
+         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    spec:
+      accessModes:
+      {{- range .Values.mancenter.persistence.accessModes }}
+      - {{ . | quote }}
+      {{- end }}
+      {{- if .Values.mancenter.persistence.storageClass }}
+      {{- if (eq "-" .Values.mancenter.persistence.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: "{{ .Values.mancenter.persistence.storageClass }}"
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.mancenter.persistence.size }}
 {{- end -}}
