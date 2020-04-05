@@ -122,11 +122,22 @@ spec:
         fsGroup: {{ .Values.securityContext.fsGroup }}
       {{- end }}
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
-      volumes:
-      - name: mancenter-storage
-      {{- if .Values.mancenter.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.mancenter.persistence.existingClaim | default (include "mancenter.fullname" .) }}
+  volumeClaimTemplates:
+  - metadata:
+      name: mancenter-storage
+      labels:
+        app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+        app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    spec:
+      accessModes:
+      {{- range .Values.mancenter.persistence.accessModes }}
+        - {{ . | quote }}
+      {{- end }}
+      {{- if .Values.mancenter.persistence.storageClass }}
+      {{- if (eq "-" .Values.mancenter.persistence.storageClass) }}
+      storageClassName: ""
       {{- else }}
         emptyDir: {}
       {{- end -}}

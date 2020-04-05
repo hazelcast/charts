@@ -145,6 +145,31 @@ spec:
             - ALL
         {{- end }}
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
+      volumeClaimTemplates:
+      {{- if .Values.hotRestart.enabled }}
+      - metadata:
+          name: hot-restart-persistence
+          labels:
+            app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+            helm.sh/chart: {{ template "hazelcast.chart" . }}
+            app.kubernetes.io/instance: "{{ .Release.Name }}"
+            app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+        spec:
+          accessModes:
+          {{- range .Values.hotRestart.accessModes }}
+            - {{ . | quote }}
+          {{- end }}
+          resources:
+            requests:
+              storage: {{ .Values.hotRestart.size | quote }}
+          {{- if .Values.hotRestart.storageClass }}
+          {{- if (eq "-" .Values.hotRestart.storageClass) }}
+          storageClassName: ""
+          {{- else }}
+          storageClassName: "{{ .Values.hotRestart.storageClass }}"
+          {{- end }}
+          {{- end }}
+      {{- end }}
       volumes:
       - name: hazelcast-storage
         configMap:
@@ -153,16 +178,6 @@ spec:
           {{- else }}
           name: {{ template "hazelcast.fullname" . }}-configuration
           {{- end }}
-      {{- if .Values.hotRestart.enabled }}
-      - name: hot-restart-persistence
-      {{- if .Values.hotRestart.hostPath }}
-        hostPath:
-          path: {{ .Values.hotRestart.hostPath }}
-      {{- else }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.hotRestart.existingClaim | default (include "hazelcast.fullname" .) }}
-      {{- end }}
-      {{- end }}
       {{- if .Values.secretsMountName }}
       - name: hazelcast-secrets
         secret:
