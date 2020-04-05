@@ -159,5 +159,9 @@ spec:
       storageClassName: ""
       {{- else }}
         emptyDir: {}
-      {{- end -}}
-{{- end -}}
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.mancenter.persistence.size }}
+  {{- end -}}

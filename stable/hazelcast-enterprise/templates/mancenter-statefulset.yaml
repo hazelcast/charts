@@ -161,12 +161,12 @@ spec:
               storage: {{ .Values.mancenter.persistence.size | quote }}
       volumes:
       - name: config
-        configMap:
-          {{- if .Values.mancenter.existingConfigMap }}
-          name: {{ .Values.mancenter.existingConfigMap }}
-          {{- else }}
-          name: {{ template "mancenter.fullname" . }}-configuration
-          {{- end }}
+          configMap:
+            {{- if .Values.mancenter.existingConfigMap }}
+            name: {{ .Values.mancenter.existingConfigMap }}
+            {{- else }}
+            name: {{ template "mancenter.fullname" . }}-configuration
+            {{- end }}
       - name: mancenter-secrets
         secret:
           secretName: {{ .Values.mancenter.secretsMountName }}
