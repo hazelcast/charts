@@ -136,38 +136,56 @@ spec:
         fsGroup: {{ .Values.securityContext.fsGroup }}
       {{- end }}
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
-      volumeClaimTemplates:
-      - metadata:
-          name: mancenter-storage
-          labels:
-            app.kubernetes.io/name: {{ template "hazelcast.name" . }}
-            helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-            app.kubernetes.io/instance: "{{ .Release.Name }}"
-            app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-        spec:
-          accessModes:
-          {{- range .Values.mancenter.persistence.accessModes }}
-          - {{ . | quote }}
-          {{- end }}
-          {{- if .Values.mancenter.persistence.storageClass }}
-          {{- if (eq "-" .Values.mancenter.persistence.storageClass) }}
-          storageClassName: ""
-          {{- else }}
-          storageClassName: "{{ .Values.mancenter.persistence.storageClass }}"
-          {{- end }}
-          {{- end }}
-          resources:
-            requests:
-              storage: {{ .Values.mancenter.persistence.size | quote }}
+      {{- if and (eq .Values.mancenter.persistence.enabled true) .Values.mancenter.persistence.existingClaim }}
       volumes:
-      - name: config
+        - name: mancenter-storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.mancenter.persistence.existingClaim }}
+        - name: config
+          configMap:
+            {{- if .Values.mancenter.existingConfigMap }}
+            name: {{ .Values.mancenter.existingConfigMap }}
+            {{- else }}
+            name: {{ template "mancenter.fullname" . }}-configuration
+        {{- end }}
+        - name: mancenter-secrets
+          secret:
+            secretName: {{ .Values.mancenter.secretsMountName }}
+      {{ else if and (eq .Values.mancenter.persistence.enabled false) (empty .Values.mancenter.persistence.existingClaim) }}
+      volumes:
+        - name: config
           configMap:
             {{- if .Values.mancenter.existingConfigMap }}
             name: {{ .Values.mancenter.existingConfigMap }}
             {{- else }}
             name: {{ template "mancenter.fullname" . }}-configuration
             {{- end }}
-      - name: mancenter-secrets
-        secret:
-          secretName: {{ .Values.mancenter.secretsMountName }}
+        - name: mancenter-secrets
+          secret:
+            secretName: {{ .Values.mancenter.secretsMountName }}
+      {{ else if and (eq .Values.mancenter.persistence.enabled true) (empty .Values.mancenter.persistence.existingClaim) }}
+  volumeClaimTemplates:
+  - metadata:
+      name: mancenter-storage
+      labels:
+        app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+        app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    spec:
+      accessModes:
+      {{- range .Values.mancenter.persistence.accessModes }}
+      - {{ . | quote }}
+      {{- end }}
+      {{- if .Values.mancenter.persistence.storageClass }}
+      {{- if (eq "-" .Values.mancenter.persistence.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: "{{ .Values.mancenter.persistence.storageClass }}"
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.mancenter.persistence.size | quote }}
+      {{- end }}
 {{- end -}}
