@@ -198,7 +198,7 @@ hotRestart:
   # existingClaim:
   # accessModes defines the access modes for the created Persistent Volume Claim
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   # size is the size of Persistent Volume Claim
   size: 8Gi
   # hostPath is the path of the node machine directory that is used for persistent storage
