@@ -136,22 +136,6 @@ spec:
         fsGroup: {{ .Values.securityContext.fsGroup }}
       {{- end }}
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
-      {{- if and (eq .Values.mancenter.persistence.enabled true) .Values.mancenter.persistence.existingClaim }}
-      volumes:
-        - name: mancenter-storage
-          persistentVolumeClaim:
-            claimName: {{ .Values.mancenter.persistence.existingClaim }}
-        - name: config
-          configMap:
-            {{- if .Values.mancenter.existingConfigMap }}
-            name: {{ .Values.mancenter.existingConfigMap }}
-            {{- else }}
-            name: {{ template "mancenter.fullname" . }}-configuration
-        {{- end }}
-        - name: mancenter-secrets
-          secret:
-            secretName: {{ .Values.mancenter.secretsMountName }}
-      {{ else if and (eq .Values.mancenter.persistence.enabled false) (empty .Values.mancenter.persistence.existingClaim) }}
       volumes:
         - name: config
           configMap:
@@ -160,10 +144,19 @@ spec:
             {{- else }}
             name: {{ template "mancenter.fullname" . }}-configuration
             {{- end }}
+        {{- if .Values.mancenter.secretsMountName }}
         - name: mancenter-secrets
           secret:
             secretName: {{ .Values.mancenter.secretsMountName }}
-      {{ else if and (eq .Values.mancenter.persistence.enabled true) (empty .Values.mancenter.persistence.existingClaim) }}
+        {{- end }}
+        - name: mancenter-storage
+          {{- if and (eq .Values.mancenter.persistence.enabled true) .Values.mancenter.persistence.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.mancenter.persistence.existingClaim }}
+          {{- else if (eq .Values.mancenter.persistence.enabled false) }}
+          emptyDir: {}
+          {{- end }}
+      {{ if and (eq .Values.mancenter.persistence.enabled true) (empty .Values.mancenter.persistence.existingClaim) }}
   volumeClaimTemplates:
   - metadata:
       name: mancenter-storage

@@ -141,6 +141,14 @@ spec:
         secret:
           secretName: {{ .Values.mancenter.secretsMountName }}
       {{- end }}
+      - name: mancenter-storage
+        {{- if and (eq .Values.mancenter.persistence.enabled true) .Values.mancenter.persistence.existingClaim }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.mancenter.persistence.existingClaim }}
+        {{- else if (eq .Values.mancenter.persistence.enabled false) }}
+        emptyDir: {}
+        {{- end }}
+    {{ if and (eq .Values.mancenter.persistence.enabled true) (empty .Values.mancenter.persistence.existingClaim) }}
   volumeClaimTemplates:
   - metadata:
       name: mancenter-storage
@@ -158,10 +166,11 @@ spec:
       {{- if (eq "-" .Values.mancenter.persistence.storageClass) }}
       storageClassName: ""
       {{- else }}
-        emptyDir: {}
+      storageClassName: "{{ .Values.mancenter.persistence.storageClass }}"
       {{- end }}
       {{- end }}
       resources:
         requests:
-          storage: {{ .Values.mancenter.persistence.size }}
+          storage: {{ .Values.mancenter.persistence.size | quote }}
   {{- end -}}
+{{- end -}}
