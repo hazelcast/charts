@@ -162,8 +162,20 @@ spec:
         - name: hazelcast-custom
           {{ toYaml .Values.customVolume | indent 8 }}
             {{- end }}
+        {{- if .Values.hotRestart.enabled }}
+        {{- if .Values.hotRestart.hostPath }}
+        - name: hot-restart-persistence
+          hostPath:
+            path: {{ .Values.hotRestart.hostPath }}
+        {{- end }}
+        {{- if .Values.hotRestart.existingClaim }}
+        - name: hot-restart-persistence
+          persistentVolumeClaim:
+            claimName: {{ .Values.hotRestart.existingClaim }}
+        {{- end }}
+        {{- end }}
   volumeClaimTemplates:
-  {{- if .Values.hotRestart.enabled }}
+  {{- if and (and (eq .Values.hotRestart.enabled true) (empty .Values.hotRestart.existingClaim)) (empty .Values.hotRestart.hostPath) }}
   - metadata:
       name: hot-restart-persistence
       labels:
