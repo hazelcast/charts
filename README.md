@@ -149,6 +149,20 @@ $ kubectl get pv --watch
 ```
 If you see Persistent Volume created, your Management Center Pod will be turning `Running` state soon.
 
+**Persistence Volume Claim Clean Up**
+
+Deleting the helm release of Hazelcast chart will not automatically delete the PVCs. To see the the PVCs run:
+
+```
+$ kubectl get pvc
+```
+
+To delete them run:
+
+```
+$ kubectl delete pvc <name-of-the-pvc>
+```
+
 ## How to find us?
 
 In case of any question or issue, please raise a GH issue, send an email to [Hazelcast Google Groups](https://groups.google.com/forum/#!forum/hazelcast) or contact as directly via [Hazelcast Gitter](https://gitter.im/hazelcast/hazelcast).
