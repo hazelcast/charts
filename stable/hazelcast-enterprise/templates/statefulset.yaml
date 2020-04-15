@@ -146,29 +146,56 @@ spec:
         {{- end }}
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
       volumes:
-      - name: hazelcast-storage
-        configMap:
-          {{- if .Values.hazelcast.existingConfigMap }}
-          name: {{ .Values.hazelcast.existingConfigMap }}
-          {{- else }}
-          name: {{ template "hazelcast.fullname" . }}-configuration
-          {{- end }}
-      {{- if .Values.hotRestart.enabled }}
-      - name: hot-restart-persistence
-      {{- if .Values.hotRestart.hostPath }}
-        hostPath:
-          path: {{ .Values.hotRestart.hostPath }}
+        - name: hazelcast-storage
+          configMap:
+            {{- if .Values.hazelcast.existingConfigMap }}
+            name: {{ .Values.hazelcast.existingConfigMap }}
+            {{- else }}
+            name: {{ template "hazelcast.fullname" . }}-configuration
+            {{- end }}
+        {{- if .Values.secretsMountName }}
+        - name: hazelcast-secrets
+          secret:
+            secretName: {{ .Values.secretsMountName }}
+        {{- end }}
+        {{- if .Values.customVolume }}
+        - name: hazelcast-custom
+          {{ toYaml .Values.customVolume | indent 8 }}
+            {{- end }}
+        {{- if .Values.hotRestart.enabled }}
+        {{- if .Values.hotRestart.hostPath }}
+        - name: hot-restart-persistence
+          hostPath:
+            path: {{ .Values.hotRestart.hostPath }}
+        {{- end }}
+        {{- if .Values.hotRestart.existingClaim }}
+        - name: hot-restart-persistence
+          persistentVolumeClaim:
+            claimName: {{ .Values.hotRestart.existingClaim }}
+        {{- end }}
+        {{- end }}
+  volumeClaimTemplates:
+  {{- if and (and (eq .Values.hotRestart.enabled true) (empty .Values.hotRestart.existingClaim)) (empty .Values.hotRestart.hostPath) }}
+  - metadata:
+      name: hot-restart-persistence
+      labels:
+        app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+        helm.sh/chart: {{ template "hazelcast.chart" . }}
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+        app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    spec:
+      accessModes:
+      {{- range .Values.hotRestart.accessModes }}
+        - {{ . | quote }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.hotRestart.size | quote }}
+      {{- if .Values.hotRestart.storageClass }}
+      {{- if (eq "-" .Values.hotRestart.storageClass) }}
+      storageClassName: ""
       {{- else }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.hotRestart.existingClaim | default (include "hazelcast.fullname" .) }}
+      storageClassName: "{{ .Values.hotRestart.storageClass }}"
       {{- end }}
       {{- end }}
-      {{- if .Values.secretsMountName }}
-      - name: hazelcast-secrets
-        secret:
-          secretName: {{ .Values.secretsMountName }}
-      {{- end }}
-      {{- if .Values.customVolume }}
-      - name: hazelcast-custom
-{{ toYaml .Values.customVolume | indent 8 }}
-      {{- end }}
+  {{- end }}
