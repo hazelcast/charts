@@ -98,12 +98,12 @@ spec:
         volumeMounts:
         - name: hazelcast-jet-storage
           mountPath: /data/hazelcast-jet
-        {{- if .Values.customVolumeClaimName }}
-        - name: hazelcast-jet-custom
+        {{- if .Values.customVolume }}
+        - name: hazelcast-jet-custom-volume
           mountPath: /data/custom
         {{- end }}
         env:
-        {{- if .Values.customVolumeClaimName }}
+        {{- if .Values.customVolume }}
         - name: CLASSPATH
           value: "/data/custom:/data/custom/*"
         {{- end }}
@@ -134,8 +134,7 @@ spec:
       - name: hazelcast-jet-storage
         configMap:
           name: {{ template "hazelcast-jet.fullname" . }}-configuration
-      {{- if .Values.customVolumeClaimName }}
-      - name: hazelcast-jet-custom
-        persistentVolumeClaim:
-          claimName: {{ .Values.customVolumeClaimName  }}
+      {{- if .Values.customVolume }}
+      - name: hazelcast-jet-custom-volume
+{{ toYaml .Values.customVolume | indent 8 }}
       {{- end }}
