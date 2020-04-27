@@ -221,7 +221,7 @@ metrics:
       prometheus.io/port: "8080"
 
 # customVolumeClaimName is the configuration for a volume claim which will be mounted as '/data/custom/' (e.g. to mount a volume with custom JARs)
-# customVolumeClaimName: 
+# customVolumeClaimName:
 
 # Hazelcast Jet Management Center application properties
 managementcenter:
