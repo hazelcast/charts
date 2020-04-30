@@ -62,9 +62,13 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         ports:
+        {{- if .Values.hazelcast.customPorts }}
+{{ toYaml .Values.hazelcast.customPorts | indent 10 }}
+        {{- else }}
         - name: hazelcast
           containerPort: {{ if .Values.hostPort }}{{ .Values.hostPort }}{{ else }}5701{{ end }}
           hostPort: {{ .Values.hostPort }}
+        {{- endif }}
         {{- if .Values.metrics.enabled }}
         - name: metrics
           containerPort: {{ .Values.metrics.service.port }}
