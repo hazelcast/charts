@@ -79,6 +79,9 @@ nodeSelector: {}
 # hostPort is a port under which Hazelcast PODs are exposed on the host machines
 # hostPort:
 
+# customPorts is the whole port section to customize how Hazelcast container ports are defined
+# customPorts:
+
 gracefulShutdown:
   enabled: true
   maxWaitSeconds: 600
