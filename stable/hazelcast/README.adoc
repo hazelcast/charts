@@ -123,6 +123,9 @@ into `+values.yaml+`) |`+{DEFAULT_HAZELCAST_YAML}+`
 |`+hostPort+` |Port under which Hazelcast PODs are exposed on the host machines
 |`+nil+`
 
+|`+customPorts+` | Whole ports section to customize how Hazelcast container ports are defined
+|`+nil+`
+
 |`+gracefulShutdown.enabled+` |Turn on and off Graceful Shutdown |`+true+`
 
 |`+gracefulShutdown.maxWaitSeconds+` |Maximum time to wait for the Hazelcast POD
