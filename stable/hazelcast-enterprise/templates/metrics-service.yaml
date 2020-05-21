@@ -8,6 +8,7 @@ metadata:
     helm.sh/chart: {{ template "hazelcast.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    promethues: true 
   annotations:
 {{ toYaml .Values.metrics.service.annotations | indent 4 }}
 spec:
