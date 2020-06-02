@@ -1,7 +1,7 @@
 # Hazelcast Helm Charts
 
 This is a repository for Hazelcast Helm Charts. For more information about installing and using Helm, see its
-[README.md](https://github.com/kubernetes/helm/tree/master/README.md). To get a quick introduction to Charts see this [chart document](https://github.com/kubernetes/helm/blob/master/docs/charts.md).
+[README.md](https://github.com/kubernetes/helm/tree/master/README.md). To get a quick introduction to Charts see this [chart document](https://helm.sh/docs/intro/quickstart/).
 
 Note that the structure and style of this repository and the Helm Charts themselves is similar to the [Official Helm Chart repository](https://github.com/helm/charts).
 
