@@ -33,7 +33,7 @@ else
 fi
 CHART_NAME=$1
 
-cp -TRv ${WORKSPACE}/hz-charts/stable/${CHART_NAME}/ ${WORKSPACE}/helm-charts/stable/${CHART_NAME}/
+rsync -av --progress ${WORKSPACE}/hz-charts/stable/${CHART_NAME}/ ${WORKSPACE}/helm-charts/stable/${CHART_NAME}/ --exclude ci
 
 echo "Configuring ssh-key and e-mail for git commands..."
 git config --global user.email "${GITHUB_EMAIL}"
@@ -58,5 +58,5 @@ pushd ${WORKSPACE}/helm-charts
     git push -u devops-helm ${BRANCH_NAME}
 
     OFFICIAL_HELM_PR_ISSUE_NUMBER=$(hub pull-request -m "[stable/${CHART_NAME}] ${LATEST_COMMIT_MESSAGE}" -b ${HELM_REPOSITORY}:master -h devOpsHelm/charts:${BRANCH_NAME} | awk -F/ '{print $7}')
-    hub api repos/${HELM_REPOSITORY}/issues/${OFFICIAL_HELM_PR_ISSUE_NUMBER}/comments -f body='Please approve @hasancelik @leszko @mesutcelik @googlielmo @eminn'
+    hub api repos/${HELM_REPOSITORY}/issues/${OFFICIAL_HELM_PR_ISSUE_NUMBER}/comments -f body='Please approve @hasancelik @leszko @mesutcelik @eminn'
 popd

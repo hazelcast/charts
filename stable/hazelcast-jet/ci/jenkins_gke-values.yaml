@@ -1,0 +1,9 @@
+image:
+  pullPolicy: Always
+nodeSelector:
+  pool: standard
+managementcenter:
+  image:
+    pullPolicy: Always
+  nodeSelector:
+    pool: standard

@@ -15,14 +15,16 @@ ifeval::["{repo}"=="hazelcast/charts"]
 ----
 $ helm repo add hazelcast https://hazelcast.github.io/charts/
 $ helm repo update
-$ helm install hazelcast/hazelcast
+$ helm install my-release hazelcast/hazelcast        # Helm 3
+$ helm install --name my-release hazelcast/hazelcast # Helm 2
 ----
 endif::[]
 
 ifeval::["{repo}"=="helm/charts"]
 [source,bash]
 ----
-$ helm install stable/hazelcast
+$ helm install my-release stable/hazelcast        # Helm 3
+$ helm install --name my-release stable/hazelcast # Helm 2
 ----
 endif::[]
 
@@ -45,14 +47,16 @@ To install the chart with the release name `+my-release+`:
 ifeval::["{repo}"=="hazelcast/charts"]
 [source,bash]
 ----
-$ helm install --name my-release hazelcast/hazelcast
+$ helm install my-release hazelcast/hazelcast        # Helm 3
+$ helm install --name my-release hazelcast/hazelcast # Helm 2
 ----
 endif::[]
 
 ifeval::["{repo}"=="helm/charts"]
 [source,bash]
 ----
-$ helm install --name my-release stable/hazelcast
+$ helm install my-release stable/hazelcast        # Helm 3
+$ helm install --name my-release stable/hazelcast # Helm 2
 ----
 endif::[]
 
@@ -84,7 +88,7 @@ their default values.
 [width="100%",cols="22%,53%,25%",options="header",]
 |===
 |Parameter |Description |Default
-|`+image.repository+` |Hazelcast Image name |`+hazelcast/hazelcast-kubernetes+`
+|`+image.repository+` |Hazelcast Image name |`+hazelcast/hazelcast+`
 
 |`+image.tag+` |Hazelcast Image tag |`+{VERSION}+`
 
@@ -95,13 +99,14 @@ their default values.
 
 |`+cluster.memberCount+` |Number of Hazelcast members |2
 
-|`+hazelcast.rest+` |Enable REST endpoints for Hazelcast member |`+true+`
-
 |`+hazelcast.javaOpts+` |Additional JAVA_OPTS properties for Hazelcast member
 |`+nil+`
 
+|`+hazelcast.loggingLevel+` |Level of Hazelcast logs (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, and FINEST); note that changing this value requires setting `securityContext.runAsUser` to `0` and `securityContext.readOnlyRootFilesystem` to `false`
+|`+nil+`
+
 |`+hazelcast.existingConfigMap+` |ConfigMap which contains Hazelcast
-configuration file(s) that are used instead hazelcast.yaml embedded into
+configuration file(s) that are used instead of hazelcast.yaml file embedded into
 values.yaml |`+nil+`
 
 |`+hazelcast.yaml+` |Hazelcast YAML Configuration (`+hazelcast.yaml+` embedded
@@ -138,6 +143,10 @@ to be considered successful after having failed |`+1+`
 |`+livenessProbe.failureThreshold+` |Minimum consecutive failures for the probe
 to be considered failed after having succeeded. |`+3+`
 
+|`+livenessProbe.path+` |URL path that will be called to check liveness. |`+/hazelcast/health/node-state+`
+
+|`+livenessProbe.port+` |Port that will be used in liveness probe calls. |`+nil+`
+
 |`+readinessProbe.enabled+` |Turn on and off readiness probe |`+true+`
 
 |`+readinessProbe.initialDelaySeconds+` |Delay before readiness probe is
@@ -152,6 +161,10 @@ probe to be considered successful after having failed |`+1+`
 
 |`+readinessProbe.failureThreshold+` |Minimum consecutive failures for the probe
 to be considered failed after having succeeded. |`+3+`
+
+|`+readinessProbe.path+` |URL path that will be called to check readiness. |`+/hazelcast/health/ready+`
+
+|`+readinessProbe.port+` |Port that will be used in readiness probe calls. |`+nil+`
 
 |`+resources.limits.cpu+` |CPU resource limit |`+default+`
 
@@ -171,6 +184,8 @@ fullname template |`+nil+`
 
 |`+service.port+` |Kubernetes service port |`+5701+`
 
+|`+service.clusterIP+` | IP of the service, "None" makes the service headless |`+None+`
+
 |`+rbac.create+` |Enable installing RBAC Role authorization |`+true+`
 
 |`+serviceAccount.create+` |Enable installing Service Account |`+true+`
@@ -184,8 +199,14 @@ Management Center |`+true+`
 |`+securityContext.runAsUser+` |User ID used to run the Hazelcast and Management
 Center containers |`+65534+`
 
+| `securityContext.runAsGroup` |Primary Group ID used to run all processes in the
+ Hazelcast Jet and Hazelcast Jet Management Center containers | `+65534+`
+
 |`+securityContext.fsGroup+` |Group ID associated with the Hazelcast and
 Management Center container |`+65534+`
+
+|`+securityContext.readOnlyRootFilesystem+` | Enables readOnlyRootFilesystem in
+the Hazelcast security context |`true`
 
 |`+metrics.enabled+` |Turn on and off JMX Prometheus metrics available at
 `+/metrics+` |`+false+`
@@ -214,6 +235,11 @@ the same or one minor release greater than Hazelcast image version)
 |`+mancenter.image.pullSecrets+` |Specify docker-registry secret names as an
 array |`+nil+`
 
+|`+mancenter.contextPath+` |the value for the MC_CONTEXT_PATH environment variable,
+thus overriding the default context path for Hazelcast Management Center |`+nil+`
+
+|`+mancenter.ssl+` |Enable SSL for Management |`+false+`
+
 |`+mancenter.javaOpts+` |Additional JAVA_OPTS properties for Hazelcast
 Management Center |`+nil+`
 
@@ -226,6 +252,10 @@ Center License Key is stored (can be used instead of licenseKey) |`+nil+`
 |`+mancenter.adminCredentialsSecretName+` |Kubernetes Secret Name for admin
 credentials. Secret has to contain `username` and `password` literals. please check
 Management Center documentation for password requirements |`+nil+`
+
+|`+mancenter.existingConfigMap+` |ConfigMap which contains Hazelcast Client configuration file(s) that are used instead of hazelcast-client.yaml file embedded into values.yaml |`+{DEFAULT_HAZELCAST_CLIENT_YAML}+`
+
+|`+mancenter.yaml+` |Hazelcast Client YAML Configuration (`hazelcast-client.yaml` used to connect to Hazelcast cluster |`+nil+`
 
 |`+mancenter.affinity+` |Management Center Node affinity |`+nil+`
 
@@ -295,6 +325,9 @@ for example |`+[]+`
 
 |`+mancenter.ingress.tls+` |List of TLS configuration for ingress, see
 `+values.yaml+` for example |`+[]+`
+
+|`+mancenter.secretsMountName+` |Secret name that is mounted as '/secrets/' (e.g. with keystore/trustore files) |`+nil+`
+
 |===
 
 Specify each parameter using the `+--set key=value[,key=value]+` argument to
@@ -304,8 +337,14 @@ Specify each parameter using the `+--set key=value[,key=value]+` argument to
 ifeval::["{repo}"=="hazelcast/charts"]
 [source,bash]
 ----
+# Helm 3
+$ helm install my-release \
+  --set cluster.memberCount=3 \
+    hazelcast/hazelcast
+
+# Helm 2
 $ helm install --name my-release \
-  --set cluster.memberCount=3,hazelcast.rest=false \
+  --set cluster.memberCount=3 \
     hazelcast/hazelcast
 ----
 endif::[]
@@ -313,14 +352,19 @@ endif::[]
 ifeval::["{repo}"=="helm/charts"]
 [source,bash]
 ----
+# Helm 3
+$ helm install my-release \
+  --set cluster.memberCount=3 \
+    stable/hazelcast
+
+# Helm 2
 $ helm install --name my-release \
-  --set cluster.memberCount=3,hazelcast.rest=false \
+  --set cluster.memberCount=3 \
     stable/hazelcast
 ----
 endif::[]
 
-The above command sets number of Hazelcast members to 3 and disables REST
-endpoints.
+The above command sets number of Hazelcast members to 3.
 
 Alternatively, a YAML file that specifies the values for the parameters can be
 provided while installing the chart. For example,
@@ -328,7 +372,8 @@ provided while installing the chart. For example,
 ifeval::["{repo}"=="hazelcast/charts"]
 [source,bash]
 ----
-$ helm install --name my-release -f values.yaml hazelcast/hazelcast
+$ helm install my-release -f values.yaml hazelcast/hazelcast        # Helm 3
+$ helm install --name my-release -f values.yaml hazelcast/hazelcast # Helm 2
 ----
 endif::[]
 
@@ -336,7 +381,8 @@ endif::[]
 ifeval::["{repo}"=="helm/charts"]
 [source,bash]
 ----
-$ helm install --name my-release -f values.yaml stable/hazelcast
+$ helm install my-release -f values.yaml stable/hazelcast        # Helm 3
+$ helm install --name my-release -f values.yaml stable/hazelcast # Helm 2
 ----
 endif::[]
 
@@ -366,6 +412,7 @@ hazelcast:
         <!-- Custom Configuration Placeholder -->
 ----
 
+<<<<<<< HEAD
 === Management Center Credentials
 You have an option to store Management Center Credentials in Kubernetes Secret before installing 
 hazelcast helm chart. To create Management Center secret, simply run following command. 
@@ -380,4 +427,23 @@ Then use the same secret with the parameter `mancenter.adminCredentialsSecretNam
 [source,bash]
 ----
 $ helm install --name hazelcast --set mancenter.adminCredentialsSecretName=admincredentials hazelcast/hazelcast
+=======
+== Notable changes
+
+=== 2.8.0
+
+Hazelcast REST Endpoints are no longer enabled by default and the parameter `hazelcast.rest` is no longer available. If you want to enable REST, please add the related `endpoint-groups` to the Hazelcast Configuration. For example:
+
+[source,yaml]
+----
+rest-api:
+  enabled: true
+  endpoint-groups:
+    HEALTH_CHECK:
+      enabled: true
+    CLUSTER_READ:
+      enabled: true
+    CLUSTER_WRITE:
+      enabled: true
+>>>>>>> master
 ----

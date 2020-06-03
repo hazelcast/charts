@@ -40,10 +40,13 @@ spec:
       hostNetwork: false
       hostPID: false
       hostIPC: false
+      {{- if .Values.securityContext.enabled }}
       securityContext:
         runAsNonRoot: {{ if eq (int .Values.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}
         runAsUser: {{ .Values.securityContext.runAsUser }}
+        runAsGroup: {{ .Values.securityContext.runAsGroup }}
         fsGroup: {{ .Values.securityContext.fsGroup }}
+      {{- end }}
       {{- if .Values.affinity }}
       affinity:
 {{ toYaml .Values.affinity | indent 8 }}
@@ -69,9 +72,9 @@ spec:
         {{- if .Values.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
-            path: /hazelcast/health/node-state
-            port: {{ if .Values.hostPort }}{{ .Values.hostPort }}{{ else }}5701{{ end }}
-            scheme: {{ if .Values.hazelcast.ssl }}HTTPS{{ else }}HTTP{{ end }}
+            path: {{ .Values.livenessProbe.path }}
+            port: {{ if .Values.livenessProbe.port }}{{ .Values.livenessProbe.port }}{{ else if .Values.hostPort }}{{ .Values.hostPort }}{{ else }}5701{{ end }}
+            scheme: {{ .Values.livenessProbe.scheme }}
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -81,9 +84,9 @@ spec:
         {{- if .Values.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: /hazelcast/health/node-state
-            port: {{ if .Values.hostPort }}{{ .Values.hostPort }}{{ else }}5701{{ end }}
-            scheme: {{ if .Values.hazelcast.ssl }}HTTPS{{ else }}HTTP{{ end }}
+            path: {{ .Values.readinessProbe.path }}
+            port: {{ if .Values.readinessProbe.port }}{{ .Values.readinessProbe.port }}{{ else if .Values.hostPort }}{{ .Values.hostPort }}{{ else }}5701{{ end }}
+            scheme: {{ .Values.readinessProbe.scheme }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
@@ -115,6 +118,10 @@ spec:
         {{- else }}
           value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
+        {{- if .Values.customVolume }}
+        - name: CLASSPATH
+          value: "/data/custom:/data/custom/*"
+        {{- end }}
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -124,13 +131,18 @@ spec:
           value: "{{ .Values.metrics.service.port }}"
         {{- end }}
         - name: JAVA_OPTS
-          value: "-Dhazelcast.rest.enabled={{ .Values.hazelcast.rest }} -Dhazelcast.config=/data/hazelcast/hazelcast.yaml -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mancenter.enabled={{ .Values.mancenter.enabled }} -Dhazelcast.ssl={{ .Values.hazelcast.ssl }} -Dhazelcast.hotRestart={{ .Values.hotRestart.enabled }} -Dhazelcast.mancenter.url={{ if .Values.mancenter.ssl }}https{{ else }}http{{ end }}://{{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}/hazelcast-mancenter {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} -Dhazelcast.cluster.version.auto.upgrade.enabled={{ .Values.hazelcast.updateClusterVersionAfterRollingUpgrade }} {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.hazelcast.javaOpts }}"
+          value: "-Dhazelcast.config=/data/hazelcast/hazelcast.yaml -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.ssl={{ .Values.hazelcast.ssl }} -Dhazelcast.hotRestart={{ .Values.hotRestart.enabled }} {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} -Dhazelcast.cluster.version.auto.upgrade.enabled={{ .Values.hazelcast.updateClusterVersionAfterRollingUpgrade }} {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.hazelcast.javaOpts }}"
+        {{- if .Values.hazelcast.loggingLevel }}
+        - name: LOGGING_LEVEL
+          value: {{ .Values.hazelcast.loggingLevel }}
+        {{- end }}
         {{- if .Values.securityContext.enabled }}
         securityContext:
           runAsNonRoot: {{ if eq (int .Values.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}
           runAsUser: {{ .Values.securityContext.runAsUser }}
+          runAsGroup: {{ .Values.securityContext.runAsGroup }}
           privileged: false
-          readOnlyRootFilesystem: {{ not .Values.hotRestart.enabled }}
+          readOnlyRootFilesystem: {{ .Values.securityContext.readOnlyRootFilesystem }}
           allowPrivilegeEscalation: false
           capabilities:
             drop:
@@ -138,29 +150,56 @@ spec:
         {{- end }}
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
       volumes:
-      - name: hazelcast-storage
-        configMap:
-          {{- if .Values.hazelcast.existingConfigMap }}
-          name: {{ .Values.hazelcast.existingConfigMap }}
-          {{- else }}
-          name: {{ template "hazelcast.fullname" . }}-configuration
-          {{- end }}
-      {{- if .Values.hotRestart.enabled }}
-      - name: hot-restart-persistence
-      {{- if .Values.hotRestart.hostPath }}
-        hostPath:
-          path: {{ .Values.hotRestart.hostPath }}
+        - name: hazelcast-storage
+          configMap:
+            {{- if .Values.hazelcast.existingConfigMap }}
+            name: {{ .Values.hazelcast.existingConfigMap }}
+            {{- else }}
+            name: {{ template "hazelcast.fullname" . }}-configuration
+            {{- end }}
+        {{- if .Values.secretsMountName }}
+        - name: hazelcast-secrets
+          secret:
+            secretName: {{ .Values.secretsMountName }}
+        {{- end }}
+        {{- if .Values.customVolume }}
+        - name: hazelcast-custom
+          {{ toYaml .Values.customVolume | indent 8 }}
+            {{- end }}
+        {{- if .Values.hotRestart.enabled }}
+        {{- if .Values.hotRestart.hostPath }}
+        - name: hot-restart-persistence
+          hostPath:
+            path: {{ .Values.hotRestart.hostPath }}
+        {{- end }}
+        {{- if .Values.hotRestart.existingClaim }}
+        - name: hot-restart-persistence
+          persistentVolumeClaim:
+            claimName: {{ .Values.hotRestart.existingClaim }}
+        {{- end }}
+        {{- end }}
+  volumeClaimTemplates:
+  {{- if and (and (eq .Values.hotRestart.enabled true) (empty .Values.hotRestart.existingClaim)) (empty .Values.hotRestart.hostPath) }}
+  - metadata:
+      name: hot-restart-persistence
+      labels:
+        app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+        helm.sh/chart: {{ template "hazelcast.chart" . }}
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+        app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    spec:
+      accessModes:
+      {{- range .Values.hotRestart.accessModes }}
+        - {{ . | quote }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.hotRestart.size | quote }}
+      {{- if .Values.hotRestart.storageClass }}
+      {{- if (eq "-" .Values.hotRestart.storageClass) }}
+      storageClassName: ""
       {{- else }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.hotRestart.existingClaim | default (include "hazelcast.fullname" .) }}
+      storageClassName: "{{ .Values.hotRestart.storageClass }}"
       {{- end }}
       {{- end }}
-      {{- if .Values.secretsMountName }}
-      - name: hazelcast-secrets
-        secret:
-          secretName: {{ .Values.secretsMountName }}
-      {{- end }}
-      {{- if .Values.customVolume }}
-      - name: hazelcast-custom
-{{ toYaml .Values.customVolume | indent 8 }}
-      {{- end }}
+  {{- end }}
