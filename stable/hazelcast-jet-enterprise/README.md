@@ -8,10 +8,24 @@ Visit [Hazelcast Jet Enterprise](https://hazelcast.com/products/jet/enterprise/)
 
 ## Quick Start
 
-    $ helm repo add hazelcast https://hazelcast.github.io/charts/
+    $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
     $ helm repo update
     $ helm install my-release hazelcast/hazelcast-jet-enterprise        # Helm 3
     $ helm install --name my-release hazelcast/hazelcast-jet-enterprise # Helm 2
+
+For users who already added `hazelcast` repo to their local helm client before; you need to run `helm repo add` command again to use latest charts at the new chart repo:
+
+    $ helm repo list
+    NAME            URL
+    hazelcast       https://hazelcast.github.io/charts/
+    ...
+
+    $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
+
+    $ helm repo list
+    NAME            URL
+    hazelcast       https://hazelcast-charts.s3.amazonaws.com/
+    ...
 
 ## Introduction
 
