@@ -14,8 +14,7 @@ Add the Hazelcast repository:
 
 Then, you can install the charts by:
 
-    $ helm install my-release hazelcast/<chart>           # Helm 3
-    $ helm install --name my-release hazelcast/<chart>    # Helm 2
+    $ helm install my-release hazelcast/<chart>
 
 The available list of charts can be found in the [stable](stable) directory.
 
@@ -35,25 +34,8 @@ For users who already added `hazelcast` repo to their local helm client before; 
 
 Please note that if `hazelcast-enterprise` (or `hazelcast-jet-enterprise`) chart is used, hazelcast enterprise license key must be passed to the helm chart as below. You can contact sales@hazelcast.com for a trial license key.
 
-	$ helm install my-release --set hazelcast.licenseKey=$HAZELCAST_ENTERPRISE_LICENSE_KEY hazelcast/hazelcast-enterprise # Helm 3
-	$ helm install --name my-release --set hazelcast.licenseKey=$HAZELCAST_ENTERPRISE_LICENSE_KEY hazelcast/hazelcast-enterprise # Helm 2
+	$ helm install my-release --set hazelcast.licenseKey=$HAZELCAST_ENTERPRISE_LICENSE_KEY hazelcast/hazelcast-enterprise
 
-
-## Helm & Tiller
-
-If you don't have `helm` in your system, you can download and install it from [helm github project page](https://github.com/helm/helm#install).
-
-If you use Helm 3, you don't need any additional steps. For Helm 2, you need a Tiller service running in your kubernetes cluster. Installing Tiller as simple as executing `init` command.
-
-```
-$ helm init
-```
-
-Verify that Tiller Version is returned.
-
-```
-$ helm version --server
-```
 
 ## Troubleshooting in Kubernetes Environments
 
@@ -129,8 +111,7 @@ parameters:
 Use storage class name defined in the storage.yaml file in helm installation.
 
 ```
-$ helm install my-release --set mancenter.persistence.storageClass=standard hazelcast/<chart>         # Helm 3
-$ helm install --name my-release --set mancenter.persistence.storageClass=standard hazelcast/<chart>  # Helm 2
+$ helm install my-release --set mancenter.persistence.storageClass=standard hazelcast/<chart>
 ```
 **Persistent Volume Availability Zone**
 

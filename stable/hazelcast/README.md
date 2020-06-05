@@ -6,8 +6,7 @@
 
     $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
     $ helm repo update
-    $ helm install my-release hazelcast/hazelcast        # Helm 3
-    $ helm install --name my-release hazelcast/hazelcast # Helm 2
+    $ helm install my-release hazelcast/hazelcast
 
 For users who already added `hazelcast` repo to their local helm client before; you need to run `helm repo add` command again to use latest charts at the new chart repo:
 
@@ -35,8 +34,7 @@ This chart bootstraps a [Hazelcast](https://github.com/hazelcast/hazelcast-docke
 
 To install the chart with the release name `my-release`:
 
-    $ helm install my-release hazelcast/hazelcast        # Helm 3
-    $ helm install --name my-release hazelcast/hazelcast # Helm 2
+    $ helm install my-release hazelcast/hazelcast
 
 The command deploys Hazelcast on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
 
@@ -157,13 +155,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 
 Specify each parameter using the `--set key=value,key=value` argument to `helm install`. For example,
 
-    # Helm 3
     $ helm install my-release \
-    --set cluster.memberCount=3 \
-        hazelcast/hazelcast
-
-    # Helm 2
-    $ helm install --name my-release \
     --set cluster.memberCount=3 \
         hazelcast/hazelcast
 
@@ -171,8 +163,7 @@ The above command sets number of Hazelcast members to 3.
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
-    $ helm install my-release -f values.yaml hazelcast/hazelcast        # Helm 3
-    $ helm install --name my-release -f values.yaml hazelcast/hazelcast # Helm 2
+    $ helm install my-release -f values.yaml hazelcast/hazelcast
 
 > **Tip**: You can use the default values.yaml
 
