@@ -133,6 +133,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |mancenter.javaOpts|Additional JAVA_OPTS properties for Hazelcast Management Center|nil|
 |mancenter.licenseKey|License Key for Hazelcast Management Center, if not provided, can be filled in the web interface|nil|
 |mancenter.licenseKeySecretName|Kubernetes Secret Name, where Management Center License Key is stored (can be used instead of licenseKey)|nil|
+|mancenter.adminCredentialsSecretName|Kubernetes Secret Name for admin credentials. Secret has to contain `username` and `password` literals. please check Management Center documentation for password requirements|nil|
 |mancenter.affinity|Management Center Node affinity|nil|
 |mancenter.tolerations|Management Center Node tolerations|nil|
 |mancenter.nodeSelector|Hazelcast Management Center node labels for pod assignment|nil|
