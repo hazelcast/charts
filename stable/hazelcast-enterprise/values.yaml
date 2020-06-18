@@ -270,7 +270,7 @@ mancenter:
   licenseKey:
   # licenseKeySecretName is the name of the secret where the Hazelcast Management Center License Key is stored (can be used instead of licenseKey)
   # licenseKeySecretName:
-  
+
   # adminCredentialsSecretName is Kubernetes Secret Name for admin credentials. Secret has to contain `username` and `password` literals. please check Management Center documentation for password requirements
   # adminCredentialsSecretName:
 
