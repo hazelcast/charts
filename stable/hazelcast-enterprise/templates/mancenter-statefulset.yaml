@@ -96,6 +96,18 @@ spec:
           mountPath: /secrets
         {{- end }}
         env:
+        {{- if .Values.mancenter.adminCredentialsSecretName }}
+        - name: MC_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mancenter.adminCredentialsSecretName }}
+              key: username
+        - name: MC_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mancenter.adminCredentialsSecretName }}
+              key: password
+        {{- end }}
         {{- if .Values.mancenter.contextPath }}
         - name: MC_CONTEXT_PATH
           value: {{ .Values.mancenter.contextPath }}
