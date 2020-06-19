@@ -1,9 +1,7 @@
 # Hazelcast Helm Charts
 
 This is a repository for Hazelcast Helm Charts. For more information about installing and using Helm, see its
-[README.md](https://github.com/kubernetes/helm/tree/master/README.md). To get a quick introduction to Charts see this [chart document](https://github.com/kubernetes/helm/blob/master/docs/charts.md).
-
-Note that the structure and style of this repository and the Helm Charts themselves is similar to the [Official Helm Chart repository](https://github.com/helm/charts).
+[README.md](https://github.com/kubernetes/helm/tree/master/README.md). To get a quick introduction to Charts see this [chart document](https://helm.sh/docs/intro/quickstart/).
 
 We also have specific instructions for [IBM Cloud](IBM_Cloud.md).
 
@@ -11,15 +9,29 @@ We also have specific instructions for [IBM Cloud](IBM_Cloud.md).
 
 Add the Hazelcast repository:
 
-    $ helm repo add hazelcast https://hazelcast.github.io/charts/
+    $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
     $ helm repo update
 
 Then, you can install the charts by:
 
     $ helm install my-release hazelcast/<chart>           # Helm 3
     $ helm install --name my-release hazelcast/<chart>    # Helm 2
-    
+
 The available list of charts can be found in the [stable](stable) directory.
+
+For users who already added `hazelcast` repo to their local helm client before; you need to run `helm repo add` command again to use latest charts at the new chart repo:
+
+    $ helm repo list
+    NAME            URL
+    hazelcast       https://hazelcast.github.io/charts/
+    ...
+
+    $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
+
+    $ helm repo list
+    NAME            URL
+    hazelcast       https://hazelcast-charts.s3.amazonaws.com/
+    ...
 
 Please note that if `hazelcast-enterprise` (or `hazelcast-jet-enterprise`) chart is used, hazelcast enterprise license key must be passed to the helm chart as below. You can contact sales@hazelcast.com for a trial license key.
 
@@ -49,7 +61,7 @@ If you have Helm installed in your system, you can start deploying Hazelcast Hel
 
 ### Why is Management Center EXTERNAL-IP not assigned?
 
-[Minikube](https://github.com/kubernetes/minikube) is a tool that makes it easy to run Kubernetes locally. However, It does not come with LoadBalancer so Management Center can't be accessible with external IP. 
+[Minikube](https://github.com/kubernetes/minikube) is a tool that makes it easy to run Kubernetes locally. However, It does not come with LoadBalancer so Management Center can't be accessible with external IP.
 
 You can see below that EXTERNAL-IP is pending when you install hazelcast helm charts via `helm install` and execute `kubectl get services` right after.
 
@@ -70,7 +82,7 @@ In some Kubernetes Clusters, RBAC might not be enabled by default so you might e
 Error: release funky-woodpecker failed: roles.rbac.authorization.k8s.io “funky-woodpecker-hazelcast-enterprise” is forbidden: attempt to grant extra privileges: [PolicyRule{APIGroups:[“”], Resources:[“endpoints”], Verbs:[“get”]} PolicyRule{APIGroups:[“”], Resources:[“endpoints”], Verbs:[“list”]}] user=&{system:serviceaccount:kube-system:tiller 411da847-9999-11e8-bf5e-ba0dc6d88758 [system:serviceaccounts system:serviceaccounts:kube-system system:authenticated] map[]} ownerrules=[] ruleResolutionErrors=[clusterroles.rbac.authorization.k8s.io “cluster-admin” not found]
 ```
 
-In that case, you need either enable debug or pass `--set rbac.create=false` into your `helm install` command. 
+In that case, you need either enable debug or pass `--set rbac.create=false` into your `helm install` command.
 
 ### Why is Management Center Pod in Pending state?
 
@@ -89,7 +101,7 @@ $ kubectl get pv
 NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                                                  STORAGECLASS   REASON    AGE
 pvc-7f4baaff-a63d-11e8-9df7-0800277c0239   8Gi        RWO            Delete           Bound     default/mouthy-alpaca-hazelcast-enterprise-mancenter   standard                 4d
 
-$ kubectl get pvc 
+$ kubectl get pvc
 NAME                                           STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 mouthy-alpaca-hazelcast-enterprise-mancenter   Bound     pvc-7f4baaff-a63d-11e8-9df7-0800277c0239   8Gi        RWO            standard       4d
 ```
