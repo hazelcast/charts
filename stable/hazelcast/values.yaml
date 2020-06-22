@@ -51,6 +51,9 @@ hazelcast:
   # configurationFiles are any additional Hazelcast configuration files
   # configurationFiles:
 
+# annotations is an array of metadata for Hazelcast IMDG Statefulset
+annotations: {}
+
 # affinity specifies the affinity/anti-affinity of different pods. The commented out
 # example below shows how you could ensure your hazelcast pods are scheduled on
 # different Kubernetes nodes
@@ -252,6 +255,9 @@ mancenter:
       network:
         cluster-members:
           - ${serviceName}
+
+  # annotations is an array of metadata for Management Center Statefulset
+  annotations: {}
 
   # affinity specifies the Management Center affinity/anti-affinity of different pods
   # affinity:

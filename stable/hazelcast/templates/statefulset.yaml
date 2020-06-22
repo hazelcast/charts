@@ -25,6 +25,9 @@ spec:
         role: hazelcast
       annotations:
         checksum/hazelcast-config: {{ toYaml .Values.hazelcast.yaml | sha256sum }}
+        {{- range $key, $val := .Values.annotations }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
     spec:
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:

@@ -24,6 +24,10 @@ spec:
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
         role: mancenter
+      {{- if .Values.mancenter.annotations }}
+      annotations:
+{{ toYaml .Values.mancenter.annotations | indent 8 }}
+      {{- end }}
     spec:
       {{- if .Values.mancenter.image.pullSecrets }}
       imagePullSecrets:

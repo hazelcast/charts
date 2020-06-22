@@ -43,15 +43,21 @@ Follow the steps to have the Hazelcast IMDG Enterprise up and running on your cl
 4. To install the chart with the release name `hz-mc` and `latest` images. If you have already imported different image versions, please update `image.tag` and `mancenter.image.tag` parameters:
     ```
     $ helm install hz-mc --set hazelcast.licenseKey=<HZ_LICENSE_KEY>\
-        --set image.repository=image-registry.openshift-image-registry.svc:5000/hazelcast/hazelcast-4-rhel8 \
+        --set image.repository=image-registry.openshift-image-registry.svc:5000/<your-project>/hazelcast-4-rhel8 \
         --set image.tag=latest \
         --set securityContext.enabled=false \
-        --set mancenter.image.repository=image-registry.openshift-image-registry.svc:5000/hazelcast/management-center-4-rhel8 \
+        --set mancenter.image.repository=image-registry.openshift-image-registry.svc:5000/<your-project>/management-center-4-rhel8 \
         --set mancenter.image.tag=latest \
         --set mancenter.service.type=ClusterIP \
         hazelcast/hazelcast-enterprise
     ```
-    You can find all configurable parameters of the Hazelcast chart and their default values at README.md
+    You can find all configurable parameters of the Hazelcast chart and their default values at [README](https://github.com/hazelcast/charts/blob/master/stable/hazelcast-enterprise/README.md) of the chart.
+
+
+    If you want to enable `CPD metering` for Hazelcast IMDG Enterprise service, you can modify `<YOUR PROJECT>` and `<HZ_LICENSE_KEY>` at [ICP4D-values.yaml](https://github.com/hazelcast/charts/blob/master/stable/hazelcast-enterprise/ICP4D-values.yaml) and create helm release with it:
+    ```
+    $ helm instal hz-mc -f ICP4D-values.yaml hazelcast/hazelcast-enterprise
+    ```
 
 5. Run the following `oc` command to verify the deployment:
     ```
@@ -111,11 +117,11 @@ Follow the steps to have the Hazelcast IMDG Enterprise up and running on your cl
     $ docker pull registry.connect.redhat.com/hazelcast/management-center-4-rhel8:latest
     $ docker pull registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8:latest
 
-    $ docker tag registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8:latest ${HOST}/hazelcast/hazelcast-4-rhel8:latest
-    $ docker push ${HOST}/hazelcast/hazelcast-4-rhel8:latest
+    $ docker tag registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8:latest ${HOST}/<your-project>/hazelcast-4-rhel8:latest
+    $ docker push ${HOST}/<your-project>/hazelcast-4-rhel8:latest
 
-    $ docker tag registry.connect.redhat.com/hazelcast/management-center-4-rhel8:latest ${HOST}/hazelcast/management-center-4-rhel8:latest
-    $ docker push ${HOST}/hazelcast/management-center-4-rhel8:latest
+    $ docker tag registry.connect.redhat.com/hazelcast/management-center-4-rhel8:latest ${HOST}/<your-project>/management-center-4-rhel8:latest
+    $ docker push ${HOST}/<your-project>/management-center-4-rhel8:latest
     ```
 
 5. Verfiy Image Streams that are imported into your project/namespace:
