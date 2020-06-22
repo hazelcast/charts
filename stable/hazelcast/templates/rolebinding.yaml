@@ -11,7 +11,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "hazelcast.fullname" . }}
+  name: {{ template "hazelcast.fullname" . }}-{{ .Release.Namespace }}
 subjects:
 - kind: ServiceAccount
   name: {{ template "hazelcast.serviceAccountName" . }}
