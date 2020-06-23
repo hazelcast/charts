@@ -40,9 +40,14 @@ Follow the steps to have the Hazelcast IMDG Enterprise up and running on your cl
     $ helm repo update
     ```
 
-4. To install the chart with the release name `hz-mc` and `latest` images. If you have already imported different image versions, please update `image.tag` and `mancenter.image.tag` parameters:
+4. Create Secret with your Hazelcast License Key:
     ```
-    $ helm install hz-mc --set hazelcast.licenseKey=<HZ_LICENSE_KEY>\
+    $ oc create secret generic hazelcast-license-key-secret --from-literal=key="<HZ_LICENSE_KEY>"
+    ```
+
+6. To install the chart with the release name `hz-mc` and `latest` images. If you have already imported different image versions, please update `image.tag` and `mancenter.image.tag` parameters:
+    ```
+    $ helm install hz-mc --set hazelcast.licenseKeySecretName=hazelcast-license-key-secret \
         --set image.repository=image-registry.openshift-image-registry.svc:5000/<your-project>/hazelcast-4-rhel8 \
         --set image.tag=latest \
         --set securityContext.enabled=false \
@@ -54,12 +59,12 @@ Follow the steps to have the Hazelcast IMDG Enterprise up and running on your cl
     You can find all configurable parameters of the Hazelcast chart and their default values at [README](https://github.com/hazelcast/charts/blob/master/stable/hazelcast-enterprise/README.md) of the chart.
 
 
-    If you want to enable `CPD metering` for Hazelcast IMDG Enterprise service, you can modify `<YOUR PROJECT>` and `<HZ_LICENSE_KEY>` at [ICP4D-values.yaml](https://github.com/hazelcast/charts/blob/master/stable/hazelcast-enterprise/ICP4D-values.yaml) and create helm release with it:
+    If you want to enable `CPD metering` for Hazelcast IMDG Enterprise service, you can modify `<YOUR PROJECT>` at [ICP4D-values.yaml](https://github.com/hazelcast/charts/blob/master/stable/hazelcast-enterprise/ICP4D-values.yaml) and create helm release with it:
     ```
-    $ helm instal hz-mc -f ICP4D-values.yaml hazelcast/hazelcast-enterprise
+    $ helm install hz-mc -f ICP4D-values.yaml hazelcast/hazelcast-enterprise
     ```
 
-5. Run the following `oc` command to verify the deployment:
+7. Run the following `oc` command to verify the deployment:
     ```
     $ oc get all
     NAME                                         READY   STATUS    RESTARTS   AGE
@@ -81,7 +86,7 @@ Follow the steps to have the Hazelcast IMDG Enterprise up and running on your cl
     imagestream.image.openshift.io/management-center-4-rhel8   default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/management-center-4-rhel8   latest   6 minutes ago
     ```
 
-6. Management Center service can be exposed by creating a route with such command:
+8. Management Center service can be exposed by creating a route with such command:
     ```
     $ oc expose service/hz-mc-hazelcast-enterprise-mancenter
     route.route.openshift.io/hz-mc-hazelcast-enterprise-mancenter exposed
@@ -147,7 +152,12 @@ Follow the steps to have the Hazelcast IMDG Enterprise up and running on your cl
     imagestream.image.openshift.io "management-center-4-rhel8" deleted
     ```
 
-3. Delete Management Center route:
+3. Delete license secret:
+    ```
+    $ oc delete secret hazelcast-license-key-secret
+    ```
+
+4. Delete Management Center route:
     ```
     oc delete route.route.openshift.io/hz-mc-hazelcast-enterprise-mancenter
     ```

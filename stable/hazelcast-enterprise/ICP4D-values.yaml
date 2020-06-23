@@ -12,7 +12,7 @@ annotations:
   cloudpakVersion: "3.0"
 
 hazelcast:
-  licenseKey: <HZ_LICENSE_KEY>
+  licenseKeySecretName: hazelcast-license-key-secret
 
 mancenter:
   enabled: true
