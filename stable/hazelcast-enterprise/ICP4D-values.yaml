@@ -1,6 +1,6 @@
 image:
   repository: "image-registry.openshift-image-registry.svc:5000/<YOUR PROJECT>/hazelcast-4-rhel8"
-  tag: "latest"
+  tag: "4.0.1"
 securityContext:
   enabled: false
 annotations:
@@ -18,7 +18,7 @@ mancenter:
   enabled: true
   image:
     repository: "image-registry.openshift-image-registry.svc:5000/<YOUR PROJECT>/management-center-4-rhel8"
-    tag: "latest"
+    tag: "4.0.3-1"
   service:
     type: ClusterIP
   annotations:
