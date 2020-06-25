@@ -1,0 +1,30 @@
+image:
+  repository: "image-registry.openshift-image-registry.svc:5000/<YOUR PROJECT>/hazelcast-4-rhel8"
+  tag: "4.0.1"
+securityContext:
+  enabled: false
+annotations:
+  productID: "HazelcastIMDGEnterprise_401_5701"
+  productName: "Hazelcast IMDG Enterprise"
+  productVersion: "4.0.1"
+  cloudpakId: "eb9998dcc5d24e3eb5b6fb488f750fe2"
+  cloudpakName: "IBM Cloud Pak for Data"
+  cloudpakVersion: "3.0"
+
+hazelcast:
+  licenseKeySecretName: hazelcast-license-key-secret
+
+mancenter:
+  enabled: true
+  image:
+    repository: "image-registry.openshift-image-registry.svc:5000/<YOUR PROJECT>/management-center-4-rhel8"
+    tag: "4.0.3-1"
+  service:
+    type: ClusterIP
+  annotations:
+    productID: "HazelcastIMDGEnterprise_401_5701"
+    productName: "Hazelcast IMDG Enterprise"
+    productVersion: "4.0.1"
+    cloudpakId: "eb9998dcc5d24e3eb5b6fb488f750fe2"
+    cloudpakName: "IBM Cloud Pak for Data"
+    cloudpakVersion: "3.0"

@@ -19,19 +19,18 @@ Deploying Hazelcast IMDG Enterprise on IBM Cloud Pak for Data uses the following
 ## **Installation**
 Follow the steps to have the Hazelcast IMDG Enterprise up and running on your cluster.
 
-1. Add `latest` RHEL based Hazelcast IMDG Enterprise images into you project, if you want to use different version of the service, please change the `latest` with the version:
+1. Add RHEL based Hazelcast IMDG Enterprise images into you project, if you want to use different version of the service:
     ```
-    $ oc import-image hazelcast/hazelcast-4-rhel8:latest --from=registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8 --confirm
-
-    $ oc import-image hazelcast/management-center-4-rhel8:latest --from=registry.connect.redhat.com/hazelcast/management-center-4-rhel8 --confirm
+    $ oc import-image hazelcast/hazelcast-4-rhel8:4.0.1 --from=registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8 --confirm
+    $ oc import-image hazelcast/management-center-4-rhel8:4.0.3-1 --from=registry.connect.redhat.com/hazelcast/management-center-4-rhel8 --confirm
     ```
     You can find all Hazelcasty IMDG Enterprise and Management Center RHEL based images at [RedHat Container Catalog](https://catalog.redhat.com/software/containers/search?vendor_name=Hazelcast).
 2. Verfiy Image Streams that are imported:
     ```
     $ oc get all
     NAME                                                       IMAGE REPOSITORY                                                                                           TAGS     UPDATED
-    imagestream.image.openshift.io/hazelcast-4-rhel8           default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/hazelcast-4-rhel8           latest
-    imagestream.image.openshift.io/management-center-4-rhel8   default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/management-center-4-rhel8   latest
+    imagestream.image.openshift.io/hazelcast-4-rhel8           default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/hazelcast-4-rhel8           4.0.1
+    imagestream.image.openshift.io/management-center-4-rhel8   default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/management-center-4-rhel8   4.0.3-1
     ```
 
 3. Add Hazelcast helm charts repo:
@@ -40,20 +39,31 @@ Follow the steps to have the Hazelcast IMDG Enterprise up and running on your cl
     $ helm repo update
     ```
 
-4. To install the chart with the release name `hz-mc` and `latest` images. If you have already imported different image versions, please update `image.tag` and `mancenter.image.tag` parameters:
+4. Create Secret with your Hazelcast License Key:
     ```
-    $ helm install hz-mc --set hazelcast.licenseKey=<HZ_LICENSE_KEY>\
-        --set image.repository=image-registry.openshift-image-registry.svc:5000/hazelcast/hazelcast-4-rhel8 \
-        --set image.tag=latest \
+    $ oc create secret generic hazelcast-license-key-secret --from-literal=key="<HZ_LICENSE_KEY>"
+    ```
+
+5. To install the chart with the `hz-mc` release name, run following `helm` command:
+    ```
+    $ helm install hz-mc --set hazelcast.licenseKeySecretName=hazelcast-license-key-secret \
+        --set image.repository=image-registry.openshift-image-registry.svc:5000/<YOUR_PROJECT>/hazelcast-4-rhel8 \
+        --set image.tag=4.0.1 \
         --set securityContext.enabled=false \
-        --set mancenter.image.repository=image-registry.openshift-image-registry.svc:5000/hazelcast/management-center-4-rhel8 \
-        --set mancenter.image.tag=latest \
+        --set mancenter.image.repository=image-registry.openshift-image-registry.svc:5000/<YOUR_PROJECT>/management-center-4-rhel8 \
+        --set mancenter.image.tag=4.0.3-1 \
         --set mancenter.service.type=ClusterIP \
         hazelcast/hazelcast-enterprise
     ```
-    You can find all configurable parameters of the Hazelcast chart and their default values at README.md
+    You can find all configurable parameters of the Hazelcast chart and their default values at [README](https://github.com/hazelcast/charts/blob/master/stable/hazelcast-enterprise/README.md) of the chart.
 
-5. Run the following `oc` command to verify the deployment:
+
+    If you want to enable `CPD metering` for Hazelcast IMDG Enterprise service, you can modify `<YOUR PROJECT>` at [ICP4D-values.yaml](https://github.com/hazelcast/charts/blob/master/stable/hazelcast-enterprise/ICP4D-values.yaml) and create helm release with it:
+    ```
+    $ helm install hz-mc -f ICP4D-values.yaml hazelcast/hazelcast-enterprise
+    ```
+
+6. Run the following `oc` command to verify the deployment:
     ```
     $ oc get all
     NAME                                         READY   STATUS    RESTARTS   AGE
@@ -71,11 +81,11 @@ Follow the steps to have the Hazelcast IMDG Enterprise up and running on your cl
     statefulset.apps/hz-mc-hazelcast-enterprise-mancenter   1/1     2m8s
 
     NAME                                                       IMAGE REPOSITORY                                                                                           TAGS     UPDATED
-    imagestream.image.openshift.io/hazelcast-4-rhel8           default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/hazelcast-4-rhel8           latest   6 minutes ago
-    imagestream.image.openshift.io/management-center-4-rhel8   default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/management-center-4-rhel8   latest   6 minutes ago
+    imagestream.image.openshift.io/hazelcast-4-rhel8           default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/hazelcast-4-rhel8           4.0.1   6 minutes ago
+    imagestream.image.openshift.io/management-center-4-rhel8   default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/management-center-4-rhel8   4.0.3-1   6 minutes ago
     ```
 
-6. Management Center service can be exposed by creating a route with such command:
+7. Management Center service can be exposed by creating a route with such command:
     ```
     $ oc expose service/hz-mc-hazelcast-enterprise-mancenter
     route.route.openshift.io/hz-mc-hazelcast-enterprise-mancenter exposed
@@ -102,28 +112,28 @@ Follow the steps to have the Hazelcast IMDG Enterprise up and running on your cl
     ```
 
 3. Go to your project:
-   ```
-   $ oc project <your-projecct>
-   ```
+    ```
+    $ oc project <YOUR_PROJECT>
+    ```
 
 4. Pull RHEL based images into your local and tag images with that route registry’s url and push them to it:
     ```
-    $ docker pull registry.connect.redhat.com/hazelcast/management-center-4-rhel8:latest
-    $ docker pull registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8:latest
+    $ docker pull registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8:4.0.1
+    $ docker pull registry.connect.redhat.com/hazelcast/management-center-4-rhel8:4.0.3-1
 
-    $ docker tag registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8:latest ${HOST}/hazelcast/hazelcast-4-rhel8:latest
-    $ docker push ${HOST}/hazelcast/hazelcast-4-rhel8:latest
+    $ docker tag registry.connect.redhat.com/hazelcast/hazelcast-4-rhel8:4.0.1 ${HOST}/<YOUR_PROJECT>/hazelcast-4-rhel8:4.0.1
+    $ docker push ${HOST}/<YOUR_PROJECT>/hazelcast-4-rhel8:4.0.1
 
-    $ docker tag registry.connect.redhat.com/hazelcast/management-center-4-rhel8:latest ${HOST}/hazelcast/management-center-4-rhel8:latest
-    $ docker push ${HOST}/hazelcast/management-center-4-rhel8:latest
+    $ docker tag registry.connect.redhat.com/hazelcast/management-center-4-rhel8:4.0.3-1 ${HOST}/<YOUR_PROJECT>/management-center-4-rhel8:4.0.3-1
+    $ docker push ${HOST}/<YOUR_PROJECT>/management-center-4-rhel8:4.0.3-1
     ```
 
 5. Verfiy Image Streams that are imported into your project/namespace:
     ```
     $ oc get all
     NAME                                                       IMAGE REPOSITORY                                                                                           TAGS     UPDATED
-    imagestream.image.openshift.io/hazelcast-4-rhel8           default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/hazelcast-4-rhel8           latest   9 seconds ago
-    imagestream.image.openshift.io/management-center-4-rhel8   default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/management-center-4-rhel8   latest   3 minutes ago
+    imagestream.image.openshift.io/hazelcast-4-rhel8           default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/hazelcast-4-rhel8           4.0.1   9 seconds ago
+    imagestream.image.openshift.io/management-center-4-rhel8   default-route-openshift-image-registry.apps.p-ella.ibmplayground.com/hazelcast/management-center-4-rhel8   4.0.3-1   3 minutes ago
     ```
 6. Then follow same deployments steps at [Installation](#installation) section.
 
@@ -141,7 +151,12 @@ Follow the steps to have the Hazelcast IMDG Enterprise up and running on your cl
     imagestream.image.openshift.io "management-center-4-rhel8" deleted
     ```
 
-3. Delete Management Center route:
+3. Delete license secret:
+    ```
+    $ oc delete secret hazelcast-license-key-secret
+    ```
+
+4. Delete Management Center route:
     ```
     oc delete route.route.openshift.io/hz-mc-hazelcast-enterprise-mancenter
     ```
