@@ -21,4 +21,4 @@ if [[ "$MODIFIED_CHARTS" == *"hazelcast-jet-enterprise"* ]]; then
 fi
 
 ct lint --config ${WORKSPACE}/test/ct.yaml
-ct install --config ${WORKSPACE}/test/ct.yaml
+ct install --config ${WORKSPACE}/test/ct.yaml --debug
