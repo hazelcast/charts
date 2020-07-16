@@ -166,6 +166,8 @@ service:
   type: ClusterIP
   # port is the Kubernetes service port
   port: 5701
+  # Static NodePort, if set.
+  nodePort: false
   # clusterIP set to None makes the service headless
   # It is required if DNS Lookup is used (https://github.com/hazelcast/hazelcast-kubernetes#dns-lookup)
   clusterIP: "None"
