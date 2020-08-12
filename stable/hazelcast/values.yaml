@@ -42,7 +42,6 @@ hazelcast:
             enabled: true
             service-name: ${serviceName}
             namespace: ${namespace}
-            resolve-not-ready-addresses: true
         rest-api:
           enabled: true
           endpoint-groups:
@@ -209,7 +208,7 @@ mancenter:
     # repository is the Hazelcast Management Center image name
     repository: "hazelcast/management-center"
     # tag is the Hazelcast Management Center image tag
-    tag: "4.0.3"
+    tag: "4.2020.08"
     # pullPolicy is the Docker image pull policy
     # It's recommended to change this to 'Always' if the image tag is 'latest'
     # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
@@ -256,8 +255,10 @@ mancenter:
   yaml:
     hazelcast-client:
       network:
-        cluster-members:
-          - ${serviceName}
+        kubernetes:
+          enabled: true
+          service-name: ${serviceName}
+          namespace: ${namespace}
 
   # annotations is an array of metadata for Management Center Statefulset
   annotations: {}
