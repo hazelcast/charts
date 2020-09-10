@@ -1,0 +1,5 @@
+remote: origin
+target-branch: 3.12.z
+chart-dirs:
+  - stable
+helm-extra-args: --timeout 10m
