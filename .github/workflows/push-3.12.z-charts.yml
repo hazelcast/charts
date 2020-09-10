@@ -2,7 +2,7 @@ name: Push Helm 3.12.z charts to the repo
 
 on:
   push:
-    branches: '3.12.z'
+    branches: 3.12.z
 
 jobs:
   build:
