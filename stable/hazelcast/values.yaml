@@ -308,6 +308,9 @@ mancenter:
     # service annotations for management center
     annotations: {}
 
+  # customVolume is the configuration for any volume mounted as '/data/custom/' (e.g. to mount a volume with custom JARs)
+  # customVolume:
+
   # Hazelcast Management Center Liveness probe
   livenessProbe:
     # enabled is a flag to used to enable liveness probe

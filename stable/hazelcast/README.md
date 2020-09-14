@@ -194,6 +194,76 @@ Custom Hazelcast configuration can be specified inside `values.yaml`, as the `ha
                 resolve-not-ready-addresses: true
             <!-- Custom Configuration Placeholder -->
 
+## Adding custom JAR files to the IMDG/Management Center classpath
+
+You can mount any volume which contains your JAR files to the pods created by helm chart using `customVolume` configuration.
+
+When the `customVolume` set, it will mount provided volume to the pod on `/data/custom` path. This path is also appended to the classpath of running Java process.
+
+For example, if you have existing [Local Persistent Volumes](https://kubernetes.io/blog/2019/04/04/kubernetes-1.14-local-persistent-volumes-ga/) and Persistent Volume Claims like below;
+
+```yaml
+  kind: StorageClass
+  apiVersion: storage.k8s.io/v1
+  metadata:
+    name: local-storage
+  provisioner: kubernetes.io/no-provisioner
+  volumeBindingMode: WaitForFirstConsumer
+
+  ---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: <hz-custom-local-pv / mc-custom-local-pv>
+  spec:
+    storageClassName: local-storage
+    capacity:
+      storage: 1Gi
+    accessModes:
+      - ReadWriteOnce
+    local:
+      path: </path/to/your/jars>
+    nodeAffinity:
+      required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - <YOUR_NODE>
+  ---
+
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: < hz-custom-local-pv-claim / mc-custom-local-pv-claim>
+  spec:
+    storageClassName: local-storage
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+      storage: 1Gi
+```
+
+You can configure your Helm chart to use it like below in your `values.yaml` file.
+
+For IMDG:
+```yaml
+customVolume:
+  persistentVolumeClaim:
+    claimName: hz-custom-local-pv-claim
+```
+
+For Management Center:
+```yaml
+mancenter:
+  ...
+  customVolume:
+    persistentVolumeClaim:
+      claimName: mc-custom-local-pv-claim
+```
+
 # Notable changes
 
 ## 2.8.0

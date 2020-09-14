@@ -97,6 +97,10 @@ spec:
         - name: mancenter-secrets
           mountPath: /secrets
         {{- end }}
+        {{- if .Values.mancenter.customVolume }}
+        - name: mancenter-custom
+          mountPath: /data/custom
+        {{- end }}
         env:
         {{- if .Values.mancenter.adminCredentialsSecretName }}
         - name: MC_ADMIN_USER
@@ -113,6 +117,10 @@ spec:
         {{- if .Values.mancenter.contextPath }}
         - name: MC_CONTEXT_PATH
           value: {{ .Values.mancenter.contextPath }}
+        {{- end }}
+        {{- if .Values.mancenter.customVolume }}
+        - name: MC_CLASSPATH
+          value: "/data/custom:/data/custom/*"
         {{- end }}
         - name: MC_LICENSE_KEY
         {{- if .Values.mancenter.licenseKeySecretName }}
@@ -164,6 +172,10 @@ spec:
         {{- else if (eq .Values.mancenter.persistence.enabled false) }}
         emptyDir: {}
         {{- end }}
+      {{- if .Values.mancenter.customVolume }}
+      - name: mancenter-custom
+{{ toYaml .Values.mancenter.customVolume | indent 8 }}
+      {{- end }}
     {{ if and (eq .Values.mancenter.persistence.enabled true) (empty .Values.mancenter.persistence.existingClaim) }}
   volumeClaimTemplates:
   - metadata:
