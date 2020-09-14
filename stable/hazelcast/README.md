@@ -198,7 +198,7 @@ Custom Hazelcast configuration can be specified inside `values.yaml`, as the `ha
 
 You can mount any volume which contains your JAR files to the pods created by helm chart using `customVolume` configuration.
 
-When the `customVolume` set, it will mount provided volume to the pod on `/data/custom` path. This path also appended to the classpath of running Java process.
+When the `customVolume` set, it will mount provided volume to the pod on `/data/custom` path. This path is also appended to the classpath of running Java process.
 
 For example, if you have existing [Local Persistent Volumes](https://kubernetes.io/blog/2019/04/04/kubernetes-1.14-local-persistent-volumes-ga/) and Persistent Volume Claims like below;
 
