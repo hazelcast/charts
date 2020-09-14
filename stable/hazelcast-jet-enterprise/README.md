@@ -10,8 +10,7 @@ Visit [Hazelcast Jet Enterprise](https://hazelcast.com/products/jet/enterprise/)
 
     $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
     $ helm repo update
-    $ helm install my-release hazelcast/hazelcast-jet-enterprise        # Helm 3
-    $ helm install --name my-release hazelcast/hazelcast-jet-enterprise # Helm 2
+    $ helm install my-release hazelcast/hazelcast-jet-enterprise
 
 For users who already added `hazelcast` repo to their local helm client before; you need to run `helm repo add` command again to use latest charts at the new chart repo:
 
@@ -39,8 +38,8 @@ This chart bootstraps a [Hazelcast Jet Enterprise](https://github.com/hazelcast/
 
 To install the chart with the release name `my-release`:
 
-    $ helm install my-release hazelcast/hazelcast-jet-enterprise        # Helm 3
-    $ helm install --name my-release hazelcast/hazelcast-jet-enterprise # Helm 3
+    $ helm install my-release hazelcast/hazelcast-jet-enterprise
+    $ helm install --name my-release hazelcast/hazelcast-jet-enterprise
 
 The command deploys Hazelcast Jet Enterprise on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
 
@@ -142,13 +141,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
-    # Helm 3
     $ helm install my-release \
-      --set cluster.memberCount=3,serviceAccount.create=false \
-        hazelcast/hazelcast-jet-enterprise
-
-    # Helm 2
-    $ helm install --name my-release \
       --set cluster.memberCount=3,serviceAccount.create=false \
         hazelcast/hazelcast-jet-enterprise
 
@@ -156,8 +149,7 @@ The above command sets number of Hazelcast Jet members to 3 and disables REST en
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
-    $ helm install my-release -f values.yaml hazelcast/hazelcast-jet-enterprise        # Helm 3
-    $ helm install --name my-release -f values.yaml hazelcast/hazelcast-jet-enterprise # Helm 2
+    $ helm install my-release -f values.yaml hazelcast/hazelcast-jet-enterprise
 
 > **Tip**: You can use the default values.yaml
 
@@ -199,13 +191,7 @@ Custom Hazelcast IMDG and Hazelcast Jet configuration can be specified inside `v
 
 Alternatively, above parameters can be modified directly via `helm` commands. For example,
 
-    # Helm 3
     $ helm install my-jet-release \
-      --set jet.yaml.hazelcast-jet.instance.backup-count=2,jet.yaml.hazelcast.network.kubernetes.service-name=jet-service \
-        hazelcast/hazelcast-jet
-
-    # Helm 2
-    $ helm install --name my-jet-release \
       --set jet.yaml.hazelcast-jet.instance.backup-count=2,jet.yaml.hazelcast.network.kubernetes.service-name=jet-service \
         hazelcast/hazelcast-jet
 

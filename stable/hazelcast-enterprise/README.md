@@ -6,8 +6,7 @@
 
     $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
     $ helm repo update
-    $ helm install my-release --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise        # Helm 3
-    $ helm install --name my-release --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise # Helm 2
+    $ helm install my-release --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise
 
 For users who already added `hazelcast` repo to their local helm client before; you need to run `helm repo add` command again to use latest charts from our new chart repo:
 
@@ -36,8 +35,7 @@ This chart bootstraps a [Hazelcast Enterprise](https://github.com/hazelcast/haze
 
 To install the chart with the release name `my-release`:
 
-    $ helm install my-release --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise        # Helm 3
-    $ helm install --name my-release --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise # Helm 2
+    $ helm install my-release --set hazelcast.licenseKey=<license_key> hazelcast/hazelcast-enterprise
 
 The command deploys Hazelcast on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
 
@@ -167,13 +165,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
-    # Helm 3
     $ helm install my-release \
-      --set hazelcast.licenseKey=<license_key>,cluster.memberCount=3 \
-        hazelcast/hazelcast-enterprise
-
-    # Helm 2
-    $ helm install --name my-release \
       --set hazelcast.licenseKey=<license_key>,cluster.memberCount=3 \
         hazelcast/hazelcast-enterprise
 
@@ -181,8 +173,7 @@ The above command sets number of Hazelcast members to 3.
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
-    $ helm install my-release -f values.yaml hazelcast/hazelcast-enterprise        # Helm 3
-    $ helm install --name my-release -f values.yaml hazelcast/hazelcast-enterprise # Helm 2
+    $ helm install my-release -f values.yaml hazelcast/hazelcast-enterprise
 
 > **Tip**: You can use the default values.yaml with the `hazelcast.license`
 > filled in
@@ -216,20 +207,7 @@ To enable SSL-protected communication between members and clients, you need firs
 
 Then, run your cluster with SSL enabled and keystore secrets mounted into your PODs.
 
-    # Helm 3
     $ helm install --my-release \
-      --set hazelcast.licenseKey=<license_key> \
-      --set hazelcast.ssl=true \
-      --set secretsMountName=keystore \
-      --set hazelcast.javaOpts='-Djavax.net.ssl.keyStore=/data/secrets/keystore -Djavax.net.ssl.keyStorePassword=<keystore_password> -Djavax.net.ssl.trustStore=/data/secrets/truststore -Djavax.net.ssl.trustStorePassword=<truststore_password>' \
-      --set mancenter.ssl=true \
-      --set mancenter.secretsMountName=keystore \
-      --set mancenter.javaOpts='-Dhazelcast.mc.tls.keyStore=/secrets/keystore -Dhazelcast.mc.tls.keyStorePassword=<keystore_password> -Dhazelcast.mc.tls.trustStore=/secrets/truststore -Dhazelcast.mc.tls.trustStorePassword=<truststore_password>' \
-      --set mancenter.service.port=8443 \
-        hazelcast/hazelcast-enterprise
-
-    # Helm 2
-    $ helm install --name my-release \
       --set hazelcast.licenseKey=<license_key> \
       --set hazelcast.ssl=true \
       --set secretsMountName=keystore \
