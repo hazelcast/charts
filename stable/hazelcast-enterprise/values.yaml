@@ -321,7 +321,7 @@ mancenter:
   # Management Center persistence properties
   persistence:
     # enabled is a flag to enable persistence for Management Center
-    enabled: false
+    enabled: true
     # existingClaim is a name of the existing Persistence Volume Claim that will be used for persistence
     # if not defined, a new Persistent Value Claim is created with the default name
     # existingClaim:
@@ -331,7 +331,7 @@ mancenter:
     # size is the size of Persistent Volume Claim
     size: 8Gi
     # https://kubernetes.io/docs/concepts/storage/storage-classes/
-    storageClass: my-storage-class
+    #storageClass: my-storage-class
 
   # Hazelcast Management Center Service properties
   service:
