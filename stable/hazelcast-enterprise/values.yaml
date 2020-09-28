@@ -330,6 +330,7 @@ mancenter:
     - ReadWriteOnce
     # size is the size of Persistent Volume Claim
     size: 8Gi
+    # storageClass defines the storage class used for Management Center. Read more at: https://kubernetes.io/docs/concepts/storage/storage-classes/
 
   # Hazelcast Management Center Service properties
   service:
