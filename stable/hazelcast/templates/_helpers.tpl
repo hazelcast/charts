@@ -61,3 +61,11 @@ If release name contains chart name it will be used as a full name.
 {{- define "mancenter.fullname" -}}
 {{ (include "hazelcast.fullname" .) | trunc 53 | }}-mancenter
 {{- end -}}
+
+{{/*
+Create the name of the Management Center app.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "mancenter.name" -}}
+{{- printf "%s" .Chart.Name | trunc 53 | trimSuffix "-" | }}-mancenter
+{{- end -}}
