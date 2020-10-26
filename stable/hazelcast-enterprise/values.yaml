@@ -219,7 +219,7 @@ metrics:
   service:
     type: ClusterIP
     port: 8080
-    portName: metrics8080
+    portName: metrics
     annotations:
       prometheus.io/scrape: "true"
       prometheus.io/path: "/metrics"
