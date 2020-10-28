@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast Jet Enterprise image name
   repository: "hazelcast/hazelcast-jet-enterprise"
   # tag is the Hazelcast Jet image tag
-  tag: "4.2"
+  tag: "4.3"
   # pullPolicy is the Docker image pull policy
   # It's recommended to change this to 'Always' if the image tag is 'latest'
   # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
@@ -223,6 +223,7 @@ metrics:
   service:
     type: ClusterIP
     port: 8080
+    portName: metrics
     annotations:
       prometheus.io/scrape: "true"
       prometheus.io/path: "/metrics"
@@ -242,7 +243,7 @@ managementcenter:
     # repository is the Hazelcast Jet Management Center image name
     repository: "hazelcast/hazelcast-jet-management-center"
     # tag is the Hazelcast Jet Management Center image tag
-    tag: "4.2"
+    tag: "4.3"
     # pullPolicy is the Docker image pull policy
     # It's recommended to change this to 'Always' if the image tag is 'latest'
     # ref: http://kubernetes.io/docs/user-guide/images/#updating-images

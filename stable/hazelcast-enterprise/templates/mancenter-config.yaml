@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "mancenter.fullname" . }}-configuration
   labels:
-    app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+    app.kubernetes.io/name: {{ template "mancenter.name" . }}
     helm.sh/chart: {{ template "hazelcast.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"

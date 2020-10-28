@@ -75,7 +75,7 @@ spec:
           hostPort: {{ .Values.hostPort }}
         {{- end }}
         {{- if .Values.metrics.enabled }}
-        - name: metrics
+        - name: {{ .Values.metrics.service.portName }}
           containerPort: {{ .Values.metrics.service.port }}
         {{- end }}
         {{- if .Values.livenessProbe.enabled }}
