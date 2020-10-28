@@ -25,7 +25,7 @@ cluster:
 # Hazelcast properties
 hazelcast:
   # enabled is a flag to enable Hazelcast application
-  enabled: true
+  enabled: false
   # javaOpts are additional JAVA_OPTS properties for Hazelcast member
   javaOpts:
   # loggingLevel is the level of Hazelcast logs (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, and FINEST)
@@ -225,14 +225,15 @@ mancenter:
 
   # ingress configuration for mancenter
   ingress:
-    enabled: false
-    annotations: {}
-    # hosts:
-    # - hazelcast-mancenter.cluster.domain
-    # tls:
-    # - secretName: hazelcast-ingress-tls
-    #   hosts:
-    #   - hazelcast-mancenter.cluster.domain
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: "nginx-pre"
+    hosts:
+      - hz4m-workspace.edicom.es
+    tls:
+      - secretName: todos-edicom-es
+        hosts:
+          - hz4m-workspace.edicom.es
 
   # ssl is a flag to enable SSL for Management Center
   ssl: false
@@ -300,12 +301,12 @@ mancenter:
     # size is the size of Persistent Volume Claim
     size: 8Gi
     # storageClass defines the storage class used for Management Center. Read more at: https://kubernetes.io/docs/concepts/storage/storage-classes/
-    # storageClass:
+    storageClass: csi-rbd-sc
 
   # Hazelcast Management Center Service properties
   service:
     # type defines the Kubernetes service type ('ClusterIP', 'LoadBalancer', or 'NodePort')
-    type: LoadBalancer
+    type: ClusterIP
     # port is the Kubernetes service port
     port: 8080
     # service https port
