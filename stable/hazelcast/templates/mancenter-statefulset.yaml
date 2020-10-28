@@ -24,6 +24,9 @@ spec:
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
         role: mancenter
+        {{- if .Values.mancenter.podLabels }}
+{{ toYaml .Values.mancenter.podLabels | indent 8 }}
+        {{- end }}
       {{- if .Values.mancenter.annotations }}
       annotations:
 {{ toYaml .Values.mancenter.annotations | indent 8 }}
@@ -151,7 +154,11 @@ spec:
       securityContext:
         fsGroup: {{ .Values.securityContext.fsGroup }}
       {{- end }}
+      {{- if .Values.mancenter.priorityClassName }}
+      priorityClassName: "{{ .Values.mancenter.priorityClassName }}"
+      {{- end }}
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountToken }}
       volumes:
       - name: config
         configMap:
