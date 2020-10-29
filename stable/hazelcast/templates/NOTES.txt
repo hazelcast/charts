@@ -1,3 +1,4 @@
+{{- if .Values.hazelcast.enabled }}
 ** Hazelcast cluster is being deployed! **
 
 -------------------------------------------------------------------------------
@@ -33,10 +34,11 @@ To access Hazelcast from outside the Kubernetes cluster:
      clientConfig.getNetworkConfig().addAddress("$NODE_IP:$NODE_PORT");
 {{- end }}
 
-{{- if .Values.mancenter.enabled }}
-
 -------------------------------------------------------------------------------
 
+{{- end }}
+
+{{- if .Values.mancenter.enabled }}
 To access Hazelcast Management Center:
 
 {{- if contains "LoadBalancer" .Values.mancenter.service.type }}
