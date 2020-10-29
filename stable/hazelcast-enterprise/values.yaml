@@ -24,6 +24,8 @@ cluster:
 
 # Hazelcast properties
 hazelcast:
+  # enabled is a flag to enable Hazelcast application
+  enabled: true
   # licenseKey is the Hazelcast Enterprise License Key (always required to run Hazelcast Enterprise)
   licenseKey:
   # licenseKeySecretName is the name of the secret where the Hazelcast Enterprise License Key is stored (can be used instead of licenseKey)

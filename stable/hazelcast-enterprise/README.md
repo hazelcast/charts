@@ -60,6 +60,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |image.pullPolicy|Image pull policy|IfNotPresent|
 |image.pullSecrets|Specify docker-registry secret names as an array|nil|
 |cluster.memberCount|Number of Hazelcast members|2|
+|hazelcast.enabled|Turn on and off Hazelcast application|true|
 |hazelcast.licenseKey|Hazelcast Enterprise License Key|nil|
 |hazelcast.licenseKeySecretName|Kubernetes Secret Name, where Hazelcast Enterprise License Key is stored (can be used instead of licenseKey)|nil|
 |hazelcast.ssl|Enable SSL for Hazelcast|false|

@@ -1,4 +1,4 @@
-{{- if and (or .Values.hazelcast.configurationFiles .Values.hazelcast.yaml) (not .Values.hazelcast.existingConfigMap) }}
+{{- if and .Values.hazelcast.enabled (or .Values.hazelcast.configurationFiles .Values.hazelcast.yaml) (not .Values.hazelcast.existingConfigMap) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

@@ -24,6 +24,8 @@ cluster:
 
 # Hazelcast properties
 hazelcast:
+  # enabled is a flag to enable Hazelcast application
+  enabled: true
   # javaOpts are additional JAVA_OPTS properties for Hazelcast member
   javaOpts:
   # loggingLevel is the level of Hazelcast logs (SEVERE, WARNING, INFO, CONFIG, FINE, FINER, and FINEST)
