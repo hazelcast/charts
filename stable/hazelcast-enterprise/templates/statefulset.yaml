@@ -24,6 +24,9 @@ spec:
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
         role: hazelcast
+      {{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+      {{- end }}
       annotations:
         checksum/hazelcast-config: {{ toYaml .Values.hazelcast.yaml | sha256sum }}
         {{- range $key, $val := .Values.annotations }}
@@ -158,7 +161,11 @@ spec:
             drop:
             - ALL
         {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+      {{- end }}
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountToken }}
       volumes:
         - name: hazelcast-storage
           configMap:

@@ -86,6 +86,13 @@ nodeSelector: {}
 # customPorts is the whole ports section to customize how Hazelcast container ports are defined
 # customPorts:
 
+# labels to add to the pod container metadata
+podLabels: {}
+#  key: value
+
+# specify a custom priority class name
+priorityClassName: ""
+
 gracefulShutdown:
   enabled: true
   maxWaitSeconds: 600
@@ -168,6 +175,8 @@ rbac:
 serviceAccount:
   # Specifies whether a ServiceAccount should be created
   create: true
+  # Whether the token associated with the service account should be automatically mounted
+  automountToken: true
   # The name of the ServiceAccount to use.
   # If not set and create is true, a name is generated using the fullname template
   name:
@@ -275,6 +284,13 @@ mancenter:
   # nodeSelector is an array of Hazelcast Management Center Node labels for POD assignments
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
   nodeSelector: {}
+
+  # labels to add to the mancenter pod container metadata
+  podLabels: {}
+  #  key: value
+
+  # priority class name for mancenter
+  priorityClassName: ""
 
   # Configure resource requests and limits
   # ref: http://kubernetes.io/docs/user-guide/compute-resources/
