@@ -99,6 +99,9 @@ jet:
   # configurationFiles are any additional Hazelcast Jet configuration files
   # configurationFiles:
 
+# annotations is an array of metadata for Hazelcast IMDG Statefulset
+annotations: {}
+
 # affinity specifies the affinity/anti-affinity of different pods. The commented out
 # example below shows how you could ensure your hazelcast jet pods are scheduled on
 # different Kubernetes nodes
@@ -127,6 +130,16 @@ nodeSelector: {}
 # hostPort is a port under which Hazelcast Jet PODs are exposed on the host machines
 # hostPort:
 
+# customPorts is the whole ports section to customize how Hazelcast container ports are defined
+# customPorts:
+
+# labels to add to the pod container metadata
+podLabels: {}
+#  key: value
+
+# specify a custom priority class name
+priorityClassName: ""
+
 gracefulShutdown:
   enabled: true
   maxWaitSeconds: 600
@@ -140,11 +153,11 @@ livenessProbe:
   # periodSeconds decides how often to perform the probe
   periodSeconds: 10
   # timeoutSeconds decides when the probe times out
-  timeoutSeconds: 5
+  timeoutSeconds: 10
   # successThreshold is the minimum consecutive successes for the probe to be considered successful after having failed
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
-  failureThreshold: 3
+  failureThreshold: 10
   # url path that will be called to check liveness
   path: /hazelcast/health/node-state
   # port that will be used in liveness probe calls
@@ -161,11 +174,11 @@ readinessProbe:
   # periodSeconds decides how often to perform the probe
   periodSeconds: 10
   # timeoutSeconds decides when the probe times out
-  timeoutSeconds: 1
+  timeoutSeconds: 10
   # successThreshold is the minimum consecutive successes for the probe to be considered successful after having failed
   successThreshold: 1
   # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
-  failureThreshold: 3
+  failureThreshold: 10
   # url path that will be called to check readiness
   path: /hazelcast/health/node-state
   # port that will be used in readiness probe calls
@@ -180,13 +193,25 @@ readinessProbe:
 #   requests:
 #     memory: 256Mi
 #     cpu: 100m
+#   limits:
+#     memory: 1024Mi
+#     cpu: 200m
 
 # Hazelcast Service properties
 service:
+  # Specifies whether a Service should be created
+  create: true
+  # The name of the Service to use.
+  # The name is used for service discovery by Hazelcast K8S discovery plugin.
+  # If not set and create is true, a name is generated using the fullname template
+  # name:
   # type defines the Kubernetes service type ('ClusterIP', 'LoadBalancer', or 'NodePort')
   type: ClusterIP
   # port is the Kubernetes service port
   port: 5701
+  # Static NodePort, if set.
+  # nodePort: 30100
+
   # clusterIP set to None makes the service headless
   # It is required if DNS Lookup is used (https://github.com/hazelcast/hazelcast-kubernetes#dns-lookup)
   clusterIP: "None"
@@ -232,18 +257,18 @@ metrics:
 # customVolume is the configuration for a volume will be mounted as '/data/custom/' (e.g. to mount a volume with custom JARs)
 # customVolume:
 
-# Hazelcast Jet Management Center application properties
+# Hazelcast Management Center application properties
 managementcenter:
-  # enabled is a flag to enable Hazelcast Jet Management Center application
+  # enabled is a flag to enable Management Center application
   enabled: true
-  ## Hazelcast Jet Management Center image version
-  ## ref: https://hub.docker.com/r/hazelcast/hazelcast-jet-management-center/tags/
+  ## Hazelcast Management Center image version
+  ## ref: https://hub.docker.com/r/hazelcast/management-center/tags/
   ##
   image:
-    # repository is the Hazelcast Jet Management Center image name
-    repository: "hazelcast/hazelcast-jet-management-center"
-    # tag is the Hazelcast Jet Management Center image tag
-    tag: "4.3"
+    # repository is the Hazelcast Management Center image name
+    repository: "hazelcast/management-center"
+    # tag is the Hazelcast Management Center image tag
+    tag: "4.2020.10"
     # pullPolicy is the Docker image pull policy
     # It's recommended to change this to 'Always' if the image tag is 'latest'
     # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
@@ -255,40 +280,67 @@ managementcenter:
     # pullSecrets:
     # - myRegistryKeySecretName
 
-  # javaOpts are additional JAVA_OPTS properties for Hazelcast Jet Management Center
+  # ingress configuration for mancenter
+  ingress:
+    enabled: false
+    annotations: {}
+    # hosts:
+    # - hazelcast-mancenter.cluster.domain
+    # tls:
+    # - secretName: hazelcast-ingress-tls
+    #   hosts:
+    #   - hazelcast-mancenter.cluster.domain
+
+  # ssl is a flag to enable SSL for Management Center
+  ssl: false
+  # javaOpts are additional JAVA_OPTS properties for Hazelcast Management Center
   javaOpts:
 
-  # licenseKey is the license key for Hazelcast Jet Management Center
+  # contextPath is the value for the MC_CONTEXT_PATH environment variable, thus overriding the default context path for Hazelcast Management Center
+  # ref: https://hub.docker.com/r/hazelcast/management-center/
+  contextPath:
+
+  # licenseKey is the license key for Hazelcast Management Center
   # if not provided, it can be filled in the Management Center web interface
   licenseKey:
-
-  # licenseKeySecretName is the name of the secret where the Hazelcast
-  # Jet Management Center License Key is stored (can be used instead of licenseKey)
+  # licenseKeySecretName is the name of the secret where the Hazelcast Management Center License Key is stored (can be used instead of licenseKey)
   # licenseKeySecretName:
 
-  # affinity specifies the Hazelcast Jet Management Center affinity/anti-affinity of different pods
-  # affinity:
+  # adminCredentialsSecretName is Kubernetes Secret Name for admin credentials. Secret has to contain `username` and `password` literals. please check Management Center documentation for password requirements
+  # adminCredentialsSecretName:
 
-  # tolerations enable Hazelcast Jet Management Center POD to be able to run on nodes with taints
-  # tolerations:
 
-  # nodeSelector is an array of Hazelcast Jet Management Center Node labels for POD assignments
-  # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
-  nodeSelector: {}
-
-  # Jet Client configuration YAML file which will be used by Hazelcast Jet Management Center
+  # existingConfigMap defines a ConfigMap which contains Hazelcast Client configuration file(s) that are used instead of hazelcast-client.yaml configuration below
+  # existingConfigMap:
+  # yaml is the Hazelcast Client YAML configuration file
   yaml:
     hazelcast-client:
       cluster-name: jet
       network:
         kubernetes:
           enabled: true
-          namespace: ${namespace}
           service-name: ${serviceName}
-          resolve-not-ready-addresses: true
+          namespace: ${namespace}
 
-  # configurationFiles are any additional Hazelcast Jet Client configuration files
-  # configurationFiles:
+  # annotations is an array of metadata for Management Center Statefulset
+  annotations: {}
+
+  # affinity specifies the Management Center affinity/anti-affinity of different pods
+  # affinity:
+
+  # tolerations enable Management Center POD to be able to run on nodes with taints
+  # tolerations:
+
+  # nodeSelector is an array of Hazelcast Management Center Node labels for POD assignments
+  # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+  nodeSelector: {}
+
+  # labels to add to the mancenter pod container metadata
+  podLabels: {}
+  #  key: value
+
+  # priority class name for mancenter
+  priorityClassName: ""
 
   # Configure resource requests and limits
   # ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -297,19 +349,40 @@ managementcenter:
   #   requests:
   #     memory: 256Mi
   #     cpu: 100m
+  #   limits:
+  #     memory: 1024Mi
+  #     cpu: 200m
 
-  # Hazelcast Jet Management Center Service properties
+  # Management Center persistence properties
+  persistence:
+    # enabled is a flag to enable persistence for Management Center
+    enabled: true
+    # existingClaim is a name of the existing Persistence Volume Claim that will be used for persistence
+    # if not defined, a new Persistent Value Claim is created with the default name
+    # existingClaim:
+    # accessModes defines the access modes for the created Persistent Volume Claim
+    accessModes:
+      - ReadWriteOnce
+    # size is the size of Persistent Volume Claim
+    size: 8Gi
+    # storageClass defines the storage class used for Management Center. Read more at: https://kubernetes.io/docs/concepts/storage/storage-classes/
+    # storageClass:
+
+  # Hazelcast Management Center Service properties
   service:
     # type defines the Kubernetes service type ('ClusterIP', 'LoadBalancer', or 'NodePort')
     type: LoadBalancer
     # port is the Kubernetes service port
-    port: 8081
+    port: 8080
     # service https port
     httpsPort: 443
     # service annotations for management center
     annotations: {}
 
-  # Hazelcast Jet Management Center Liveness probe
+  # customVolume is the configuration for any volume mounted as '/data/custom/' (e.g. to mount a volume with custom JARs)
+  # customVolume:
+
+  # Hazelcast Management Center Liveness probe
   livenessProbe:
     # enabled is a flag to used to enable liveness probe
     enabled: true
@@ -323,8 +396,7 @@ managementcenter:
     successThreshold: 1
     # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
     failureThreshold: 3
-
-  # Hazelcast Jet Management Center Readiness probe
+  # Hazelcast Management Center Readiness probe
   readinessProbe:
     # enabled is a flag to used to enable readiness probe
     enabled: true
@@ -338,3 +410,6 @@ managementcenter:
     successThreshold: 1
     # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
     failureThreshold: 3
+
+  # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
+  # secretsMountName:

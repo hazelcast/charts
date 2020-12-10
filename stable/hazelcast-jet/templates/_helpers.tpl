@@ -67,5 +67,5 @@ Create the name of the Management Center app.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "managementcenter.name" -}}
-{{- printf "%s" .Chart.Name | trunc 53 | trimSuffix "-" | }}-management-center
+{{- printf "%s" .Chart.Name | trunc 45 | trimSuffix "-" | }}-management-center
 {{- end -}}
