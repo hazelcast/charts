@@ -1,0 +1,44 @@
+{{- if .Values.managementcenter.ingress.enabled -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "{{ include "managementcenter.fullname" . }}"
+  labels:
+    app.kubernetes.io/name: {{ template "managementcenter.name" . }}
+    helm.sh/chart: {{ template "hazelcast-jet.chart" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+{{- if .Values.managementcenter.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.managementcenter.ingress.annotations | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.managementcenter.ingress.tls }}
+  tls:
+  {{- range .Values.managementcenter.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . | quote }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- $serviceName := include "managementcenter.fullname" . -}}
+  {{- if .Values.managementcenter.ingress.hosts }}
+  {{- range $host := .Values.managementcenter.ingress.hosts }}
+    - host: {{ $host | quote }}
+      http:
+        paths:
+          - backend:
+              serviceName: {{ $serviceName }}
+              servicePort: mc-http
+  {{- end }}
+  {{- else }}
+  - http:
+      paths:
+      - backend:
+          serviceName: {{ $serviceName }}
+          servicePort: mc-https-port
+  {{- end }}
+{{- end }}
