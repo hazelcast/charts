@@ -122,7 +122,7 @@ spec:
           mountPath: /data/custom
         {{- end }}
         env:
-        - name: HZ_LICENSE_KEY
+        - name: HZ_LICENSEKEY
         {{- if .Values.hazelcast.licenseKeySecretName }}
           valueFrom:
             secretKeyRef:
