@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast image name
   repository: "hazelcast/hazelcast-enterprise"
   # tag is the Hazelcast image tag
-  tag: "4.1"
+  tag: "4.1.1"
   # pullPolicy is the Docker image pull policy
   # It's recommended to change this to 'Always' if the image tag is 'latest'
   # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
