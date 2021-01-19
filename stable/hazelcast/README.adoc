@@ -158,7 +158,7 @@ probe to be considered successful after having failed |`+1+`
 |`+readinessProbe.failureThreshold+` |Minimum consecutive failures for the probe
 to be considered failed after having succeeded. |`+3+`
 
-|`+readinessProbe.path+` |URL path that will be called to check readiness. |`+/hazelcast/health/ready+`
+|`+readinessProbe.path+` |URL path that will be called to check readiness. |`+/hazelcast/health/node-state+`
 
 |`+readinessProbe.port+` |Port that will be used in readiness probe calls. |`+nil+`
 
