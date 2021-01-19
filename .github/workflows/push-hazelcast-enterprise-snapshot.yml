@@ -1,9 +1,6 @@
 name: Push Hazelcast Enterprise Snapshot Helm charts to the repo
 
 on:
-  push:
-    branches:
-      - snapshot-release
   workflow_dispatch:
 
 jobs:
