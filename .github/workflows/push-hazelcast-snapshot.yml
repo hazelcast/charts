@@ -59,12 +59,12 @@ jobs:
 
       - name: Package modified chart and update index.yaml
         run: |
-          aws s3 cp s3://hazelcast-charts-staging/index.yaml .
+          aws s3 cp s3://hazelcast-charts/index.yaml .
           helm package ./stable/hazelcast
-          helm repo index --url=https://hazelcast-charts-staging.s3.amazonaws.com --merge ./index.yaml .
+          helm repo index --url=https://hazelcast-charts.s3.amazonaws.com --merge ./index.yaml .
 
       - name: Push snapshot chart and new index.yaml to the S3 bucket
         run: |
-          aws s3 cp ./index.yaml s3://hazelcast-charts-staging
-          aws s3 cp hazelcast-${OS_CHART_VERSION}.tgz s3://hazelcast-charts-staging
+          aws s3 cp ./index.yaml s3://hazelcast-charts
+          aws s3 cp hazelcast-${OS_CHART_VERSION}.tgz s3://hazelcast-charts
 
