@@ -45,7 +45,7 @@ jobs:
       - name: Run chart-testing with custom chart values
         run:
           |
-          rm -rf ./stable/hazelcast/ci/jenkins_gke-values.yaml
+          mkdir -p ./stable/hazelcast/ci
           (cat <<EOF
           mancenter:
             licenseKey: ${{ secrets.HZ_LICENSE_KEY }}
@@ -55,7 +55,7 @@ jobs:
           EOF
           ) > ./stable/hazelcast/ci/snapshot-ci-values.yaml
           ct install --charts ./stable/hazelcast --helm-extra-args "--timeout 10m"
-          rm -rf ./stable/hazelcast/ci/snapshot-ci-values.yaml
+          rm -rf ./stable/hazelcast/ci
 
       - name: Package modified chart and update index.yaml
         run: |
