@@ -8,13 +8,13 @@ IFS=. read -r major minor patch <<<"$version"
 # $ ./bump-up-version.sh 4.1.1 app
 # 4.2-SNAPSHOT
 # $ ./bump-up-version.sh 3.5.2 chart
-# 3.5.3-snapshot
+# 3.5.3-latest-snapshot
 if [ $type = app ]; then
     ((minor++))
     printf -v version '%d.%d-SNAPSHOT' "$major" "$((minor))"
 elif [ $type = chart ]; then
     ((patch++))
-    printf -v version '%d.%d.%d-snapshot' "$major" "$minor" "$((patch))"
+    printf -v version '%d.%d.%d-latest-snapshot' "$major" "$minor" "$((patch))"
 fi
 
 echo $version
