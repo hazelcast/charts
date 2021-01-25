@@ -20,7 +20,7 @@ image:
 # Cluster settings
 cluster:
   # memberCount is the number Hazelcast members
-  memberCount: 3
+  memberCount: 2
 
 # Hazelcast properties
 hazelcast:
