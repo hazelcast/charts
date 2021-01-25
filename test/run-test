@@ -18,7 +18,6 @@ do
   if [ $chart == "stable/hazelcast" ]; then
     mkdir -p ${WORKSPACE}/stable/hazelcast/ci
     cat << 'EOF' > ${WORKSPACE}/stable/hazelcast/ci/jenkins_gke-values.yaml
-hazelcast:
 nodeSelector:
   pool: standard
 mancenter:
