@@ -1,7 +1,0 @@
-hazelcast:
-  licenseKey: HAZELCAST_ENTERPRISE_LICENSE
-nodeSelector:
-  pool: standard
-mancenter:
-  nodeSelector:
-    pool: standard

@@ -1,0 +1,70 @@
+name: Push Hazelcast Snapshot Helm charts to the repo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - uses: azure/setup-helm@v1
+        with:
+          version: 'v3.2.1'
+        id: install
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.0.1
+
+      - name: Replace IMDG and MC tags with latest-snapshot
+        run: |
+          sed -i "s/tag:.*/tag: latest-snapshot/g" ./stable/hazelcast/values.yaml
+
+      - name: Update snapshot versions for Chart and App
+        run: |
+          OS_CHART_VERSION=$(grep -oE "^version:(\s+\S+|\S+)" ./stable/hazelcast/Chart.yaml | awk '{ print $2}')
+          OS_CHART_VERSION=$(./.github/scripts/bump-up-version.sh $OS_CHART_VERSION chart)
+          echo "OS_CHART_VERSION=${OS_CHART_VERSION}" >> $GITHUB_ENV
+          sed -i "s/version:.*/version: $OS_CHART_VERSION/g" ./stable/hazelcast/Chart.yaml
+          OS_APP_VERSION=$(grep -oE "^appVersion:(\s+\S+|\S+)"./stable/hazelcast/Chart.yaml | awk '{ print $2}' | sed 's/"//g')
+          OS_APP_VERSION=$(./.github/scripts/bump-up-version.sh $OS_APP_VERSION app)
+          sed -i "s/appVersion:.*/appVersion: $OS_APP_VERSION/g" ./stable/hazelcast/Chart.yaml
+
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.0.0
+
+      - name: Run chart-testing with custom chart values
+        run:
+          |
+          mkdir -p ./stable/hazelcast/ci
+          (cat <<EOF
+          mancenter:
+            licenseKey: ${{ secrets.HZ_LICENSE_KEY }}
+            javaOpts: '-Dhazelcast.mc.rest.enabled=true'
+            service:
+              type: ClusterIP
+          EOF
+          ) > ./stable/hazelcast/ci/snapshot-ci-values.yaml
+          ct install --charts ./stable/hazelcast --helm-extra-args "--timeout 10m"
+          rm -rf ./stable/hazelcast/ci
+
+      - name: Package modified chart and update index.yaml
+        run: |
+          aws s3 cp s3://hazelcast-charts/index.yaml .
+          helm package ./stable/hazelcast
+          helm repo index --url=https://hazelcast-charts.s3.amazonaws.com --merge ./index.yaml .
+
+      - name: Push snapshot chart and new index.yaml to the S3 bucket
+        run: |
+          aws s3 cp ./index.yaml s3://hazelcast-charts
+          aws s3 cp hazelcast-${OS_CHART_VERSION}.tgz s3://hazelcast-charts
+
