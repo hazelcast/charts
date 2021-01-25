@@ -29,13 +29,13 @@ jobs:
         run: |
           sed -i "s/tag:.*/tag: latest-snapshot/g" ./stable/hazelcast/values.yaml
 
-      - name: Bump up Chart and App versions then add on snapshot suffix
+      - name: Update snapshot versions for Chart and App
         run: |
-          OS_CHART_VERSION=$(grep 'version:' ./stable/hazelcast/Chart.yaml | tail -n1 | awk '{ print $2}')
+          OS_CHART_VERSION=$(grep -oE "^version:(\s+\S+|\S+)" ./stable/hazelcast/Chart.yaml | awk '{ print $2}')
           OS_CHART_VERSION=$(./.github/scripts/bump-up-version.sh $OS_CHART_VERSION chart)
           echo "OS_CHART_VERSION=${OS_CHART_VERSION}" >> $GITHUB_ENV
           sed -i "s/version:.*/version: $OS_CHART_VERSION/g" ./stable/hazelcast/Chart.yaml
-          OS_APP_VERSION=$(grep 'appVersion:' ./stable/hazelcast/Chart.yaml | tail -n1 | awk '{ print $2}' | sed 's/"//g')
+          OS_APP_VERSION=$(grep -oE "^appVersion:(\s+\S+|\S+)"./stable/hazelcast/Chart.yaml | awk '{ print $2}' | sed 's/"//g')
           OS_APP_VERSION=$(./.github/scripts/bump-up-version.sh $OS_APP_VERSION app)
           sed -i "s/appVersion:.*/appVersion: $OS_APP_VERSION/g" ./stable/hazelcast/Chart.yaml
 
