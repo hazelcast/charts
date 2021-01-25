@@ -174,6 +174,24 @@ Alternatively, a YAML file that specifies the values for the parameters can be p
 
 > **Tip**: You can use the default values.yaml
 
+## Using DNS Lookup Discovery
+
+By default, Hazelcast Helm Chart uses [Kubernetes API discovery](https://github.com/hazelcast/hazelcast-kubernetes#understanding-discovery-modes). If you prefer the [DNS Lookup discovery](https://github.com/hazelcast/hazelcast-kubernetes#dns-lookup), use the following configuration.
+
+```yaml
+hazelcast:
+  yaml:
+    hazelcast:
+      network:
+        join:
+          kubernetes:
+            service-dns: "${serviceName}.${namespace}.svc.cluster.local"
+            service-name: ''
+            namespace: ''
+rbac:
+  create: false
+```
+
 ## Custom Hazelcast configuration
 
 Custom Hazelcast configuration can be specified inside `values.yaml`, as the `hazelcast.yaml` property.
