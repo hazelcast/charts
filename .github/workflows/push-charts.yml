@@ -2,7 +2,10 @@ name: Push Helm charts to the repo
 
 on:
   push:
-    branches: master
+    branches:
+      - master
+    paths:
+      - "stable/**"
 
 jobs:
   build:
@@ -23,19 +26,13 @@ jobs:
           version: 'v3.2.1'
         id: install
 
-      - name: Download existing Helm charts and index.yaml
-        run: |
-          mkdir tmp
-          aws s3 sync s3://hazelcast-charts ./tmp
-
-      - name: Package modified Helm charts and update index.yaml
+      - name: Package charts and add them into index.yaml
         run: |
           for CHART in ./stable/*; do helm package ${CHART}; done
-          cp *.tgz ./tmp/
-          helm repo index --url=https://hazelcast-charts.s3.amazonaws.com ./tmp
+          aws s3 cp s3://hazelcast-charts/index.yaml .
+          helm repo index --url=https://hazelcast-charts.s3.amazonaws.com --merge ./index.yaml .
 
-      - name: Push charts to S3 bucket
+      - name: Push charts and index.yaml to S3 bucket
         run: |
-          aws s3 cp ./tmp/index.yaml s3://hazelcast-charts
-          rm -rf ./tmp
-          for CHART in *.tgz; do aws s3 cp ${CHART} s3://hazelcast-charts; done
+          for CHART_TGZ in *.tgz; do aws s3 cp ${CHART_TGZ} s3://hazelcast-charts; done
+          aws s3 cp ./index.yaml s3://hazelcast-charts
