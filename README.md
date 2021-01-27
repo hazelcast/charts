@@ -1,5 +1,7 @@
 # Hazelcast Helm Charts
 
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/hazelcast)](https://artifacthub.io/packages/search?repo=hazelcast)
+
 This is a repository for Hazelcast Helm Charts. For more information about installing and using Helm, see its
 [README.md](https://github.com/kubernetes/helm/tree/master/README.md). To get a quick introduction to Charts see this [chart document](https://helm.sh/docs/intro/quickstart/).
 
