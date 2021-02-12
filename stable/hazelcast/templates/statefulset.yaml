@@ -96,6 +96,10 @@ spec:
           mountPath: /data/custom
         {{- end }}
         env:
+        {{- if .Values.customVolume }}
+        - name: CLASSPATH
+          value: "/data/custom:/data/custom/*"
+        {{- end }}
         - name: POD_NAME
           valueFrom:
             fieldRef:
