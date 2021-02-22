@@ -238,8 +238,11 @@ metrics:
 # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
 # secretsMountName:
 
-# customVolume is the configuration for any volume mounted as '/data/custom/' (e.g. to mount a volume with custom JARs)
+# customVolume is the configuration for any volume mounted as '/data/custom/' and exposed to classpath (e.g. to mount a volume with custom JARs)
 # customVolume:
+
+# externalVolume is the configuration for any volume mounted as '/data/external/'
+# externalVolume:
 
 # Hazelcast Management Center application properties
 mancenter:
