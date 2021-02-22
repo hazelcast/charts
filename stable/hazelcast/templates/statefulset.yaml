@@ -95,6 +95,10 @@ spec:
         - name: hazelcast-custom
           mountPath: /data/custom
         {{- end }}
+        {{- if .Values.externalVolume }}
+        - name: hazelcast-external
+          mountPath: /data/external
+        {{- end }}
         env:
         {{- if .Values.customVolume }}
         - name: CLASSPATH
@@ -137,4 +141,8 @@ spec:
       {{- if .Values.customVolume }}
       - name: hazelcast-custom
 {{ toYaml .Values.customVolume | indent 8 }}
+      {{- end }}
+      {{- if .Values.externalVolume }}
+      - name: hazelcast-external
+{{ toYaml .Values.externalVolume | indent 8 }}
       {{- end }}
