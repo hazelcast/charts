@@ -205,8 +205,11 @@ metrics:
       prometheus.io/path: "/metrics"
       prometheus.io/port: "8080"
 
-# customVolume is the configuration for any volume mounted as '/data/custom/' (e.g. to mount a volume with custom JARs)
+# customVolume is the configuration for any volume mounted as '/data/custom/' and exposed to classpath (e.g. to mount a volume with custom JARs)
 # customVolume:
+
+# externalVolume is the configuration for any volume mounted as '/data/external/'
+# externalVolume:
 
 # Hazelcast Management Center application properties
 mancenter:
