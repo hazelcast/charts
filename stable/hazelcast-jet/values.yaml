@@ -380,4 +380,3 @@ managementcenter:
     failureThreshold: 3
   # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
   # secretsMountName:
-
