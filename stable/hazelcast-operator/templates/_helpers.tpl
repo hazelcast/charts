@@ -35,9 +35,9 @@ Create chart name and version as used by the chart label.
 Create the name of the service account to use
 */}}
 {{- define "hazelcastOperator.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "hazelcastOperator.fullname" .) .Values.serviceAccount.name }}
+{{- if .Values.hazelcastOperator.serviceAccount.create -}}
+    {{ default (include "hazelcastOperator.fullname" .) .Values.hazelcastOperator.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
+    {{ default "default" .Values.hazelcastOperator.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
