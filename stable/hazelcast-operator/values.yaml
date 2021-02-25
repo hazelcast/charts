@@ -1,0 +1,25 @@
+fullnameOverride: hazelcast-operator-fullname
+
+nameOverride: hazelcast-operator-name
+
+hazelcastOperator:
+  replicas: 1
+  image:
+    repository: hazelcast/hazelcast-operator
+    version: 0.3.4
+    pullPolicy: IfNotPresent
+
+  serviceAccount:
+    create: true
+    name: hazelcast-operator-saccount
+
+  role:
+    create: true
+
+  roleBinding:
+    create: true
+
+
+customResources:
+  Hazelcast:
+    create: true
