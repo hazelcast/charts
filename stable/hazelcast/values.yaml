@@ -163,7 +163,8 @@ service:
   # clusterIP set to None makes the service headless
   # It is required if DNS Lookup is used (https://github.com/hazelcast/hazelcast-kubernetes#dns-lookup)
   clusterIP: "None"
-
+  # service annotations for the hazelcast service
+  annotations: {}
 
 # Role-based Access Control
 rbac:
