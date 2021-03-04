@@ -41,7 +41,7 @@ To access Hazelcast Jet Management Center:
 
 {{- if contains "LoadBalancer" .Values.managementcenter.service.type }}
   *) Check Management Center external IP:
-     $ export MANAGEMENT_CENTER_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "hazelcast-jet-management-center.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+     $ export MANAGEMENT_CENTER_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "managementcenter.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
   *) Open Browser at: http://$MANAGEMENT_CENTER_IP:{{ .Values.managementcenter.service.port }}/
 {{- else if contains "ClusterIP" .Values.managementcenter.service.type }}
   *) Forward port from POD:
@@ -51,7 +51,7 @@ To access Hazelcast Jet Management Center:
 {{- else if contains "NodePort" .Values.managementcenter.service.type }}
   *) Check Node IP and Port:
      $ export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
-     $ export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "hazelcast-jet-management-center.fullname" . }})
+     $ export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "managementcenter.fullname" . }})
   *) Open Browser at: http://$NODE_IP:$NODE_PORT/
 {{- end }}
 {{- end }}
