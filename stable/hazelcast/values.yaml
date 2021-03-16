@@ -185,6 +185,7 @@ serviceAccount:
 securityContext:
   # enabled is a flag to enable Security Context
   enabled: true
+  # readOnlyRootFilesystem is a flag to enable readOnlyRootFilesystem for the Hazelcast security context
   readOnlyRootFilesystem: true
 
 # Allows to enable a Prometheus to scrape pods, implemented for Hazelcast version >= 3.12 (or 'latest')
