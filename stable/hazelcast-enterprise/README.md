@@ -112,9 +112,9 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |serviceAccount.automountToken|Whether the token associated with the service account should be automatically mounted|true|
 |serviceAccount.name|Name of Service Account, if not set, the name is generated using the fullname template|nil|
 |securityContext.enabled|Enables Security Context for Hazelcast and Management Center|true|
-|securityContext.runAsUser|User ID used to run the Hazelcast and Management Center containers|65534|
-|securityContext.runAsGroup|Primary Group ID used to run all processes in the Hazelcast Jet and Hazelcast Jet Management Center containers|65534|
-|securityContext.fsGroup|Group ID associated with the Hazelcast and Management Center container|65534|
+|securityContext.runAsUser|User ID used to run the Hazelcast and Management Center containers|nil|
+|securityContext.runAsGroup|Primary Group ID used to run all processes in the Hazelcast Jet and Hazelcast Jet Management Center containers|nil|
+|securityContext.fsGroup|Group ID associated with the Hazelcast and Management Center container|nil|
 |securityContext.readOnlyRootFilesystem|Enables readOnlyRootFilesystem in the Hazelcast security context|true|
 |hotRestart.enabled|Turn on and off Hazelcast Hot Restart feature (Hazelcast configuration must be also updated with the map/cache configuration)|false|
 |hotRestart.existingClaim|Name of the existing Persistence Volume Claim, if not defined, a new is created|nil|

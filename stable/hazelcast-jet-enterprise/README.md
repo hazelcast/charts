@@ -102,9 +102,9 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |serviceAccount.create|Enable installing Service Account|true|
 |serviceAccount.name|Name of Service Account, if not set, the name is generated using the fullname template|nil|
 |securityContext.enabled|Enables Security Context for Hazelcast Jet and Hazelcast Jet Management Center|true|
-|securityContext.runAsUser|User ID used to run the Hazelcast Jet and Hazelcast Jet Management Center containers|65534|
-|securityContext.runAsGroup|Primary Group ID used to run all processes in the Hazelcast Jet and Hazelcast Jet Management Center containers|65534|
-|securityContext.fsGroup|Group ID associated with the Hazelcast Jet and Hazelcast Jet Management Center container|65534|
+|securityContext.runAsUser|User ID used to run the Hazelcast Jet and Hazelcast Jet Management Center containers|nil|
+|securityContext.runAsGroup|Primary Group ID used to run all processes in the Hazelcast Jet and Hazelcast Jet Management Center containers|nil|
+|securityContext.fsGroup|Group ID associated with the Hazelcast Jet and Hazelcast Jet Management Center container|nil|
 |securityContext.readOnlyRootFilesystem|Enables readOnlyRootFilesystem in the Hazelcast Jet and Hazelcast Jet Management Center security containers|true|
 |metrics.enabled|Turn on and off JMX Prometheus metrics available at `/metrics`|false|
 |metrics.service.type|Type of the metrics service|ClusterIP|
