@@ -233,6 +233,8 @@ serviceAccount:
 securityContext:
   # enabled is a flag to enable Security Context
   enabled: true
+  # runAsNonRoot is a flag to run the container as non-root user
+  runAsNonRoot: true
   # readOnlyRootFilesystem is a flag to enable readOnlyRootFilesystem for the Hazelcast security context
   readOnlyRootFilesystem: true
 
