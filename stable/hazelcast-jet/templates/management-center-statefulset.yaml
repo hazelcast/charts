@@ -47,7 +47,7 @@ spec:
       hostIPC: false
       {{- if .Values.securityContext.enabled }}
       securityContext:
-        runAsNonRoot: {{ if eq (int .Values.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}
+        runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
         runAsUser: {{ .Values.securityContext.runAsUser }}
         runAsGroup: {{ .Values.securityContext.runAsGroup }}
         fsGroup: {{ .Values.securityContext.fsGroup }}
@@ -140,7 +140,7 @@ spec:
           value: "{{ if or .Values.managementcenter.licenseKey .Values.managementcenter.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} {{ if or .Values.managementcenter.readinessProbe.enabled .Values.managementcenter.livenessProbe.enabled }}-Dhazelcast.mc.healthCheck.enable=true{{ end }} -DserviceName={{ template "hazelcast-jet.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mc.tls.enabled={{ .Values.managementcenter.ssl }} {{ .Values.managementcenter.javaOpts }}"
         {{- if .Values.securityContext.enabled }}
         securityContext:
-          runAsNonRoot: {{ if eq (int .Values.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}
+          runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
           runAsUser: {{ .Values.securityContext.runAsUser }}
           runAsGroup: {{ .Values.securityContext.runAsGroup }}
           privileged: false
