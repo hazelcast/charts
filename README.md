@@ -158,6 +158,20 @@ To delete them run:
 $ kubectl delete pvc <name-of-the-pvc>
 ```
 
+### "65534: must be in the ranges: [x, y]" or "65534 is not an allowed group"
+
+In OpenShift (and IBM Cloud) environments, the projects/namespaces may be limited to the certain range of user and group ids. Then, installing Hazelcast helm charts with default values results in the following error:
+
+```
+forbidden: unable to validate against any security context constraint: [fsGroup: Invalid value: []int64{65534}: 65534 is not an allowed group spec.containers[0].securityContext.securityContext.runAsUser: Invalid value: 65534: must be in the ranges: [1000560000, 1000569999]]
+``` 
+
+When you face such an issue, you must pick the user and group ids between the allowed range and pass them to the helm chart as below:
+
+```
+helm install my-release --set securityContext.runAsUser=1000560000,securityContext.runAsGroup=1000560000,securityContext.fsGroup=1000560000 hazelcast/<chart>
+``` 
+
 ## How to find us?
 
 In case of any question or issue, please raise a GH issue, send an email to [Hazelcast Google Groups](https://groups.google.com/forum/#!forum/hazelcast) or contact as directly via [Hazelcast Slack](https://slack.hazelcast.com).
