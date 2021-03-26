@@ -243,7 +243,7 @@ Then, run your cluster with SSL enabled and keystore secrets mounted into your P
       --set mancenter.service.port=8443 \
         hazelcast/hazelcast-enterprise
 
-For more information please check [Hazelcast Kubernetes SSL Code Sample](https://github.com/hazelcast/hazelcast-code-samples/tree/master/hazelcast-integration/kubernetes/samples/ssl).
+For more information please check [Hazelcast Kubernetes SSL Guide](https://guides.hazelcast.org/kubernetes-ssl/).
 
 
 ## Adding custom JAR files to the IMDG/Management Center classpath
