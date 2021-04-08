@@ -147,8 +147,69 @@ spec:
         {{- else }}
           value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
+
+        {{- if and .Values.mcm.enabled (not .Values.mcm.baseURL) }}
+        - name: CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
+              key: CLIENT_ID
+        - name: CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
+              key: client_secret
+        - name: AUTHORIZE_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
+              key: AUTHORIZE_ENDPOINT
+        - name: USER_INFO_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
+              key: USER_INFO_ENDPOINT
+        - name: TOKEN_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
+              key: TOKEN_ENDPOINT
+        - name: JWK_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
+              key: JWK_ENDPOINT
+        - name: OIDC_ISSUER_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
+              key: OIDC_ISSUER_URL
+        - name: TRUSTED_URI_PREFIX_0
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
+              key: TRUSTED_URI_PREFIX_0
+        - name: MC_INIT_CMD
+          value: "./bin/mc-conf.sh cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml; ./bin/mc-conf.sh security reset -H /data; ./bin/mc-conf.sh oidc configure -H /data \
+                  --client-id $(CLIENT_ID) \
+                  --client-secret $(CLIENT_SECRET) \
+                  --authorization-endpoint $(AUTHORIZE_ENDPOINT) \
+                  --user-info-endpoint $(USER_INFO_ENDPOINT) \
+                  --token-endpoint $(TOKEN_ENDPOINT) \
+                  --jwk-set-endpoint $(JWK_ENDPOINT) \
+                  --issuer $(OIDC_ISSUER_URL) \
+                  --groups-claim-name 'groups' \
+                  --admin-groups 'icpusers' \
+                  --read-write-groups 'icpusers' \
+                  --read-only-groups 'icpusers' \
+                  --metrics-only-groups 'icpusers' \
+                  --redirect-url $(TRUSTED_URI_PREFIX_0)/oidc/auth \
+                  --user-info-request-http-method POST \
+                  --send-client-info-in-token-request"
+        {{- else }}
         - name: MC_INIT_CMD
           value: "./bin/mc-conf.sh cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml"
+        {{- end }}
         - name: JAVA_OPTS
           value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName .Values.hazelcast.licenseKey .Values.hazelcast.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} {{ if or .Values.mancenter.readinessProbe.enabled .Values.mancenter.livenessProbe.enabled }}-Dhazelcast.mc.healthCheck.enable=true{{ end }} -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} -Dmancenter.ssl={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
         {{- if .Values.securityContext.enabled }}
