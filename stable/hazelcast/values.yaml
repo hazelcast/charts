@@ -250,6 +250,8 @@ mancenter:
   ssl: false
   # javaOpts are additional JAVA_OPTS properties for Hazelcast Management Center
   javaOpts:
+  # loggingLevel is the level of Management Center logs (OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE and ALL)
+  # loggingLevel:
 
   # contextPath is the value for the MC_CONTEXT_PATH environment variable, thus overriding the default context path for Hazelcast Management Center
   # ref: https://hub.docker.com/r/hazelcast/management-center/

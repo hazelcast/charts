@@ -136,6 +136,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |mancenter.image.contextPath|the value for the MC_CONTEXT_PATH environment variable, thus overriding the default context path for Hazelcast Management Center|nil|
 |mancenter.ssl|Enable SSL for Management Center|false|
 |mancenter.javaOpts|Additional JAVA_OPTS properties for Hazelcast Management Center|nil|
+|mancenter.loggingLevel|Level of Management Center logs (OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE and ALL)|nil|
 |mancenter.licenseKey|License Key for Hazelcast Management Center, if not provided, can be filled in the web interface|nil|
 |mancenter.licenseKeySecretName|Kubernetes Secret Name, where Management Center License Key is stored (can be used instead of licenseKey)|nil|
 |mancenter.adminCredentialsSecretName|Kubernetes Secret Name for admin credentials. Secret has to contain `username` and `password` literals. please check Management Center documentation for password requirements|nil|
