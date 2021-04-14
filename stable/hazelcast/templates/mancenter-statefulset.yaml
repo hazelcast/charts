@@ -105,6 +105,10 @@ spec:
           mountPath: /data/custom
         {{- end }}
         env:
+        {{- if .Values.mancenter.loggingLevel }}
+        - name: LOGGING_LEVEL
+          value: {{ .Values.mancenter.loggingLevel }}
+        {{- end }}
         {{- if .Values.mancenter.adminCredentialsSecretName }}
         - name: MC_ADMIN_USER
           valueFrom:

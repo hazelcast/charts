@@ -63,7 +63,6 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |hazelcast.enabled|Turn on and off Hazelcast application|true|
 |hazelcast.licenseKey|Hazelcast Enterprise License Key|nil|
 |hazelcast.licenseKeySecretName|Kubernetes Secret Name, where Hazelcast Enterprise License Key is stored (can be used instead of licenseKey)|nil|
-|hazelcast.ssl|Enable SSL for Hazelcast|false|
 |hazelcast.updateClusterVersionAfterRollingUpgrade|Enable Hazelcast cluster auto version upgrade after the rolling upgrade procedure|true|
 |hazelcast.javaOpts|Additional JAVA_OPTS properties for Hazelcast member|nil|
 |hazelcast.loggingLevel|Level of Hazelcast logs (OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE and ALL)|nil|
@@ -136,6 +135,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |mancenter.image.contextPath|the value for the MC_CONTEXT_PATH environment variable, thus overriding the default context path for Hazelcast Management Center|nil|
 |mancenter.ssl|Enable SSL for Management Center|false|
 |mancenter.javaOpts|Additional JAVA_OPTS properties for Hazelcast Management Center|nil|
+|mancenter.loggingLevel|Level of Management Center logs (OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE and ALL)|nil|
 |mancenter.licenseKey|License Key for Hazelcast Management Center, if not provided, can be filled in the web interface|nil|
 |mancenter.licenseKeySecretName|Kubernetes Secret Name, where Management Center License Key is stored (can be used instead of licenseKey)|nil|
 |mancenter.adminCredentialsSecretName|Kubernetes Secret Name for admin credentials. Secret has to contain `username` and `password` literals. please check Management Center documentation for password requirements|nil|
@@ -230,17 +230,52 @@ To enable SSL-protected communication between members and clients, you need firs
 
     $ kubectl create secret generic keystore --from-file=./keystore --from-file=./truststore
 
-Then, run your cluster with SSL enabled and keystore secrets mounted into your PODs.
+Then, since Kubernetes liveness/readiness probes cannot use SSL, we need to prepare Hazelcast configuration with a separate non-secured port opened for health checks. Create a file `hazelcast.yaml`.
 
-    $ helm install --my-release \
+```
+hazelcast:
+  advanced-network:
+    enabled: true
+    join:
+      kubernetes:
+        enabled: true
+        service-name: ${serviceName}
+        service-port: 5702
+        namespace: ${namespace}
+    member-server-socket-endpoint-config:
+      port:
+        port: 5702
+      ssl:
+        enabled: true
+    client-server-socket-endpoint-config:
+      port:
+        port: 5701
+      ssl:
+        enabled: true
+    rest-server-socket-endpoint-config:
+      port:
+        port: 5703
+      endpoint-groups:
+        HEALTH_CHECK:
+          enabled: true
+```
+
+Then, add this configuration as a ConfigMap.
+
+    $ kubectl create configmap hazelcast-configuration --from-file=hazelcast.yaml
+
+Finally, run your cluster with SSL enabled and keystore secrets mounted into your PODs.
+
+    $ helm install my-release \
       --set hazelcast.licenseKey=<license_key> \
-      --set hazelcast.ssl=true \
       --set secretsMountName=keystore \
+      --set hazelcast.existingConfigMap=hazelcast-configuration \
       --set hazelcast.javaOpts='-Djavax.net.ssl.keyStore=/data/secrets/keystore -Djavax.net.ssl.keyStorePassword=<keystore_password> -Djavax.net.ssl.trustStore=/data/secrets/truststore -Djavax.net.ssl.trustStorePassword=<truststore_password>' \
-      --set mancenter.ssl=true \
+      --set livenessProbe.port=5703 \
+      --set readinessProbe.port=5703 \
       --set mancenter.secretsMountName=keystore \
-      --set mancenter.javaOpts='-Dhazelcast.mc.tls.keyStore=/secrets/keystore -Dhazelcast.mc.tls.keyStorePassword=<keystore_password> -Dhazelcast.mc.tls.trustStore=/secrets/truststore -Dhazelcast.mc.tls.trustStorePassword=<truststore_password>' \
-      --set mancenter.service.port=8443 \
+      --set mancenter.yaml.hazelcast-client.network.ssl.enabled=true \
+      --set mancenter.javaOpts='-Djavax.net.ssl.keyStore=/secrets/keystore -Djavax.net.ssl.keyStorePassword=<keystore_password> -Djavax.net.ssl.trustStore=/secrets/truststore -Djavax.net.ssl.trustStorePassword=<truststore_password>' \
         hazelcast/hazelcast-enterprise
 
 For more information please check [Hazelcast Kubernetes SSL Guide](https://guides.hazelcast.org/kubernetes-ssl/).
