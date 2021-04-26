@@ -1,0 +1,17 @@
+{{- if .Values.mcm.enabled -}}
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ template "mancenter.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+    helm.sh/chart: {{ template "hazelcast.chart" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+spec:
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: {{ template "mancenter.fullname" . }}
+{{- end }}

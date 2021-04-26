@@ -22,6 +22,12 @@ cluster:
   # memberCount is the number Hazelcast members
   memberCount: 3
 
+# Required for IBM CP4MCM deployment
+mcm:
+  enabled: false
+  # Base URL of MCM OpenShift must be defined for CP4MCM versions before 2.3 to enable Management Center at Navigation Menu.
+  baseURL: apps.yellow-22.dev.multicloudops.io
+
 # Hazelcast properties
 hazelcast:
   # enabled is a flag to enable Hazelcast application
