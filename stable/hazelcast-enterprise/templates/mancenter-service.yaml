@@ -8,7 +8,7 @@ metadata:
 {{ else if and .Values.mcm.enabled .Values.mcm.baseURL }}
   annotations:
     name: Hazelcast Management Center
-    id: administer-mcm
+    id: applications
     roles: ClusterAdministrator,Administrator,Operator,Viewer
     url: "http://{{ template "mancenter.fullname" . }}-{{ .Release.Namespace }}.{{ .Values.mcm.baseURL }}"
 {{- end }}

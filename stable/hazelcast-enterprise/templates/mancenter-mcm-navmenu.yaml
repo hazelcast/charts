@@ -11,7 +11,7 @@ metadata:
 spec:
   target: "ManagementCenter"
   name: "Hazelcast Management Center"
-  parentId: "administer-mcm"
+  parentId: "applications"
   roles:
     - name: ClusterAdministrator
     - name: Administrator
