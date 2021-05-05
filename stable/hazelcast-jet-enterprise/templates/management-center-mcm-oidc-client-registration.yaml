@@ -1,0 +1,23 @@
+{{- if and .Values.mcm.enabled (not .Values.mcm.baseURL) -}}
+apiVersion: integrations.sdk.management.ibm.com/v1beta1
+kind: OidcClientRegistration
+metadata:
+  name: {{ template "managementcenter.fullname" . }}-oidcclientregistration
+  labels:
+    app.kubernetes.io/name: {{ template "managementcenter.name" . }}
+    helm.sh/chart: {{ template "hazelcast-jet.chart" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+spec:
+  registration:
+    post_logout_redirect_uris:
+      - http://{{ template "managementcenter.fullname" . }}-{{ .Release.Namespace }}.{{ "{{" }} .OpenShiftBaseUrl {{ "}}" }}
+    trusted_uri_prefixes:
+      - http://{{ template "managementcenter.fullname" . }}-{{ .Release.Namespace }}.{{ "{{" }} .OpenShiftBaseUrl {{ "}}" }}
+    redirect_uris:
+      - http://{{ template "managementcenter.fullname" . }}-{{ .Release.Namespace }}.{{ "{{" }} .OpenShiftBaseUrl {{ "}}" }}/oidc/auth
+    client_secret:
+      secretName: {{ template "managementcenter.fullname" . }}-oidc-reg-secret
+      secretKey: client_secret
+    apply_client_secret: true
+{{- end }}
