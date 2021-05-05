@@ -26,7 +26,7 @@ cluster:
 mcm:
   enabled: false
   # Base URL of MCM OpenShift must be defined for CP4MCM versions before 2.3 to enable Management Center at Navigation Menu.
-  baseURL: apps.yellow-22.dev.multicloudops.io
+  # baseURL:
 
 # Hazelcast Jet properties
 jet:
