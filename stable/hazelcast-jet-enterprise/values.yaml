@@ -22,6 +22,12 @@ cluster:
   # memberCount is the number Hazelcast Jet members
   memberCount: 2
 
+# Required for IBM CP4MCM deployment
+mcm:
+  enabled: false
+  # Base URL of MCM OpenShift must be defined for CP4MCM versions before 2.3 to enable Management Center at Navigation Menu.
+  baseURL: apps.yellow-22.dev.multicloudops.io
+
 # Hazelcast Jet properties
 jet:
   # licenseKey is the Hazelcast Jet Enterprise License Key (always

@@ -5,6 +5,12 @@ metadata:
   {{- if .Values.managementcenter.service.annotations }}
   annotations:
   {{ toYaml .Values.managementcenter.service.annotations | indent 4 }}
+  {{ else if .Values.mcm.enabled }}
+  annotations:
+    name: Hazelcast Management Center
+    id: applications
+    roles: ClusterAdministrator,Administrator,Operator,Viewer
+    url: "http://{{ template "managementcenter.fullname" . }}-{{ .Release.Namespace }}.{{ .Values.mcm.baseURL }}"
   {{- end }}
   name: {{ template "managementcenter.fullname" . }}
   labels:
@@ -12,6 +18,10 @@ metadata:
     helm.sh/chart: {{ template "hazelcast-jet.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+{{- if .Values.mcm.enabled }}
+    inmenu: "true"
+    target: ManagementCenter
+{{- end }}
 spec:
   type: {{ .Values.managementcenter.service.type }}
   {{- if .Values.managementcenter.service.clusterIP }}
