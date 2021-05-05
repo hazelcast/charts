@@ -5,7 +5,7 @@ metadata:
   {{- if .Values.managementcenter.service.annotations }}
   annotations:
   {{ toYaml .Values.managementcenter.service.annotations | indent 4 }}
-  {{ else if .Values.mcm.enabled }}
+  {{ else if and .Values.mcm.enabled .Values.mcm.baseURL }}
   annotations:
     name: Hazelcast Management Center
     id: applications
@@ -18,7 +18,7 @@ metadata:
     helm.sh/chart: {{ template "hazelcast-jet.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-{{- if .Values.mcm.enabled }}
+{{ if and .Values.mcm.enabled .Values.mcm.baseURL }}
     inmenu: "true"
     target: ManagementCenter
 {{- end }}

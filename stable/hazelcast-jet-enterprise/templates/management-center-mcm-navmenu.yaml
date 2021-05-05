@@ -1,0 +1,21 @@
+{{- if and .Values.mcm.enabled (not .Values.mcm.baseURL) -}}
+apiVersion: integrations.sdk.management.ibm.com/v1beta1
+kind: NavMenuEntry
+metadata:
+  name: hazelcast-management-center
+  labels:
+    app.kubernetes.io/name: {{ template "managementcenter.name" . }}
+    helm.sh/chart: {{ template "hazelcast-jet.chart" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+spec:
+  target: "ManagementCenter"
+  name: "Hazelcast Management Center"
+  parentId: "applications"
+  roles:
+    - name: ClusterAdministrator
+    - name: Administrator
+    - name: Operator
+    - name: Viewer
+  url: http://{{ template "managementcenter.fullname" . }}-{{ .Release.Namespace }}.{{ "{{" }} .OpenShiftBaseUrl {{ "}}" }}
+{{- end }}
