@@ -212,6 +212,12 @@ metrics:
 # externalVolume is the configuration for any volume mounted as '/data/external/'
 # externalVolume:
 
+# Init containers to add to the Hazelcast statefulset's pod spec.
+initContainers: []
+  # - name: init-container
+  #   image: alpine
+  #   command: ['/bin/sh', '-c', 'date']
+
 # Hazelcast Management Center application properties
 mancenter:
   # enabled is a flag to enable Management Center application

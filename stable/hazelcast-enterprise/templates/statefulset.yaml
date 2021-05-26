@@ -64,6 +64,10 @@ spec:
       tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
       {{- end }}
+{{- if .Values.initContainers }}
+      initContainers:
+        {{- toYaml .Values.initContainers | nindent 8 }}
+{{- end }}
       containers:
       - name: {{ template "hazelcast.fullname" . }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
