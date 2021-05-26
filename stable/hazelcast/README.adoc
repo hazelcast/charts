@@ -216,7 +216,7 @@ exposed to classpath (e.g. to mount a volume with custom JARs) |`+nil+`
 
 |`+externalVolume+` |Configuration for a volume mounted as `/data/external` |`+nil+`
 
-|`+initContainers+` |List of init containers to add to the Hazelcast Statefulset's pod spec.|`+[]+`|
+|`+initContainers+` |List of init containers to add to the Hazelcast Statefulset's pod spec.|`+[]+`
 
 |`+mancenter.enabled+` |Turn on and off Management Center application |`+true+`
 
