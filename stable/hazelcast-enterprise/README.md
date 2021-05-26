@@ -127,6 +127,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |secretsMountName|Secret name that is mounted as `/data/secrets/` (e.g. with keystore/trustore files)|nil|
 |customVolume|Configuration for a volume mounted as `/data/custom` and exposed to classpath (e.g. to mount a volume with custom JARs)|nil|
 |externalVolume|Configuration for a volume mounted as `/data/external` |nil|
+|initContainers|List of init containers to add to the Hazelcast Statefulset's pod spec.|[]|
 |mancenter.enabled|Turn on and off Management Center application|true|
 |mancenter.image.repository|Hazelcast Management Center Image name|hazelcast/management-center|
 |mancenter.image.tag|Hazelcast Management Center Image tag (NOTE: must be the same or one minor release greater than Hazelcast image version)|{VERSION}|
