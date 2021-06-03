@@ -223,7 +223,7 @@ the `hazelcast.yaml` property.
                 resolve-not-ready-addresses: true
             <!-- Custom Configuration Placeholder -->
 
-Note that some of the Hazelcast Enterprise features requires setting `securityContext.readOnlyRootFilesystem` parameter to `false`. This is the case for the Hot Restart feature or enabling security with OpenSSL.
+Note that some of the Hazelcast Enterprise features requires setting `securityContext.readOnlyRootFilesystem` parameter to `false`. This is the case for the Hot Restart feature or enabling security with OpenSSL. In such cases where `readOnlyRootFilesystem` needs to be set to `true` (i.e. a Pod Security Policy requirement), for Hot Restart to work the the JVM parameter `-Djava.io.tmpdir` should be set to a writable location (for example a [custom volume](#adding-custom-jar-files-to-the-imdgmanagement-center-classpath)).
 
 ## Configuring SSL
 
