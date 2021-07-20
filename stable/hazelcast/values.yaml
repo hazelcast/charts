@@ -222,7 +222,7 @@ initContainers: []
 sidecarContainers: []
   # - name: sidecar-container
   #   image: alpine
-  #   command: ['/bin/sh', '-c', 'date']
+  #   command: ['/bin/sh', '-c', 'while true; do date; sleep 1; done']
 
 # Hazelcast Management Center application properties
 mancenter:

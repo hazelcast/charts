@@ -151,7 +151,7 @@ spec:
             - ALL
         {{- end }}
 {{- if .Values.sidecarContainers }}
-        {{- toYaml .Values.sidecarContainers | nindent 8 }}
+        {{- toYaml .Values.sidecarContainers | nindent 6 }}
 {{- end }}
       {{- if .Values.priorityClassName }}
       priorityClassName: "{{ .Values.priorityClassName }}"
