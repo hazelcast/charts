@@ -218,6 +218,12 @@ initContainers: []
   #   image: alpine
   #   command: ['/bin/sh', '-c', 'date']
 
+# Sidecar containers to add to the Hazelcast statefulset's pod spec.
+sidecarContainers: []
+  # - name: sidecar-container
+  #   image: alpine
+  #   command: ['/bin/sh', '-c', 'while true; do date; sleep 1; done']
+
 # Hazelcast Management Center application properties
 mancenter:
   # enabled is a flag to enable Management Center application
