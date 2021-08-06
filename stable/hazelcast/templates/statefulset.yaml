@@ -138,6 +138,9 @@ spec:
         - name: LOGGING_LEVEL
           value: {{ .Values.hazelcast.loggingLevel }}
         {{- end }}
+        {{- with .Values.env }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
         {{- if .Values.securityContext.enabled }}
         securityContext:
           runAsNonRoot: {{ if eq (int .Values.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}

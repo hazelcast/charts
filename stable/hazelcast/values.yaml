@@ -224,6 +224,14 @@ sidecarContainers: []
   #   image: alpine
   #   command: ['/bin/sh', '-c', 'while true; do date; sleep 1; done']
 
+# Additional Environment variables
+env: []
+  # - name: DB_USERNAME
+  #   valueFrom:
+  #     secretKeyRef:
+  #       key: db-username
+  #       name: servicename-db-creds
+
 # Hazelcast Management Center application properties
 mancenter:
   # enabled is a flag to enable Management Center application
