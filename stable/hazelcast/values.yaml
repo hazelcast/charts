@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast image name
   repository: "hazelcast/hazelcast"
   # tag is the Hazelcast image tag
-  tag: "4.2.1"
+  tag: "5.0"
   # pullPolicy is the Docker image pull policy
   # It's recommended to change this to 'Always' if the image tag is 'latest'
   # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
@@ -37,17 +37,14 @@ hazelcast:
     hazelcast:
       network:
         join:
-          multicast:
-            enabled: false
           kubernetes:
             enabled: true
             service-name: ${serviceName}
             namespace: ${namespace}
         rest-api:
           enabled: true
-          endpoint-groups:
-            HEALTH_CHECK:
-              enabled: true
+      jet:
+        enabled: ${hz.jet.enabled}
   # configurationFiles are any additional Hazelcast configuration files
   # configurationFiles:
 
@@ -231,6 +228,11 @@ env: []
   #     secretKeyRef:
   #       key: db-username
   #       name: servicename-db-creds
+
+# Hazelcast Jet Engine
+jet:
+  # enabled is a flag to enabled Jet engine
+  enabled: true
 
 # Hazelcast Management Center application properties
 mancenter:
