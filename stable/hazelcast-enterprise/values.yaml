@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast image name
   repository: "hazelcast/hazelcast-enterprise"
   # tag is the Hazelcast image tag
-  tag: "4.2.1"
+  tag: "5.0"
   # pullPolicy is the Docker image pull policy
   # It's recommended to change this to 'Always' if the image tag is 'latest'
   # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
@@ -57,15 +57,14 @@ hazelcast:
             namespace: ${namespace}
         rest-api:
           enabled: true
-          endpoint-groups:
-            HEALTH_CHECK:
-              enabled: true
       hot-restart-persistence:
         enabled: ${hazelcast.hotRestart}
         base-dir: /data/hot-restart
         validation-timeout-seconds: 1200
         data-load-timeout-seconds: 900
         auto-remove-stale-data: true
+      jet:
+        enabled: ${hz.jet.enabled}
   # configurationFiles are any additional Hazelcast configuration files
   # configurationFiles:
 
@@ -230,6 +229,11 @@ hotRestart:
   # hostPath is the path of the node machine directory that is used for persistent storage
   # if defined, it's used instead of Persistent Volume Claim
   # hostPath:
+
+# Hazelcast Jet Engine
+jet:
+  # enabled is a flag to enabled Jet engine
+  enabled: true
 
 # Allows to enable a Prometheus to scrape pods, implemented for Hazelcast version >= 3.12 (or 'latest')
 metrics:

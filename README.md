@@ -3,40 +3,14 @@
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/hazelcast)](https://artifacthub.io/packages/search?repo=hazelcast)
 
 This is a repository for Hazelcast Helm Charts. For more information about installing and using Helm, see its
-[README.md](https://github.com/kubernetes/helm/tree/master/README.md). To get a quick introduction to Charts see this [chart document](https://helm.sh/docs/intro/quickstart/).
+[README.md](https://github.com/helm/helm/blob/main/README.md). To get a quick introduction to Charts see this [chart document](https://helm.sh/docs/intro/quickstart/).
 
 We also have specific instructions for [IBM Cloud](IBM_Cloud.md).
 
-## Quick Start
+See corresponding READMEs from below for each chart for step-by-step installation:
 
-Add the Hazelcast repository:
-
-    $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
-    $ helm repo update
-
-Then, you can install the charts by:
-
-    $ helm install my-release hazelcast/<chart>
-
-The available list of charts can be found in the [stable](stable) directory.
-
-For users who already added `hazelcast` repo to their local helm client before; you need to run `helm repo add` command again to use latest charts at the new chart repo:
-
-    $ helm repo list
-    NAME            URL
-    hazelcast       https://hazelcast.github.io/charts/
-    ...
-
-    $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
-
-    $ helm repo list
-    NAME            URL
-    hazelcast       https://hazelcast-charts.s3.amazonaws.com/
-    ...
-
-Please note that if `hazelcast-enterprise` (or `hazelcast-jet-enterprise`) chart is used, hazelcast enterprise license key must be passed to the helm chart as below. You can contact sales@hazelcast.com for a trial license key.
-
-	$ helm install my-release --set hazelcast.licenseKey=$HAZELCAST_ENTERPRISE_LICENSE_KEY hazelcast/hazelcast-enterprise
+- [Hazelcast](stable/hazelcast/README.md)
+- [Hazelcast Enterprise](stable/hazelcast-enterprise/README.md)
 
 
 ## Troubleshooting in Kubernetes Environments
@@ -164,13 +138,13 @@ In OpenShift (and IBM Cloud) environments, the projects/namespaces may be limite
 
 ```
 forbidden: unable to validate against any security context constraint: [fsGroup: Invalid value: []int64{65534}: 65534 is not an allowed group spec.containers[0].securityContext.securityContext.runAsUser: Invalid value: 65534: must be in the ranges: [1000560000, 1000569999]]
-``` 
+```
 
 When you face such an issue, you must pick the user and group ids between the allowed range and pass them to the helm chart as below:
 
 ```
 helm install my-release --set securityContext.runAsUser=1000560000,securityContext.runAsGroup=1000560000,securityContext.fsGroup=1000560000 hazelcast/<chart>
-``` 
+```
 
 ## How to find us?
 

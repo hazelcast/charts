@@ -1,6 +1,8 @@
 # Hazelcast Enterprise
 
-[Hazelcast IMDG Enterprise](https://hazelcast.com/products/enterprise/) is the most widely used in-memory data grid with hundreds of thousands of installed clusters around the world. It offers caching solutions ensuring that data is in the right place when it’s needed for optimal performance.
+[Hazelcast Enterprise](https://hazelcast.com) is a distributed computation and storage platform for consistently low-latency querying, aggregation and stateful computation against event streams and traditional data sources. It allows you to quickly build resource-efficient, real-time applications. You can deploy it at any scale from small edge devices to a large cluster of cloud instances.
+
+A cluster of Hazelcast nodes share both the data storage and computational load which can dynamically scale up and down. When you add new nodes to the cluster, the data is automatically rebalanced across the cluster and currently running computational tasks (known as jobs) snapshot their state and scale with processing guarantees.
 
 ## Quick Start
 
@@ -25,11 +27,11 @@ For users who already added `hazelcast` repo to their local helm client before; 
 
 ## Introduction
 
-This chart bootstraps a [Hazelcast Enterprise](https://github.com/hazelcast/hazelcast-docker/tree/master/hazelcast-enterprise-kubernetes) and [Management Center](https://github.com/hazelcast/management-center-docker) deployments on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a [Hazelcast Enterprise](https://github.com/hazelcast/hazelcast-docker/tree/master/hazelcast-enterprise) and [Management Center](https://github.com/hazelcast/management-center-docker) deployments on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
--   Kubernetes 1.9+
+-   Kubernetes 1.14+
 
 ## Installing the Chart
 
@@ -120,6 +122,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |hotRestart.accessModes|Access Modes of the new Persistent Volume Claim|ReadWriteOnce|
 |hotRestart.size|Size of the new Persistent Volume Claim|8Gi|
 |hotRestart.hostPath|Path of node machine used for persistent storage; if defined, it’s used instead of Persistent Volume Claim|nil|
+|jet.enabled|Turn on and off Hazelcast Jet engine |true|
 |metrics.enabled|Turn on and off JMX Prometheus metrics available at `/metrics`|false|
 |metrics.service.type|Type of the metrics service|ClusterIP|
 |metrics.service.port|Port of the `/metrics` endpoint and the metrics service|8080|
@@ -201,8 +204,8 @@ hazelcast:
         join:
           kubernetes:
             service-dns: "${serviceName}.${namespace}.svc.cluster.local"
-            service-name: ''
-            namespace: ''
+        rest-api:
+          enabled: true
 rbac:
   create: false
 ```
@@ -213,18 +216,18 @@ Custom Hazelcast configuration can be specified inside `values.yaml`, as
 the `hazelcast.yaml` property.
 
     hazelcast:
-       yaml:
+      yaml:
         hazelcast:
           network:
             join:
-              multicast:
-                enabled: false
               kubernetes:
                 enabled: true
                 service-name: ${serviceName}
                 namespace: ${namespace}
-                resolve-not-ready-addresses: true
-            <!-- Custom Configuration Placeholder -->
+            rest-api:
+              enabled: true
+          jet:
+            enabled: ${hz.jet.enabled}
 
 Note that some of the Hazelcast Enterprise features requires setting `securityContext.readOnlyRootFilesystem` parameter to `false`. This is the case for the Hot Restart feature or enabling security with OpenSSL. In such cases where `readOnlyRootFilesystem` needs to be set to `true` (i.e. a Pod Security Policy requirement), for Hot Restart to work the the JVM parameter `-Djava.io.tmpdir` should be set to a writable location (for example a [custom volume](#adding-custom-jar-files-to-the-imdgmanagement-center-classpath)).
 

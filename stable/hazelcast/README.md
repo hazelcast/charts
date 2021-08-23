@@ -1,6 +1,9 @@
 # Hazelcast
 
-[Hazelcast IMDG](http://hazelcast.com/) is the most widely used in-memory data grid with hundreds of thousands of installed clusters around the world. It offers caching solutions ensuring that data is in the right place when it’s needed for optimal performance.
+[Hazelcast](https://hazelcast.com/open-source-projects/) is a distributed computation and storage platform for consistently low-latency querying, aggregation and stateful computation against event streams and traditional data sources. It allows you to quickly build resource-efficient, real-time applications. You can deploy it at any scale from small edge devices to a large cluster of cloud instances.
+
+A cluster of Hazelcast nodes share both the data storage and computational load which can dynamically scale up and down. When you add new nodes to the cluster, the data is automatically rebalanced across the cluster and currently running computational tasks (known as jobs) snapshot their state and scale with processing guarantees.
+
 
 ## Quick Start
 
@@ -24,11 +27,11 @@ For users who already added `hazelcast` repo to their local helm client before; 
 
 ## Introduction
 
-This chart bootstraps a [Hazelcast](https://github.com/hazelcast/hazelcast-docker/tree/master/hazelcast-kubernetes) and [Management Center](https://github.com/hazelcast/management-center-docker) deployments on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a [Hazelcast](https://github.com/hazelcast/hazelcast-docker/tree/master/hazelcast-oss) and [Management Center](https://github.com/hazelcast/management-center-docker) deployments on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
--   Kubernetes 1.9+
+-   Kubernetes 1.14+
 
 ## Installing the Chart
 
@@ -119,6 +122,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | initContainers                                 |List of init containers to add to the Hazelcast Statefulset's pod spec.                                                                                                                                            | []                              |
 | sidecarContainers                              |List of sidecar containers to add to the Hazelcast Statefulset's pod spec.                                                                                                                                         | []                              |
 | env                                            |Additional Environment variables                                                            | []                              |
+| jet.enabled                            | Turn on and off Hazelcast Jet engine                                                                                                                                                                        | true                            |
 | mancenter.enabled                            | Turn on and off Management Center application                                                                                                                                                                       | true                            |
 | mancenter.image.repository                   | Hazelcast Management Center Image name                                                                                                                                                                              | hazelcast/management-center     |
 | mancenter.image.tag                          | Hazelcast Management Center Image tag (NOTE: must be the same or one minor release greater than Hazelcast image version)                                                                                            | {VERSION}                       |
@@ -192,8 +196,8 @@ hazelcast:
         join:
           kubernetes:
             service-dns: "${serviceName}.${namespace}.svc.cluster.local"
-            service-name: ''
-            namespace: ''
+        rest-api:
+          enabled: true
 rbac:
   create: false
 ```
@@ -203,18 +207,18 @@ rbac:
 Custom Hazelcast configuration can be specified inside `values.yaml`, as the `hazelcast.yaml` property.
 
     hazelcast:
-       yaml:
+      yaml:
         hazelcast:
           network:
             join:
-              multicast:
-                enabled: false
               kubernetes:
                 enabled: true
                 service-name: ${serviceName}
                 namespace: ${namespace}
-                resolve-not-ready-addresses: true
-            <!-- Custom Configuration Placeholder -->
+            rest-api:
+              enabled: true
+          jet:
+            enabled: ${hz.jet.enabled}
 
 ## Adding custom JAR files to the IMDG/Management Center classpath
 
