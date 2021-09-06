@@ -146,6 +146,14 @@ When you face such an issue, you must pick the user and group ids between the al
 helm install my-release --set securityContext.runAsUser=1000560000,securityContext.runAsGroup=1000560000,securityContext.fsGroup=1000560000 hazelcast/<chart>
 ```
 
+### Jet engine is disabled via external ConfigMap but it did not work
+
+In that case, you also need to turn off JET engine via chart parameter(`jet.enabled`):
+
+```
+helm install my-release ... --set jet.enabled=false hazelcast/<chart>
+```
+
 ## How to find us?
 
 In case of any question or issue, please raise a GH issue, send an email to [Hazelcast Google Groups](https://groups.google.com/forum/#!forum/hazelcast) or contact as directly via [Hazelcast Slack](https://slack.hazelcast.com).
