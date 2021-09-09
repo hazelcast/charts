@@ -1,5 +1,5 @@
 {{- if .Values.managementcenter.ingress.enabled -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "{{ include "managementcenter.fullname" . }}"
@@ -30,15 +30,23 @@ spec:
     - host: {{ $host | quote }}
       http:
         paths:
-          - backend:
-              serviceName: {{ $serviceName }}
-              servicePort: mc-http
+          - path: "/"
+            pathType: Prefix
+            backend:
+                service:
+                  name: {{ $serviceName }}
+                  port:
+                    name: mc-port
   {{- end }}
   {{- else }}
-  - http:
-      paths:
-      - backend:
-          serviceName: {{ $serviceName }}
-          servicePort: mc-https-port
+    - http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+                service:
+                  name: {{ $serviceName }}
+                  port:
+                    name: mc-https-port
   {{- end }}
 {{- end }}
