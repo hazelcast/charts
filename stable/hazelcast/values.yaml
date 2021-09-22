@@ -201,10 +201,16 @@ metrics:
     type: ClusterIP
     port: 8080
     portName: metrics
+    labels: {}
     annotations:
       prometheus.io/scrape: "true"
       prometheus.io/path: "/metrics"
       prometheus.io/port: "8080"
+  serviceMonitor:
+      port: metrics
+      enabled: false
+      additionalLabels: {}
+
 
 # customVolume is the configuration for any volume mounted as '/data/custom/' and exposed to classpath (e.g. to mount a volume with custom JARs)
 # customVolume:
@@ -223,6 +229,14 @@ sidecarContainers: []
   # - name: sidecar-container
   #   image: alpine
   #   command: ['/bin/sh', '-c', 'while true; do date; sleep 1; done']
+
+## extraVolumeMounts Extra volume mounts to add to the pods
+##
+extraVolumeMounts: []
+
+## extraVolumes Extra volumes to add to the pods
+##
+extraVolumes: []
 
 # Additional Environment variables
 env: []
