@@ -24,6 +24,8 @@ mancenter:
   licenseKey: MC_ENTERPRISE_LICENSE
   nodeSelector:
     pool: standard
+  devMode:
+    enabled: true
   javaOpts: "-Dhazelcast.mc.rest.enabled=true"
 EOF
     sed -i "s/MC_ENTERPRISE_LICENSE/\"${HAZELCAST_ENTERPRISE_LICENSE}\"/g" ${WORKSPACE}/stable/hazelcast/ci/jenkins_gke-values.yaml
@@ -39,6 +41,8 @@ nodeSelector:
 mancenter:
   nodeSelector:
     pool: standard
+  devMode:
+    enabled: true
   javaOpts: "-Dhazelcast.mc.rest.enabled=true"
 EOF
     sed -i "s/HAZELCAST_ENTERPRISE_LICENSE/\"${HAZELCAST_ENTERPRISE_LICENSE}\"/g" ${WORKSPACE}/stable/hazelcast-enterprise/ci/jenkins_gke-values.yaml
