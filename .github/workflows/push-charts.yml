@@ -1,12 +1,11 @@
-name: Push Helm charts to the repo
+name: Push Helm 4.2.z charts to the repo
 
 on:
   push:
     branches:
-      - master
+      - 4.2.z
     paths:
       - "stable/**"
-      - "artifacthub-repo.yml"
 
 jobs:
   build:
@@ -37,7 +36,3 @@ jobs:
         run: |
           for CHART_TGZ in *.tgz; do aws s3 cp ${CHART_TGZ} s3://hazelcast-charts; done
           aws s3 cp ./index.yaml s3://hazelcast-charts
-
-      - name: Push ArtifactHub metadata YAML to the S3 bucket
-        run: |
-          aws s3 cp ./artifacthub-repo.yml s3://hazelcast-charts
