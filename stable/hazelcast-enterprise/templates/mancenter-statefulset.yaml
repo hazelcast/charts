@@ -206,6 +206,9 @@ spec:
                   --redirect-url $(TRUSTED_URI_PREFIX_0)/oidc/auth \
                   --user-info-request-http-method POST \
                   --send-client-info-in-token-request"
+        {{ else if .Values.mancenter.devMode.enabled }}
+        - name: MC_INIT_CMD
+          value: "./bin/mc-conf.sh cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml; ./bin/mc-conf.sh dev-mode configure"
         {{- else }}
         - name: MC_INIT_CMD
           value: "./bin/mc-conf.sh cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml"

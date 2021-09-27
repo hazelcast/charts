@@ -140,6 +140,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |mancenter.image.pullSecrets|Specify docker-registry secret names as an array|nil|
 |mancenter.image.contextPath|the value for the MC_CONTEXT_PATH environment variable, thus overriding the default context path for Hazelcast Management Center|nil|
 |mancenter.ssl|Enable SSL for Management Center|false|
+|mancenter.devMode.enabled|Dev mode is for the Hazelcast clusters running on your local for development or evaluation purposes and it provides quick access to the Management Center without requiring any security credentials|false|
 |mancenter.javaOpts|Additional JAVA_OPTS properties for Hazelcast Management Center|nil|
 |mancenter.loggingLevel|Level of Management Center logs (OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE and ALL)|nil|
 |mancenter.licenseKey|License Key for Hazelcast Management Center, if not provided, can be filled in the web interface|nil|
