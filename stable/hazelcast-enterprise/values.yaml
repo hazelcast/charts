@@ -62,7 +62,8 @@ hazelcast:
         base-dir: /data/hot-restart
         validation-timeout-seconds: 1200
         data-load-timeout-seconds: 900
-        auto-remove-stale-data: true
+        # https://github.com/hazelcast/hazelcast/issues/19373
+        # auto-remove-stale-data: true
       jet:
         enabled: ${hz.jet.enabled}
   # configurationFiles are any additional Hazelcast configuration files
