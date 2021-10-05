@@ -60,7 +60,7 @@ spec:
       tolerations:
 {{ toYaml .Values.mancenter.tolerations | indent 8 }}
       {{- end }}
-      {{- if .Values.topologySpreadConstraints }}
+      {{- if .Values.mancenter.topologySpreadConstraints }}
       topologySpreadConstraints:
 {{ toYaml .Values.mancenter.topologySpreadConstraints | indent 8 }}
       {{- end }}
