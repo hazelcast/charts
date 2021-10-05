@@ -60,6 +60,10 @@ spec:
       tolerations:
 {{ toYaml .Values.mancenter.tolerations | indent 8 }}
       {{- end }}
+      {{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.mancenter.topologySpreadConstraints | indent 8 }}
+      {{- end }}
       containers:
       - name: {{ template "mancenter.fullname" . }}
         image: "{{ .Values.mancenter.image.repository }}:{{ .Values.mancenter.image.tag }}"
