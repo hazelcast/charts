@@ -93,6 +93,9 @@ affinity:
 # tolerations enable Hazelcast PODs to be able to run on nodes with taints
 # tolerations:
 
+# topologySpreadConstraints enable deployment spread based on topology
+# topologySpreadConstraints:
+
 # nodeSelector is an array of Hazelcast Node labels for POD assignments
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
@@ -356,6 +359,9 @@ mancenter:
 
   # tolerations enable Management Center POD to be able to run on nodes with taints
   # tolerations:
+
+  # topologySpreadConstraints enable deployment spread based on topology
+  # topologySpreadConstraints:
 
   # nodeSelector is an array of Hazelcast Management Center Node labels for POD assignments
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
