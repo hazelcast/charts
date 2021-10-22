@@ -17,9 +17,9 @@ spec:
   {{- if .Values.managementcenter.service.clusterIP }}
   clusterIP: {{ .Values.managementcenter.service.clusterIP }}
   {{- end }}
-  { { - if (and (eq .Values.managementcenter.service.type "LoadBalancer") (.Values.managementcenter.service.loadBalancerIP)) } }
-  loadBalancerIP: { { .Values.managementcenter.service.loadBalancerIP } }
-  { { - end } }
+  {{- if (and (eq .Values.managementcenter.service.type "LoadBalancer") (.Values.managementcenter.service.loadBalancerIP)) }}
+  loadBalancerIP: {{ .Values.managementcenter.service.loadBalancerIP }}
+  {{- end }}
   selector:
     app.kubernetes.io/name: {{ template "managementcenter.name" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
