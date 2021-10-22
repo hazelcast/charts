@@ -404,6 +404,8 @@ mancenter:
     httpsPort: 443
     # service annotations for management center
     annotations: {}
+    # service load balancer ip to make management center service accessible over specified ip if the service type is loadbalancer
+    loadBalancerIP: ""
 
   # customVolume is the configuration for any volume mounted as '/data/custom/' (e.g. to mount a volume with custom JARs)
   # customVolume:

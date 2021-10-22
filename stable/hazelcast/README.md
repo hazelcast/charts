@@ -153,6 +153,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | mancenter.persistence.storageClass| Storage class name used for Management Center| nil |
 | mancenter.service.type| Kubernetes service type (`ClusterIP`, `LoadBalancer`, or `NodePort`) | LoadBalancer|
 | mancenter.service.port| Kubernetes service port| 5701|
+| mancenter.service.loadBalancerIP| IP to be used to access management center for `LoadBalancer` service type| nil|
 | mancenter.livenessProbe.enabled | Turn on and off liveness probe | true|
 | mancenter.livenessProbe.initialDelaySeconds| Delay before liveness probe is initiated| 30|
 | mancenter.livenessProbe.periodSeconds | How often to perform the probe | 10|
