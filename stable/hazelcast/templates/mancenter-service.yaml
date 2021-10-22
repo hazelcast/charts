@@ -17,7 +17,7 @@ spec:
   {{- if .Values.mancenter.service.clusterIP }}
   clusterIP: {{ .Values.mancenter.service.clusterIP }}
   {{- end }}
-  {{- if .Values.mancenter.service.loadBalancerIP }}
+  {{- if (and (eq .Values.mancenter.service.type "LoadBalancer") (.Values.mancenter.service.loadBalancerIP)) }}
   loadBalancerIP: {{ .Values.mancenter.service.loadBalancerIP }}
   {{- end }}
   selector:
