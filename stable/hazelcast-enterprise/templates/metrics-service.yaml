@@ -12,6 +12,9 @@ metadata:
 {{ toYaml .Values.metrics.service.annotations | indent 4 }}
 spec:
   type: {{ .Values.metrics.service.type }}
+  {{- if (and (eq .Values.metrics.service.type "LoadBalancer") (.Values.metrics.service.loadBalancerIP)) }}
+  loadBalancerIP: {{ .Values.metrics.service.loadBalancerIP }}
+  {{- end }}
   selector:
     app.kubernetes.io/name: {{ template "hazelcast.name" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
