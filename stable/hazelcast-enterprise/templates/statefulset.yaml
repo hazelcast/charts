@@ -130,13 +130,14 @@ spec:
           mountPath: /data/external
         {{- end }}
         env:
-        - name: HZ_LICENSEKEY
         {{- if .Values.hazelcast.licenseKeySecretName }}
+        - name: HZ_LICENSEKEY
           valueFrom:
             secretKeyRef:
               name: {{ .Values.hazelcast.licenseKeySecretName }}
               key: key
-        {{- else }}
+        {{- else if .Values.hazelcast.licenseKey }}
+        - name: HZ_LICENSEKEY
           value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
         {{- if .Values.customVolume }}

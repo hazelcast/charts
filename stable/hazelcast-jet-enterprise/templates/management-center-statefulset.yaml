@@ -125,13 +125,14 @@ spec:
         - name: MC_CLASSPATH
           value: "/data/custom:/data/custom/*"
         {{- end }}
-        - name: MC_LICENSE_KEY
         {{- if .Values.managementcenter.licenseKeySecretName }}
+        - name: MC_LICENSE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ .Values.managementcenter.licenseKeySecretName }}
               key: key
-        {{- else }}
+        {{- else if .Values.managementcenter.licenseKey }}
+        - name: MC_LICENSE_KEY
           value: {{ .Values.managementcenter.licenseKey }}
         {{- end }}
 
