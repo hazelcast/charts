@@ -35,7 +35,7 @@ spec:
       {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
-      {{- end }}      
+      {{- end }}
       {{- if .Values.gracefulShutdown.enabled }}
       terminationGracePeriodSeconds: {{ .Values.gracefulShutdown.maxWaitSeconds }}
       {{- end }}
@@ -70,7 +70,7 @@ spec:
         {{- if .Values.metrics.enabled }}
         - name: {{ .Values.metrics.service.portName }}
           containerPort: {{ .Values.metrics.service.port }}
-        {{- end }}          
+        {{- end }}
         {{- if .Values.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
@@ -111,13 +111,14 @@ spec:
         - name: PROMETHEUS_PORT
           value: "{{ .Values.metrics.service.port }}"
         {{- end }}
-        - name: JET_LICENSE_KEY
         {{- if .Values.jet.licenseKeySecretName }}
+        - name: JET_LICENSE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ .Values.jet.licenseKeySecretName }}
               key: key
-        {{- else }}
+        {{- else if .Values.jet.licenseKey}}
+        - name: JET_LICENSE_KEY
           value: {{ .Values.jet.licenseKey }}
         {{- end }}
         - name: JAVA_OPTS

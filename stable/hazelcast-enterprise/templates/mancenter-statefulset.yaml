@@ -127,20 +127,23 @@ spec:
         - name: MC_CLASSPATH
           value: "/data/custom:/data/custom/*"
         {{- end }}
-        - name: MC_LICENSE_KEY
         {{- if .Values.mancenter.licenseKeySecretName }}
+        - name: MC_LICENSE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ .Values.mancenter.licenseKeySecretName }}
               key: key
         {{- else if .Values.mancenter.licenseKey }}
+        - name: MC_LICENSE_KEY
           value: {{ .Values.mancenter.licenseKey }}
         {{- else if .Values.hazelcast.licenseKeySecretName }}
+        - name: MC_LICENSE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ .Values.hazelcast.licenseKeySecretName }}
               key: key
-        {{- else }}
+        {{- else if .Values.hazelcast.licenseKey}}
+        - name: MC_LICENSE_KEY
           value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
         - name: MC_INIT_CMD
