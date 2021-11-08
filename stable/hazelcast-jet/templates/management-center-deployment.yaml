@@ -76,13 +76,14 @@ spec:
         - name: hazelcast-jet-management-center-storage
           mountPath: /data/hazelcast-jet-management-center
         env:
-        - name: MC_LICENSE_KEY
         {{- if .Values.managementcenter.licenseKeySecretName }}
+        - name: MC_LICENSE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ .Values.managementcenter.licenseKeySecretName }}
               key: key
-        {{- else }}
+        {{- else if .Values.managementcenter.licenseKey }}
+        - name: MC_LICENSE_KEY
           value: {{ .Values.managementcenter.licenseKey }}
         {{- end }}
         - name: JAVA_OPTS
