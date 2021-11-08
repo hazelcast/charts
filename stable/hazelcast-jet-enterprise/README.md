@@ -109,6 +109,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |metrics.enabled|Turn on and off JMX Prometheus metrics available at `/metrics`|false|
 |metrics.service.type|Type of the metrics service|ClusterIP|
 |metrics.service.port|Port of the `/metrics` endpoint and the metrics service|8080|
+|metrics.service.loadBalancerIP|IP to be used to access metric service for `LoadBalancer` service type| nil|
 |metrics.service.annotations|Annotations for the Prometheus discovery||
 |customVolume|Configuration for a volume which will be mounted as `/data/custom` (e.g. to mount a volume with custom JARs)|nil|
 |managementcenter.enabled|Turn on and off Hazelcast Jet Management Center application|true|
