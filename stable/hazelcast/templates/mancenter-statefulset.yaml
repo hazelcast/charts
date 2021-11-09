@@ -85,13 +85,14 @@ spec:
         - name: mancenter-storage
           mountPath: /data
         env:
-        - name: MC_LICENSE_KEY
         {{- if .Values.mancenter.licenseKeySecretName }}
+        - name: MC_LICENSE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ .Values.mancenter.licenseKeySecretName }}
               key: key
-        {{- else }}
+        {{- else if .Values.mancenter.licenseKey }}
+        - name: MC_LICENSE_KEY
           value: {{ .Values.mancenter.licenseKey }}
         {{- end }}
         - name: JAVA_OPTS
