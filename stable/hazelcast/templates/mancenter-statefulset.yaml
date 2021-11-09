@@ -129,13 +129,14 @@ spec:
         - name: MC_CLASSPATH
           value: "/data/custom:/data/custom/*"
         {{- end }}
-        - name: MC_LICENSE_KEY
         {{- if .Values.mancenter.licenseKeySecretName }}
+        - name: MC_LICENSE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ .Values.mancenter.licenseKeySecretName }}
               key: key
-        {{- else }}
+        {{- else if .Values.mancenter.licenseKey}}
+        - name: MC_LICENSE_KEY
           value: {{ .Values.mancenter.licenseKey }}
         {{- end }}
         {{ if .Values.mancenter.devMode.enabled }}
