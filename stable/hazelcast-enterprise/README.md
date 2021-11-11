@@ -178,7 +178,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |mancenter.ingress.annotations|Any annotations for the ingress|{}|
 |mancenter.ingress.hosts|List of hostnames for ingress, see values.yaml for example|[]|
 |mancenter.ingress.tls|List of TLS configuration for ingress, see values.yaml for example|[]|
-|mancenter.clusterConfigCreation.enabled|Cluster config creation will create the connection to the Hazelcast cluster based on the yaml.hazelcast-client|true|
+|mancenter.clusterConfig.create|Cluster config creation will create the connection to the Hazelcast cluster based on the yaml.hazelcast-client|true|
 
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,

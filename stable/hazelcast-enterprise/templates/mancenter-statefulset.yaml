@@ -151,7 +151,7 @@ spec:
           value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
         {{ $clusterConfigCommand := "" }}
-        {{ if .Values.mancenter.clusterConfigCreation.enabled }}
+        {{ if .Values.mancenter.clusterConfig.create }}
         {{ $clusterConfigCommand = "./bin/mc-conf.sh cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml; " }}
         {{ end }}
         {{- if and .Values.mcm.enabled (not .Values.mcm.baseURL) }}
@@ -215,7 +215,7 @@ spec:
         {{- else if .Values.mancenter.devMode.enabled }}
         - name: MC_INIT_CMD
           value: "{{ $clusterConfigCommand }}./bin/mc-conf.sh dev-mode configure"
-        {{- else if .Values.mancenter.clusterConfigCreation.enabled }}
+        {{- else if .Values.mancenter.clusterConfig.create }}
         - name: MC_INIT_CMD
           value: "{{ $clusterConfigCommand }}"
         {{- end }}
