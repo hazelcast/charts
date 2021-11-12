@@ -393,5 +393,9 @@ mancenter:
     # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
     failureThreshold: 3
 
+  # Cluster config creation will create the connection to the Hazelcast cluster based on the yaml.hazelcast-client
+  clusterConfig:
+    # create is a flag used to enable cluster config creation
+    create: true
   # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
   # secretsMountName:
