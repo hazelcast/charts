@@ -7,8 +7,8 @@ on:
       - '**.md'
 
 jobs:
-  e2e-tests:
-    name: Run e2e tests
+  tests:
+    name: Run tests
     runs-on: ubuntu-20.04
     env:
       KUBECTL_VERSION: 1.22.0
@@ -84,7 +84,7 @@ jobs:
                     
       - name: Create GKE cluster
         run: |-
-          CLUSTER_NAME="charts-e2e-test-${GITHUB_SHA::8}-${GITHUB_RUN_NUMBER}"
+          CLUSTER_NAME="charts-pr-test-${GITHUB_SHA::8}-${GITHUB_RUN_NUMBER}"
           echo "CLUSTER_NAME=${CLUSTER_NAME}" >> $GITHUB_ENV
           gcloud container clusters create ${CLUSTER_NAME} --zone=${{ env.GKE_ZONE }} --project=${{ env.GCP_PROJECT_ID }} --network=${{ env.GCP_NETWORK }} --machine-type=n1-standard-2 --num-nodes=2
           sleep 30
