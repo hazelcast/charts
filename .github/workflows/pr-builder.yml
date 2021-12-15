@@ -27,7 +27,6 @@ jobs:
       GCP_PROJECT_ID: hazelcast-33
       GCP_NETWORK: operator-test-network
       GKE_ZONE: europe-west1-b
-      RELEASE_VERSION: ${{ steps.set-outputs.outputs.RELEASE_VERSION }}
     steps:
       - name: Decide which ref to checkout
         id: decide-ref
