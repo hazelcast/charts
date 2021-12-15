@@ -17,8 +17,9 @@ permissions:
 
 jobs:
   tests:
-    if: (github.event_name == pull_request_target && contains(github.event.pull_request.labels.*.name,'safe-to-test')) ||
-        (github.event_name == pull_request && github.event.pull_request.head.repo.full_name == github.repository)
+    if: >-
+      (github.event_name == 'pull_request_target' && contains(github.event.pull_request.labels.*.name,'safe-to-test') && github.event.pull_request.head.repo.full_name != github.repository) ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
     name: Run tests
     runs-on: ubuntu-20.04
     env:
