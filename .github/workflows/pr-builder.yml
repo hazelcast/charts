@@ -2,7 +2,7 @@ name: Pull Request
 on:
   pull_request:
     branches:
-      - 4,2,z
+      - 4.2.z
     paths-ignore:
       - '**.md'
   pull_request_target:
@@ -41,6 +41,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{steps.decide-ref.outputs.ref}}
+          fetch-depth: 0
 
       - name: Add remote hazelcast
         run: |
