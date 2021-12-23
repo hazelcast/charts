@@ -40,7 +40,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: ${{steps.decide-refs.outputs.ref}}
+          ref: ${{steps.decide-ref.outputs.ref}}
 
       - name: Add remote hazelcast
         run: |
