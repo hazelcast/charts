@@ -116,6 +116,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | metrics.enabled| Turn on and off JMX Prometheus metrics available at `/metrics` | false|
 | metrics.service.type| Type of the metrics service| ClusterIP|
 | metrics.service.port| Port of the `/metrics` endpoint and the metrics service | 8080|
+| metrics.service.loadBalancerIP| IP to be used to access metrics service for `LoadBalancer` service type| nil|
 | metrics.service.portName| Port name of the `/metrics` endpoint and the metrics service | 8080|
 | metrics.service.annotations | Annotations for the Prometheus discovery|
 | customVolume |Configuration for a volume mounted as `/data/custom` and exposed to classpath (e.g. to mount a volume with custom JARs)| nil|
@@ -153,6 +154,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | mancenter.persistence.storageClass| Storage class name used for Management Center| nil |
 | mancenter.service.type| Kubernetes service type (`ClusterIP`, `LoadBalancer`, or `NodePort`) | LoadBalancer|
 | mancenter.service.port| Kubernetes service port| 5701|
+| mancenter.service.loadBalancerIP| IP to be used to access management center for `LoadBalancer` service type| nil|
 | mancenter.livenessProbe.enabled | Turn on and off liveness probe | true|
 | mancenter.livenessProbe.initialDelaySeconds| Delay before liveness probe is initiated| 30|
 | mancenter.livenessProbe.periodSeconds | How often to perform the probe | 10|
@@ -170,6 +172,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | mancenter.ingress.hosts | List of hostnames for ingress, see values.yaml for example| []|
 | mancenter.ingress.tls | List of TLS configuration for ingress, see values.yaml for example| []|
 | mancenter.secretsMountName| Secret name that is mounted as '/secrets/' (e.g. with keystore/trustore files) | nil |
+| mancenter.clusterConfig.create|Cluster config creation will create the connection to the Hazelcast cluster based on the hazelcast-client.yaml file embedded into values|true|
 
 
 Specify each parameter using the `--set key=value,key=value` argument to `helm install`. For example,

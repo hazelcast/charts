@@ -1,4 +1,4 @@
-remote: origin
+remote: hazelcast
 target-branch: master
 chart-dirs:
   - stable
