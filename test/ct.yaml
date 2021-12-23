@@ -1,4 +1,4 @@
-remote: origin
+remote: hazelcast
 target-branch: 3.12.z
 chart-dirs:
   - stable

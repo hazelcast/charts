@@ -1,0 +1,128 @@
+name: Pull Request
+on:
+  pull_request:
+    branches:
+      - 3.12.z
+    paths-ignore:
+      - '**.md'
+  pull_request_target:
+    types: [labeled]
+    branches:
+      - 3.12.z
+    paths-ignore:
+      - '**.md'
+    
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    if: >-
+      (github.event_name == 'pull_request_target' && contains(github.event.pull_request.labels.*.name,'safe-to-test') && github.event.pull_request.head.repo.full_name != github.repository) ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    name: Run tests
+    runs-on: ubuntu-20.04
+    env:
+      KUBECTL_VERSION: 1.22.0
+      GCP_PROJECT_ID: hazelcast-33
+      GCP_NETWORK: operator-test-network
+      GKE_ZONE: europe-west1-b
+    steps:
+      - name: Decide which ref to checkout
+        id: decide-ref
+        run: |
+          if [[ "${{github.event_name}}" == "pull_request" ]]; then
+            echo "::set-output name=ref::${{github.ref}}"
+          else
+            echo "::set-output name=ref::refs/pull/${{ github.event.pull_request.number }}/merge"
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{steps.decide-ref.outputs.ref}}
+
+      - name: Add remote hazelcast
+        run: |
+          git remote add hazelcast https://github.com/hazelcast/charts.git
+          git fetch hazelcast master
+
+      - name: Install kubectl
+        run: |
+          mkdir -p ${GITHUB_WORKSPACE}/bin
+          echo "${GITHUB_WORKSPACE}/bin" >> ${GITHUB_PATH}
+          curl -L https://dl.k8s.io/release/v${{ env.KUBECTL_VERSION }}/bin/linux/amd64/kubectl -o ${GITHUB_WORKSPACE}/bin/kubectl && chmod +x ${GITHUB_WORKSPACE}/bin/kubectl
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.3.0
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+
+      - name: Authenticate to GCP
+        uses: 'google-github-actions/auth@v0.4.3'
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
+          
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.4.0
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+                    
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.1.0
+
+      - name: Add values.yaml for testing
+        run: |
+          MODIFIED_CHARTS=( $(ct list-changed --config ${GITHUB_WORKSPACE}/test/ct.yaml ) )
+          for chart in "${MODIFIED_CHARTS[@]}"
+          do
+            if [ $chart == "stable/hazelcast" ]; then
+              mkdir -p ${GITHUB_WORKSPACE}/stable/hazelcast/ci
+              cat << EOF > ${GITHUB_WORKSPACE}/stable/hazelcast/ci/gha_gke-values.yaml
+          mancenter:
+            licenseKey: ${{ secrets.HZ_LICENSE_KEY }}
+            devMode:
+              enabled: true
+            javaOpts: "-Dhazelcast.mc.rest.enabled=true"
+          EOF
+            fi
+
+            if [ $chart == "stable/hazelcast-enterprise" ]; then
+              mkdir -p ${GITHUB_WORKSPACE}/stable/hazelcast-enterprise/ci
+              cat << EOF > ${GITHUB_WORKSPACE}/stable/hazelcast-enterprise/ci/gha_gke-values.yaml
+          hazelcast:
+            licenseKey: ${{ secrets.HZ_LICENSE_KEY }}
+          mancenter:
+            devMode:
+              enabled: true
+            javaOpts: "-Dhazelcast.mc.rest.enabled=true"
+          EOF
+            fi
+          done
+
+      - name: Lint Charts
+        run: |
+          ct lint --config ${GITHUB_WORKSPACE}/test/ct.yaml
+                    
+      - name: Create GKE cluster
+        run: |-
+          CLUSTER_NAME="charts-pr-test-${GITHUB_SHA::8}-${GITHUB_RUN_NUMBER}"
+          echo "CLUSTER_NAME=${CLUSTER_NAME}" >> $GITHUB_ENV
+          gcloud container clusters create ${CLUSTER_NAME} --zone=${{ env.GKE_ZONE }} --project=${{ env.GCP_PROJECT_ID }} --network=${{ env.GCP_NETWORK }} --machine-type=n1-standard-2 --num-nodes=2
+          sleep 30
+
+      - name: Connect to the GKE cluster
+        run: gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --zone ${{ env.GKE_ZONE }} --project ${{ env.GCP_PROJECT_ID }}
+
+      - name: Test Charts
+        run: |
+          ct install --config ${GITHUB_WORKSPACE}/test/ct.yaml
+
+      - name: Delete GKE cluster
+        if: always()
+        run: |-
+          gcloud container clusters delete ${{ env.CLUSTER_NAME }} --zone ${{ env.GKE_ZONE }} --quiet
