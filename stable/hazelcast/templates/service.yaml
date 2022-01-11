@@ -17,6 +17,7 @@ spec:
   {{- if (and (eq .Values.service.type "ClusterIP") (.Values.service.clusterIP)) }}
   clusterIP: {{ .Values.service.clusterIP }}
   {{- end }}
+  publishNotReadyAddresses: true
   selector:
     app.kubernetes.io/name: {{ template "hazelcast.name" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
