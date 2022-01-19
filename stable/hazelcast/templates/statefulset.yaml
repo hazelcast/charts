@@ -8,6 +8,10 @@ metadata:
     helm.sh/chart: {{ template "hazelcast.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+  annotations:
+    {{- range $key, $val := .Values.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   serviceName: {{ template "hazelcast.fullname" . }}
   replicas: {{ .Values.cluster.memberCount }}
