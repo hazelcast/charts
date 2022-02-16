@@ -75,6 +75,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |affinity|Hazelcast Node affinity|nil|
 |tolerations|Hazelcast Node tolerations|nil|
 |nodeSelector|Hazelcast Node labels for pod assignment|nil|
+|topologySpreadConstraints| Control how Pods are spread across the cluster | {} |
 |hostPort|Port under which Hazelcast PODs are exposed on the host machines|nil|
 |customPorts|Whole ports section to customize how Hazelcast container ports are defined|nil|
 |podLabels|Extra labels to add to the pod container metadata|empty map|
@@ -151,6 +152,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |mancenter.affinity|Management Center Node affinity|nil|
 |mancenter.tolerations|Management Center Node tolerations|nil|
 |mancenter.nodeSelector|Hazelcast Management Center node labels for pod assignment|nil|
+|mancenter.topologySpreadConstraints| Control how Pods are spread across the cluster | {} |
 |mancenter.podLabels| Extra labels to add to the pod container metadata|empty map|
 |mancenter.priorityClassName|Custom priority class name|<undefined>|
 |mancenter.resources|CPU/Memory resource requests/limits|nil|
