@@ -1,3 +1,4 @@
+{{- if .Values.hazelcast.enabled }}
 apiVersion: v1
 kind: Pod
 metadata:
@@ -13,22 +14,34 @@ metadata:
     app.kubernetes.io/component: "test"
     role: test
 spec:
+  {{- if .Values.image.pullSecrets }}
+  imagePullSecrets:
+    {{- range .Values.image.pullSecrets }}
+    - name: {{ . }}
+    {{- end}}
+  {{- end}}
   {{- if .Values.nodeSelector }}
   nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 4 }}
   {{- end }}
   containers:
   - name: "{{ template "hazelcast.fullname" . }}-test"
-    image: "alpine"
+    image: "{{ .Values.test.image.repository }}:{{ .Values.test.image.tag }}"
     command:
     - "sh"
     - "-c"
     - |
       set -ex
-      # Install required test tools
-      apk add -q curl
       # Get the number of Hazelcast members in the cluster
       CLUSTER_SIZE=$(curl {{ template "hazelcast.fullname" . }}:{{ .Values.service.port }}/hazelcast/health/cluster-size)
       # Test the correct number of Hazelcast members
       test ${CLUSTER_SIZE} -eq {{ .Values.cluster.memberCount }}
+    resources:
+{{ toYaml .Values.test.resources | indent 6 }}
+    securityContext:
+      runAsNonRoot: {{ if eq (int .Values.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}
+      runAsUser: {{ .Values.securityContext.runAsUser }}
+      runAsGroup: {{ .Values.securityContext.runAsGroup }}
+      privileged: false
   restartPolicy: Never
+{{- end }}
