@@ -14,7 +14,11 @@ metadata:
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
+{{- if .Values.rbac.useClusterRole }}
   kind: ClusterRole
+{{- else }}
+  kind: Role
+{{- end }}
   name: {{ template "hazelcast.fullname" . }}-{{ .Release.Namespace }}
 subjects:
 - kind: ServiceAccount
