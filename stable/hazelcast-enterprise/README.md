@@ -110,6 +110,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |service.clusterIP|IP of the service, `None` makes the service headless|None|
 |service.port|Kubernetes service port|5701|
 |rbac.create|Enable installing RBAC Role authorization|true|
+|rbac.useClusterRole|If `rbac.create` is true, this will create a cluster role. Set this to false to use role and role binding instead of cluster role and cluster role binding.|true|
 |serviceAccount.create|Enable installing Service Account|true|
 |serviceAccount.automountToken|Whether the token associated with the service account should be automatically mounted|true|
 |serviceAccount.name|Name of Service Account, if not set, the name is generated using the fullname template|nil|
