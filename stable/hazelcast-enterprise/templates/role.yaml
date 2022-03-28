@@ -18,7 +18,9 @@ rules:
   resources:
   - endpoints
   - pods
+{{- if .Values.rbac.useClusterRole }}
   - nodes
+{{- else }}
   - services
   verbs:
   - get
