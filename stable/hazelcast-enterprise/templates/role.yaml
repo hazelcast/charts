@@ -20,7 +20,7 @@ rules:
   - pods
 {{- if .Values.rbac.useClusterRole }}
   - nodes
-{{- else }}
+{{- end }}
   - services
   verbs:
   - get
