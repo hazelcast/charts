@@ -86,9 +86,8 @@ spec:
         {{- end }}
         {{- if .Values.mancenter.readinessProbe.enabled }}
         readinessProbe:
-          httpGet:
-            path: {{ if .Values.mancenter.contextPath }}{{ .Values.mancenter.contextPath }}{{ end }}/health
-            port: 8081
+          tcpSocket:
+            port: 8080
           initialDelaySeconds: {{ .Values.mancenter.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.mancenter.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.mancenter.readinessProbe.timeoutSeconds }}

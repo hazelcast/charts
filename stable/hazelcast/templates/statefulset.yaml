@@ -84,7 +84,7 @@ spec:
 {{ toYaml .Values.resources | indent 10 }}
         ports:
         {{- if .Values.customPorts }}
-{{ toYaml .Values.customPorts | indent 10 }}
+{{ toYaml .Values.customPorts | indent 8 }}
         {{- else }}
         - name: hazelcast
           containerPort: {{ if .Values.hostPort }}{{ .Values.hostPort }}{{ else }}5701{{ end }}
