@@ -453,7 +453,7 @@ test:
   ## Hazelcast chart test hook image version
   image:
     # repository is the chart test hook image name
-    repository: "alpine/curl"
+    repository: "alpine"
     # tag is the chart test hook image tag
     tag: "latest"
     # pullPolicy is the Docker image pull policy
@@ -462,13 +462,11 @@ test:
     #
     pullPolicy: IfNotPresent
 
-  # Configure resource requests and limits
-  # ref: http://kubernetes.io/docs/user-guide/compute-resources/
-  #
-  # resources:
-  #   requests:
-  #     memory: 256Mi
-  #     cpu: 100m
-  #   limits:
-  #     memory: 1024Mi
-  #     cpu: 200m
+  # Security Context properties
+  securityContext:
+    # enabled is a flag to enable Security Context
+    enabled: false
+    # runAsUser is the user ID used to run the container
+    runAsUser: 65534
+    # runAsGroup is the primary group ID used to run all processes within any container of the pod
+    runAsGroup: 65534

@@ -32,6 +32,10 @@ spec:
     - "-c"
     - |
       set -ex
+      {{- if ne .Values.test.securityContext.enabled }}
+      # Install required test tools
+      apk add -q jq curl
+      {{- end }}
       # Get the HTTP Response Code of the Health Check
       HEALTH_CHECK_HTTP_RESPONSE_CODE=$(curl --write-out %{http_code} --silent --output /dev/null {{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}{{ .Values.mancenter.contextPath }}/health)
       # Test the MC HTTP RESPONSE CODE
@@ -42,10 +46,12 @@ spec:
       test ${CONNECTED_CLUSTER_SIZE} -eq {{ .Values.cluster.memberCount }}
     resources:
 {{ toYaml .Values.test.resources | indent 6 }}
+    {{- if .Values.test.securityContext.enabled }}
     securityContext:
-      runAsNonRoot: {{ if eq (int .Values.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}
-      runAsUser: {{ .Values.securityContext.runAsUser }}
-      runAsGroup: {{ .Values.securityContext.runAsGroup }}
+      runAsNonRoot: {{ if eq (int .Values.test.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}
+      runAsUser: {{ .Values.test.securityContext.runAsUser }}
+      runAsGroup: {{ .Values.test.securityContext.runAsGroup }}
       privileged: false
+    {{- end }}
   restartPolicy: Never
 {{- end }}
