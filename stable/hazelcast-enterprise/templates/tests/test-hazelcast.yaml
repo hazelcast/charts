@@ -32,7 +32,7 @@ spec:
     - "-c"
     - |
       set -ex
-      {{- if ne .Values.test.securityContext.enabled }}
+      {{- if not .Values.test.securityContext.enabled }}
       # Install required test tools
       apk add -q curl
       {{- end }}
