@@ -1,6 +1,11 @@
 {{- if .Values.hazelcast.enabled }}
 ** Hazelcast cluster is being deployed! **
 
+{{- if not .Values.rbac.useClusterRole }}
+** Caution:
+   Deployment is configured with a Role instead of the default ClusterRole. Hence, some features will be unavailable.
+{{- end }}
+
 -------------------------------------------------------------------------------
 
 To access Hazelcast within the Kubernetes cluster:
