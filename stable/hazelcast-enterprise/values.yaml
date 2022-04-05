@@ -196,6 +196,8 @@ rbac:
   # Specifies whether RBAC resources should be created
   # It is not required if DNS Lookup is used (https://github.com/hazelcast/hazelcast-kubernetes#dns-lookup)
   create: true
+  # Set this to false to use kubernetes Role and RoleBinding instead of ClusterRole and ClusterRoleBinding.
+  useClusterRole: true
 
 serviceAccount:
   # Specifies whether a ServiceAccount should be created
