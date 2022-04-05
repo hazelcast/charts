@@ -1,3 +1,4 @@
+{{- if .Values.mancenter.enabled }}
 apiVersion: v1
 kind: Pod
 metadata:
@@ -13,20 +14,28 @@ metadata:
     app.kubernetes.io/component: "test"
     role: test
 spec:
+  {{- if .Values.image.pullSecrets }}
+  imagePullSecrets:
+    {{- range .Values.image.pullSecrets }}
+    - name: {{ . }}
+    {{- end}}
+  {{- end}}
   {{- if .Values.nodeSelector }}
   nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 4 }}
   {{- end }}
   containers:
   - name: "{{ template "mancenter.fullname" . }}-test"
-    image: "alpine"
+    image: "{{ .Values.test.image.repository }}:{{ .Values.test.image.tag }}"
     command:
     - "sh"
     - "-c"
     - |
       set -ex
+      {{- if not .Values.test.securityContext.enabled }}
       # Install required test tools
       apk add -q jq curl
+      {{- end }}
       # Get the HTTP Response Code of the Health Check
       HEALTH_CHECK_HTTP_RESPONSE_CODE=$(curl --write-out %{http_code} --silent --output /dev/null {{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}{{ .Values.mancenter.contextPath }}/health)
       # Test the MC HTTP RESPONSE CODE
@@ -35,4 +44,14 @@ spec:
       CONNECTED_CLUSTER_SIZE=$(curl --silent {{ template "mancenter.fullname" . }}:{{ .Values.mancenter.service.port }}{{ .Values.mancenter.contextPath }}/rest/clusters/dev/members | jq '. | length')
       # Test the correct number of Hazelcast members
       test ${CONNECTED_CLUSTER_SIZE} -eq {{ .Values.cluster.memberCount }}
+    resources:
+{{ toYaml .Values.test.resources | indent 6 }}
+    {{- if .Values.test.securityContext.enabled }}
+    securityContext:
+      runAsNonRoot: {{ if eq (int .Values.test.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}
+      runAsUser: {{ .Values.test.securityContext.runAsUser }}
+      runAsGroup: {{ .Values.test.securityContext.runAsGroup }}
+      privileged: false
+    {{- end }}
   restartPolicy: Never
+{{- end }}
