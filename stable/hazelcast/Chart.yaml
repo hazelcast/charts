@@ -1,22 +1,22 @@
 apiVersion: v1
 name: hazelcast
-version: 5.3.8
-appVersion: "5.0.2"
+version: 5.4.0
+appVersion: "5.1.1"
 kubeVersion: ">=1.14.0-0"
-description: Hazelcast IMDG is the most widely used in-memory data grid with hundreds of thousands of installed clusters around the world. It offers caching solutions ensuring that data is in the right place when it’s needed for optimal performance.
+description: Hazelcast is a streaming and memory-first application platform for fast, stateful, data-intensive workloads on-premises, at the edge or as a fully managed cloud service.
 keywords:
 - hazelcast
 - keyvalue
 - in-memory
 - database
 - caching
-home: http://hazelcast.org/
-icon: http://hazelcast.com/images/logos/Hazelcast-IMDG-Logo-Orange_Dark_Icon_200px.png
+home: https://hazelcast.com/open-source-projects/
+icon: https://hazelcast.com/brand-assets/files/hazelcast-stacked-flat-sm.png
 sources:
 - https://github.com/hazelcast/hazelcast
 maintainers:
-- name: leszko
-  email: rafal@hazelcast.com
+- name: Hazelcast Cloud Native Team
+  email: cloudnative@hazelcast.com
 - name: hasancelik
   email: hasan@hazelcast.com
 engine: gotpl
