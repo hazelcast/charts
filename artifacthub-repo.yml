@@ -1,7 +1,7 @@
 repositoryID: f53e0666-2684-44fa-926c-1d5761cd8097
 owners:
-  - name: leszko
-    email: rafal@hazelcast.com
+  - name: Hazelcast Cloud Native Team
+    email: cloudnative@hazelcast.com
   - name: hasancelik
     email: hasan@hazelcast.com
 ignore:
