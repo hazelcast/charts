@@ -6,6 +6,9 @@ image:
   repository: "hazelcast/hazelcast"
   # tag is the Hazelcast image tag
   tag: "5.1.1"
+  # digest is the Hazelcast image digest that will be used only if the tag is empty
+  digest: ""
+  #
   # pullPolicy is the Docker image pull policy
   # It's recommended to change this to 'Always' if the image tag is 'latest'
   # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
