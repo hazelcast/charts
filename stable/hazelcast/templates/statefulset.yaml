@@ -78,7 +78,11 @@ spec:
 {{- end }}
       containers:
       - name: {{ template "hazelcast.fullname" . }}
+        {{- if empty .Values.image.tag }}
+        image: "{{ .Values.image.repository }}@{{ .Values.image.digest }}"
+        {{- else }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        {{- end }}
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
