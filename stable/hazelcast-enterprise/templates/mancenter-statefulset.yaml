@@ -231,6 +231,7 @@ spec:
         securityContext:
           runAsNonRoot: {{ if eq (int .Values.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}
           runAsUser: {{ .Values.securityContext.runAsUser }}
+          runAsGroup: {{ .Values.securityContext.runAsGroup }}
           privileged: false
           readOnlyRootFilesystem: false
           allowPrivilegeEscalation: false
@@ -238,10 +239,6 @@ spec:
             drop:
             - ALL
         {{- end }}
-      {{- if .Values.securityContext.enabled }}
-      securityContext:
-        fsGroup: {{ .Values.securityContext.fsGroup }}
-      {{- end }}
       {{- if .Values.mancenter.priorityClassName }}
       priorityClassName: "{{ .Values.mancenter.priorityClassName }}"
       {{- end }}

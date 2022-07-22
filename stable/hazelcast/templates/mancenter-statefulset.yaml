@@ -171,10 +171,6 @@ spec:
             drop:
             - ALL
         {{- end }}
-      {{- if .Values.securityContext.enabled }}
-      securityContext:
-        fsGroup: {{ .Values.securityContext.fsGroup }}
-      {{- end }}
       {{- if .Values.mancenter.priorityClassName }}
       priorityClassName: "{{ .Values.mancenter.priorityClassName }}"
       {{- end }}
