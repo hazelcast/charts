@@ -31,6 +31,7 @@ hazelcast:
   enabled: true
   # javaOpts are additional JAVA_OPTS properties for Hazelcast member
   javaOpts:
+  maxUnavailable: 0
   # loggingLevel is the level of Hazelcast logs (OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE and ALL)
   # loggingLevel:
   # existingConfigMap defines a ConfigMap which contains Hazelcast configuration file(s) that are used instead of hazelcast.yaml configuration below
