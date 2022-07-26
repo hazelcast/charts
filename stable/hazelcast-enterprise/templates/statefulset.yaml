@@ -8,10 +8,12 @@ metadata:
     helm.sh/chart: {{ template "hazelcast.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+  {{- if .Values.annotations }}
   annotations:
     {{- range $key, $val := .Values.annotations }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
+  {{- end }}
 spec:
   serviceName: {{ template "hazelcast.fullname" . }}
   replicas: {{ .Values.cluster.memberCount }}
@@ -92,7 +94,9 @@ spec:
         {{- else }}
         - name: hazelcast
           containerPort: {{ if .Values.hostPort }}{{ .Values.hostPort }}{{ else }}5701{{ end }}
+          {{- if .Values.hostPort }}
           hostPort: {{ .Values.hostPort }}
+          {{- end }}
         {{- end }}
         {{- if .Values.metrics.enabled }}
         - name: {{ .Values.metrics.service.portName }}
@@ -226,8 +230,8 @@ spec:
         - name: hazelcast-external
 {{ toYaml .Values.externalVolume | indent 10 }}
         {{- end }}
-  volumeClaimTemplates:
   {{- if and (and (eq .Values.hotRestart.enabled true) (empty .Values.hotRestart.existingClaim)) (empty .Values.hotRestart.hostPath) }}
+  volumeClaimTemplates:
   - metadata:
       name: hot-restart-persistence
       labels:
