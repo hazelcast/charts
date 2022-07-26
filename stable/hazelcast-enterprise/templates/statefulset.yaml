@@ -13,7 +13,7 @@ metadata:
     {{- range $key, $val := .Values.annotations }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
-  {{- end}}
+  {{- end }}
 spec:
   serviceName: {{ template "hazelcast.fullname" . }}
   replicas: {{ .Values.cluster.memberCount }}
