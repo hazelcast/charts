@@ -149,7 +149,7 @@ readinessProbe:
 #     cpu: 200m
 
 # maxUnavailable enables Hazelcast PodDisruptionBudget and sets the allowed number of max unavailable pods
-# PodDisruptionBudget is not created if value is set to '0'
+# PodDisruptionBudget is not created if the value is set to '0'
 maxUnavailable: 0
 
 # Hazelcast Service properties
