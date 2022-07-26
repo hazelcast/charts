@@ -172,6 +172,9 @@ readinessProbe:
 #     memory: 1024Mi
 #     cpu: 200m
 
+# maxUnavailable enables Hazelcast PodDisruptionBudget and sets the allowed number of max unavailable pods
+maxUnavailable: 0
+
 # Hazelcast Service properties
 service:
   # Specifies whether a Service should be created

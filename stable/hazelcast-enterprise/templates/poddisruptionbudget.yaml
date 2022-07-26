@@ -1,4 +1,4 @@
-{{- if and .Values.hazelcast.enabled .Values.hazelcast.maxUnavailable }}
+{{- if and .Values.hazelcast.enabled .Values.maxUnavailable }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
 spec:
-  maxUnavailable: {{ .Values.hazelcast.maxUnavailable }}
+  maxUnavailable: {{ .Values.maxUnavailable }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ template "hazelcast.name" . }}

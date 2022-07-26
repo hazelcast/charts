@@ -31,7 +31,6 @@ hazelcast:
   enabled: true
   # javaOpts are additional JAVA_OPTS properties for Hazelcast member
   javaOpts:
-  maxUnavailable: 0
   # loggingLevel is the level of Hazelcast logs (OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE and ALL)
   # loggingLevel:
   # existingConfigMap defines a ConfigMap which contains Hazelcast configuration file(s) that are used instead of hazelcast.yaml configuration below
@@ -148,6 +147,10 @@ readinessProbe:
 #   limits:
 #     memory: 1024Mi
 #     cpu: 200m
+
+# maxUnavailable enables Hazelcast PodDisruptionBudget and sets the allowed number of max unavailable pods
+# PodDisruptionBudget is not created if value is set to '0'
+maxUnavailable: 0
 
 # Hazelcast Service properties
 service:
