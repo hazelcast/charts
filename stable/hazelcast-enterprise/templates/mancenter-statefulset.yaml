@@ -159,10 +159,10 @@ spec:
         - name: MC_LICENSE_KEY
           value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
-        {{ $clusterConfigCommand := "" }}
-        {{ if .Values.mancenter.clusterConfig.create }}
-        {{ $clusterConfigCommand = "./bin/mc-conf.sh cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml; " }}
-        {{ end }}
+        {{- $clusterConfigCommand := "" }}
+        {{- if .Values.mancenter.clusterConfig.create }}
+        {{- $clusterConfigCommand = "./bin/mc-conf.sh cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml; " }}
+        {{- end }}
         {{- if and .Values.mcm.enabled (not .Values.mcm.baseURL) }}
         - name: CLIENT_ID
           valueFrom:
