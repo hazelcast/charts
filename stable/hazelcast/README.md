@@ -100,7 +100,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | resources.limits.memory | Memory resource limit| default|
 | resources.requests.cpu| CPU resource requests| default|
 | resources.requests.memory| Memory resource requests| default|
-| maxUnavailable| Enables PodDisruptionBudget and sets maxUnavailable pod number. PodDisruptionBudget is not created if the value is set to '0'.| 0|
+| maxUnavailable| Enables PodDisruptionBudget and sets max unavailable pod number| |
 | service.create | Enable installing Service| true|
 | service.name | Name of Service, by default generated using the fullname template. To override, two condition need to be met: service.create=false (service must exist before chart deploy) and value of service.name must not be nil | nil |
 | service.type | Kubernetes service type (`ClusterIP`, `LoadBalancer`, or `NodePort`) | ClusterIP|

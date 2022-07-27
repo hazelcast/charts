@@ -1,4 +1,4 @@
-{{- if and .Values.hazelcast.enabled .Values.maxUnavailable }}
+{{- if and .Values.hazelcast.enabled (or .Values.maxUnavailable eq 0 .Values.maxUnavailable) }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
