@@ -76,7 +76,8 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | topologySpreadConstraints| Control how Pods are spread across the cluster | {} |
 | hostPort| Port under which Hazelcast PODs are exposed on the host machines| nil|
 | customPorts| Whole ports section to customize how Hazelcast container ports are defined| nil|
-| podLabels| Extra labels to add to the pod container metadata| empty map|
+| labels| Extra labels to add to the statefulset| {} |
+| podLabels| Extra labels to add to the pod container metadata| {} |
 | priorityClassName| Custom priority class name| <undefined>|
 | gracefulShutdown.enabled| Turn on and off Graceful Shutdown| true|
 | gracefulShutdown.maxWaitSeconds | Maximum time to wait for the Hazelcast POD to shut down | 600 |
@@ -105,6 +106,8 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | service.type | Kubernetes service type (`ClusterIP`, `LoadBalancer`, or `NodePort`) | ClusterIP|
 | service.port | Kubernetes service port| 5701|
 | service.clusterIP| IP of the service, "None" makes the service headless| None|
+| service.annotations| Extra annotations for the Hazelcast service| {} |
+| service.labels| Extra labels for the Hazelcast service| {} |
 | rbac.create| Enable installing RBAC Role authorization | true|
 | rbac.useClusterRole | If `rbac.create` is true, this will create a cluster role. Set this to false to use role and role binding. But note that some discovery features will be unavailable. | true |
 | serviceAccount.create | Enable installing Service Account| true|
@@ -147,7 +150,8 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | mancenter.tolerations | Management Center Node tolerations | nil |
 | mancenter.nodeSelector| Hazelcast Management Center node labels for pod assignment| nil |
 | mancenter.topologySpreadConstraints| Control how Pods are spread across the cluster | {} |
-| mancenter.podLabels | Extra labels to add to the pod container metadata | empty map|
+| mancenter.labels | Extra labels to add to the mancenter statefulset| {} |
+| mancenter.podLabels | Extra labels to add to the mancenter pod container metadata| {} |
 | mancenter.priorityClassName | Custom priority class name | <undefined>|
 | mancenter.resources | CPU/Memory resource requests/limits| nil |
 | mancenter.persistence.enabled | Enable Persistent Volume for Hazelcast Management | true|
@@ -158,6 +162,8 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | mancenter.service.type| Kubernetes service type (`ClusterIP`, `LoadBalancer`, or `NodePort`) | LoadBalancer|
 | mancenter.service.port| Kubernetes service port| 5701|
 | mancenter.service.loadBalancerIP| IP to be used to access management center for `LoadBalancer` service type| nil|
+| mancenter.service.annotations| Extra annotations for the mancenter service| {} |
+| mancenter.service.labels| Extra labels for the mancenter service| {} |
 | mancenter.livenessProbe.enabled | Turn on and off liveness probe | true|
 | mancenter.livenessProbe.initialDelaySeconds| Delay before liveness probe is initiated| 30|
 | mancenter.livenessProbe.periodSeconds | How often to perform the probe | 10|
