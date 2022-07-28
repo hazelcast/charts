@@ -148,6 +148,16 @@ readinessProbe:
 #     memory: 1024Mi
 #     cpu: 200m
 
+prometheusRule:
+  enabled: false
+  labels: {}
+  rules: []
+# rules:
+#    - name: ./example.rules
+#    rules:
+#    - alert: ExampleAlert
+#      expr: vector(1)
+
 # Hazelcast Service properties
 service:
   # Specifies whether a Service should be created
