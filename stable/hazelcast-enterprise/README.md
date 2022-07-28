@@ -104,7 +104,8 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |resources.limits.memory|Memory resource limit|default|
 |resources.requests.cpu|CPU resource requests|default|
 |resources.requests.memory|Memory resource requests|default|
-|maxUnavailable|Enables PodDisruptionBudget and sets max unavailable pod number| |
+|podDisruptionBudget.maxUnavailable|Number of max unavailable pods| |
+|podDisruptionBudget.minAvailable|Number of min available pods| |
 |service.create|Enable installing Service|true|
 |service.name|Name of Service, if not set, the name is generated using the fullname template|nil|
 |service.type|Kubernetes service type (`ClusterIP`, `LoadBalancer`, or `NodePort`|ClusterIP|
