@@ -301,7 +301,7 @@ You can mount any volume which contains your JAR files to the pods created by he
 
 When the `customVolume` set, it will mount provided volume to the pod on `/data/custom` path. This path is also appended to the classpath of running Java process.
 
-For example, if you have existing [Local Persistent Volumes](https://kubernetes.io/blog/2019/04/04/kubernetes-1.14-local-persistent-volumes-ga/) and Persistent Volume Claims like below;
+For example, if you have existing [Local Persistent Volumes](https://kubernetes.io/blog/2019/04/04/kubernetes-1.14-local-persistent-volumes-ga/) and Persistent Volume Claims like below, you should create a separate PersistentVolume for each of your node and give list of all nodes to nodeAffinity. Or you can remove nodeAffinity and change local volume to hostPath. 
 
 ```yaml
   kind: StorageClass
@@ -315,7 +315,7 @@ For example, if you have existing [Local Persistent Volumes](https://kubernetes.
   apiVersion: v1
   kind: PersistentVolume
   metadata:
-    name: <hz-custom-local-pv / mc-custom-local-pv>
+    name: <hz-custom-local-pv-1 / mc-custom-local-pv>
   spec:
     storageClassName: local-storage
     capacity:
@@ -332,6 +332,7 @@ For example, if you have existing [Local Persistent Volumes](https://kubernetes.
           operator: In
           values:
           - <YOUR_NODE>
+          - <YOUR_NODE_2>
   ---
 
   apiVersion: v1
@@ -344,7 +345,7 @@ For example, if you have existing [Local Persistent Volumes](https://kubernetes.
       - ReadWriteOnce
     resources:
       requests:
-      storage: 1Gi
+        storage: 1Gi
 ```
 
 You can configure your Helm chart to use it like below in your `values.yaml` file.
