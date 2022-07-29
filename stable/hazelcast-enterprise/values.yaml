@@ -172,16 +172,6 @@ readinessProbe:
 #     memory: 1024Mi
 #     cpu: 200m
 
-prometheusRule:
-  enabled: false
-  labels: {}
-  rules: []
-# rules:
-#    - name: ./example.rules
-#    rules:
-#    - alert: ExampleAlert
-#      expr: vector(1)
-
 # Hazelcast Service properties
 service:
   # Specifies whether a Service should be created
@@ -266,6 +256,20 @@ metrics:
       prometheus.io/scrape: "true"
       prometheus.io/path: "/metrics"
       prometheus.io/port: "8080"
+
+# configure PrometheusRule 
+prometheusRule:
+  create: false
+  labels: {}
+  rules: []
+#  rules: 
+#    - alert: JvmMemoryHigh
+#      expr: jvm_memory_bytes_used{area="heap"} * 100 / jvm_memory_bytes_max{area="heap"} > 90
+#      labels:
+#        severity: error
+#      annotations:
+#        summary: Hazelcast instance {{ "{{ $labels.instance }}" }} is using too much memory
+#        description: Hazelcast instance {{ "{{ $labels.instance }}" }} is using {{ "{{ $value }}" }}% of its available memory.
 
 # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
 # secretsMountName:
