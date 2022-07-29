@@ -331,7 +331,7 @@ For example, if you have existing [Local Persistent Volumes](https://kubernetes.
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - <YOUR_NODE>
+          - <YOUR_NODE_1>
           - <YOUR_NODE_2>
   ---
 
