@@ -1,0 +1,18 @@
+{{- if and .Values.hazelcast.enabled .Values.podDisruptionBudget }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "hazelcast.fullname" . }}-pdb
+  labels:
+    app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+    helm.sh/chart: {{ template "hazelcast.chart" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+spec:
+{{ toYaml .Values.podDisruptionBudget | indent 2 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+      role: hazelcast
+{{- end -}}
