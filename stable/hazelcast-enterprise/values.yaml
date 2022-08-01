@@ -256,8 +256,27 @@ metrics:
       prometheus.io/scrape: "true"
       prometheus.io/path: "/metrics"
       prometheus.io/port: "8080"
-  # Custom PrometheusRule to be defined
-  # ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions
+  ## Prometheus Operator ServiceMonitor
+  ## ref: https://github.com/coreos/prometheus-operator
+  ##      https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
+  ##
+  serviceMonitor:
+    enabled: false
+    namespace: ""
+    labels: {}
+    # The interval at which metrics should be scraped
+    interval: 30s
+    # The timeout after which the scrape is ended
+    scrapeTimeout: ""
+    # Metrics RelabelConfigs to apply to samples before scraping
+    relabellings: []
+    # Metrics RelabelConfigs to apply to samples before ingestion
+    metricRelabelings: []
+    # Specify honorLabels parameter to add the scrape endpoint
+    honorLabels: false
+  ## Prometheus Operator PrometheusRule
+  ## ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions
+  ##
   prometheusRule:
     enabled: false
     namespace: ""
