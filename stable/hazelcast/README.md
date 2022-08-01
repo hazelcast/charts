@@ -121,9 +121,10 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | metrics.service.loadBalancerIP| IP to be used to access metrics service for `LoadBalancer` service type| nil|
 | metrics.service.portName| Port name of the `/metrics` endpoint and the metrics service | 8080|
 | metrics.service.annotations | Annotations for the Prometheus discovery|
-| prometheusRule.create| Enable installing PrometheusRule| false|
-| prometheusRule.labels| Labels to add to the PrometheusRule| {}|
-| prometheusRule.rules| Defined array of rules| []|
+| metrics.prometheusRule.enabled| Enable to create PrometheusRule resource| false|
+| metrics.prometheusRule.namespace| The namespace in which the PrometheusRule will be created| |
+| metrics.prometheusRule.labels| Additional labels for the PrometheusRule| {}|
+| metrics.prometheusRule.rules| Array of rules to define in PrometheusRule| []|
 | customVolume |Configuration for a volume mounted as `/data/custom` and exposed to classpath (e.g. to mount a volume with custom JARs)| nil|
 | externalVolume |Configuration for a volume mounted as `/data/external` | nil|
 | initContainers |List of init containers to add to the Hazelcast Statefulset's pod spec. | []|
