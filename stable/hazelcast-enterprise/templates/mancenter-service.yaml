@@ -22,6 +22,9 @@ metadata:
     inmenu: "true"
     target: ManagementCenter
 {{- end }}
+    {{- range $key, $value := .Values.mancenter.service.labels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
   type: {{ .Values.mancenter.service.type }}
   {{- if .Values.mancenter.service.clusterIP }}

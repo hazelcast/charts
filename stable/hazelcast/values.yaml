@@ -88,6 +88,10 @@ nodeSelector: {}
 # customPorts is the whole ports section to customize how Hazelcast container ports are defined
 # customPorts:
 
+# labels to add to the statefulset
+labels: {}
+#  key: value
+
 # labels to add to the pod container metadata
 podLabels: {}
 #  key: value
@@ -167,12 +171,15 @@ service:
   port: 5701
   # Static NodePort, if set.
   # nodePort: 30100
-
+  #
   # clusterIP set to None makes the service headless
   # It is required if DNS Lookup is used (https://github.com/hazelcast/hazelcast-kubernetes#dns-lookup)
   clusterIP: "None"
-  # service annotations for the hazelcast service
+  # service annotations for the Hazelcast service
   annotations: {}
+  # service labels for the Hazelcast service
+  labels: {}
+  #  key: value
 
 # Role-based Access Control
 rbac:
@@ -335,6 +342,10 @@ mancenter:
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
   nodeSelector: {}
 
+  # labels to add to the mancenter statefulset
+  labels: {}
+  #  key: value
+
   # labels to add to the mancenter pod container metadata
   podLabels: {}
   #  key: value
@@ -378,6 +389,9 @@ mancenter:
     httpsPort: 443
     # service annotations for management center
     annotations: {}
+    # service labels for management center
+    labels: {}
+    #  key: value
 
   # customVolume is the configuration for any volume mounted as '/data/custom/' (e.g. to mount a volume with custom JARs)
   # customVolume:
