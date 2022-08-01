@@ -148,6 +148,11 @@ readinessProbe:
 #     memory: 1024Mi
 #     cpu: 200m
 
+# Enable and configure PodDisruptionBudget
+# podDisruptionBudget:
+#   maxUnavailable: 1
+#   minAvailable: 2
+
 # Hazelcast Service properties
 service:
   # Specifies whether a Service should be created
