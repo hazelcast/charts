@@ -263,13 +263,15 @@ prometheusRule:
   labels: {}
   rules: []
 #  rules:
-#    - alert: JvmMemoryHigh
+#    - alert: HazelcastJvmMemoryHigh
 #      expr: jvm_memory_bytes_used{area="heap"} * 100 / jvm_memory_bytes_max{area="heap"} > 90
+#      for: 1m
 #      labels:
 #        severity: error
 #      annotations:
-#        summary: Hazelcast instance {{ "{{ $labels.instance }}" }} is using too much memory
-#        description: Hazelcast instance {{ "{{ $labels.instance }}" }} is using {{ "{{ $value }}" }}% of its available memory.
+#        summary: Hazelcast instance {{ "{{ $labels.pod }}" }} is using too much memory
+#        description: |
+#          Hazelcast instance {{ "{{ $labels.pod }}" }} is using {{ "{{ $value }}" }}% of its available memory.
 
 # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
 # secretsMountName:
