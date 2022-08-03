@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast image name
   repository: "hazelcast/hazelcast"
   # tag is the Hazelcast image tag
-  tag: "5.1.2"
+  tag: "5.1.3"
   # digest is the Hazelcast image digest that will be used only if the tag is empty
   digest: ""
   #
@@ -301,7 +301,7 @@ mancenter:
     # repository is the Hazelcast Management Center image name
     repository: "hazelcast/management-center"
     # tag is the Hazelcast Management Center image tag
-    tag: "5.1.3"
+    tag: "5.1.4"
     # digest is the Hazelcast Management Center image digest that will be used only if the tag is empty
     digest: ""
     # pullPolicy is the Docker image pull policy
