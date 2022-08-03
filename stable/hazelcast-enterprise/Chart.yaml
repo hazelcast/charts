@@ -5,16 +5,16 @@ appVersion: "5.1.2"
 kubeVersion: ">=1.14.0-0"
 description: Hazelcast is a streaming and memory-first application platform for fast, stateful, data-intensive workloads on-premises, at the edge or as a fully managed cloud service.
 keywords:
-- hazelcast
-- keyvalue
-- in-memory
-- database
-- caching
+  - hazelcast
+  - keyvalue
+  - in-memory
+  - database
+  - caching
 home: https://hazelcast.com/products/
 icon: https://hazelcast.com/brand-assets/files/hazelcast-stacked-flat-sm.png
 maintainers:
-- name: Hazelcast Cloud Native Team
-  email: cloudnative@hazelcast.com
-- name: hasancelik
-  email: hasan@hazelcast.com
+  - name: Hazelcast Cloud Native Team
+    email: cloudnative@hazelcast.com
+  - name: hasancelik
+    email: hasan@hazelcast.com
 engine: gotpl
