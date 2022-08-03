@@ -1,0 +1,21 @@
+{{- if and .Values.metrics.enabled .Values.metrics.prometheusRule.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ template "hazelcast.fullname" . }}
+  namespace: {{ default .Release.Namespace .Values.metrics.prometheusRule.namespace | quote }}
+  labels:
+    app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+    helm.sh/chart: {{ template "hazelcast.chart" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    {{- range $key, $val := .Values.metrics.prometheusRule.labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  groups:
+    - name: {{ template "hazelcast.name" . }}
+{{- with .Values.metrics.prometheusRule.rules }}
+      rules: {{- tpl (toYaml .) $ | nindent 8 }}
+{{- end }}
+{{- end }}
