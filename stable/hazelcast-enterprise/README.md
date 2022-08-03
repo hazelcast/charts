@@ -135,6 +135,18 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |metrics.service.port|Port of the `/metrics` endpoint and the metrics service|8080|
 |metrics.service.loadBalancerIP| IP to be used to access metric service for `LoadBalancer` service type| nil|
 |metrics.service.annotations|Annotations for the Prometheus discovery||
+|metrics.service.serviceMonitor.enabled|Enable to create ServiceMonitor resource|false|
+|metrics.service.serviceMonitor.namespace|The namespace in which the ServiceMonitor will be created||
+|metrics.service.serviceMonitor.labels|Additional labels for the ServiceMonitor|{}|
+|metrics.service.serviceMonitor.interval|The interval at which metrics should be scraped|30s|
+|metrics.service.serviceMonitor.scrapeTimeout|The timeout after which the scrape is ended||
+|metrics.service.serviceMonitor.relabellings|Metrics RelabelConfigs to apply to samples before scraping|[]|
+|metrics.service.serviceMonitor.metricRelabelings|Metrics RelabelConfigs to apply to samples before ingestion|[]|
+|metrics.service.serviceMonitor.honorLabels|Specify honorLabels parameter to add the scrape endpoint|false|
+|metrics.prometheusRule.enabled|Enable to create PrometheusRule resource|false|
+|metrics.prometheusRule.namespace|The namespace in which the PrometheusRule will be created||
+|metrics.prometheusRule.labels|Additional labels for the PrometheusRule|{}|
+|metrics.prometheusRule.rules|Array of rules to define in PrometheusRule|[]|
 |secretsMountName|Secret name that is mounted as `/data/secrets/` (e.g. with keystore/trustore files)|nil|
 |customVolume|Configuration for a volume mounted as `/data/custom` and exposed to classpath (e.g. to mount a volume with custom JARs)|nil|
 |externalVolume|Configuration for a volume mounted as `/data/external` |nil|
