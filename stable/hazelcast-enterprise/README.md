@@ -351,7 +351,8 @@ For example, if you have existing [Local Persistent Volumes](https://kubernetes.
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - <YOUR_NODE>
+          - <YOUR_NODE_1>
+          - <YOUR_NODE_2>
   ---
 
   apiVersion: v1
@@ -364,7 +365,7 @@ For example, if you have existing [Local Persistent Volumes](https://kubernetes.
       - ReadWriteOnce
     resources:
       requests:
-      storage: 1Gi
+        storage: 1Gi
 ```
 
 You can configure your Helm chart to use it like below in your `values.yaml` file.
