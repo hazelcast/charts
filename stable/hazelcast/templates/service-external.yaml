@@ -1,5 +1,4 @@
-{{- if .Values.externalAccess }}
-{{- if .Values.externalAccess.enabled }}
+{{- if and .Values.externalAccess .Values.externalAccess.enabled }}
 {{- range $i, $e := until (.Values.cluster.memberCount | int) }}
 {{- $targetPod := printf "%s-%d" (include "hazelcast.fullname" $) $i }}
 ---
@@ -15,7 +14,7 @@ metadata:
     pod: {{ $targetPod }}
 spec:
   type: {{ $.Values.externalAccess.service.type }}
-  {{- if not (empty $.Values.externalAccess.service.loadBalancerIPs) }}
+  {{- if $.Values.externalAccess.service.loadBalancerIPs }}
   loadBalancerIP: {{ index $.Values.externalAccess.service.loadBalancerIPs $i }}
   {{- end }}
   {{- if $.Values.externalAccess.service.loadBalancerSourceRanges }}
@@ -24,7 +23,7 @@ spec:
   ports:
     - name: tcp-hazelcast
       port: {{ $.Values.service.port }}
-      {{- if not (empty $.Values.externalAccess.service.nodePorts) }}
+      {{- if $.Values.externalAccess.service.nodePorts }}
       nodePort: {{ index $.Values.externalAccess.service.nodePorts $i }}
       {{- else }}
       nodePort: null
@@ -35,6 +34,5 @@ spec:
     app.kubernetes.io/instance: "{{ $.Release.Name }}"
     role: hazelcast
     statefulset.kubernetes.io/pod-name: {{ $targetPod }}
-{{- end }}
 {{- end }}
 {{- end }}
