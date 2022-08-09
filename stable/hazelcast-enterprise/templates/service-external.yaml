@@ -1,0 +1,38 @@
+{{- if and .Values.externalAccess .Values.externalAccess.enabled }}
+{{- range $i, $e := until (.Values.cluster.memberCount | int) }}
+{{- $targetPod := printf "%s-%d" (include "hazelcast.fullname" $) $i }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "hazelcast.fullname" $ }}-{{ $i }}-external
+  labels:
+    app.kubernetes.io/name: {{ template "hazelcast.name" $ }}
+    helm.sh/chart: {{ template "hazelcast.chart" $ }}
+    app.kubernetes.io/instance: "{{ $.Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ $.Release.Service }}"
+    pod: {{ $targetPod }}
+spec:
+  type: {{ $.Values.externalAccess.service.type }}
+  {{- if $.Values.externalAccess.service.loadBalancerIPs }}
+  loadBalancerIP: {{ index $.Values.externalAccess.service.loadBalancerIPs $i }}
+  {{- end }}
+  {{- if $.Values.externalAccess.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- toYaml $.Values.externalAccess.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  ports:
+    - name: tcp-hazelcast
+      port: {{ $.Values.service.port }}
+      {{- if $.Values.externalAccess.service.nodePorts }}
+      nodePort: {{ index $.Values.externalAccess.service.nodePorts $i }}
+      {{- else }}
+      nodePort: null
+      {{- end }}
+      targetPort: hazelcast
+  selector:
+    app.kubernetes.io/name: {{ template "hazelcast.name" $ }}
+    app.kubernetes.io/instance: "{{ $.Release.Name }}"
+    role: hazelcast
+    statefulset.kubernetes.io/pod-name: {{ $targetPod }}
+{{- end }}
+{{- end }}

@@ -202,6 +202,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | externalAccess.service.loadBalancerSourceRanges| Address(es) that are allowed when service is LoadBalancer| []|
 | externalAccess.service.nodePorts| Array of node ports used to configure hazelcast external listener when service type is NodePort  | []|
 
+
 Specify each parameter using the `--set key=value,key=value` argument to `helm install`. For example,
 
     $ helm install my-release \
@@ -332,7 +333,7 @@ It can be enabled by changing configuration inside `values.yaml` in externalAcce
 
 Also it can be enabled by specifying externalAccess.enabled parameter using the `--set` argument to `helm install`. For example,
 
-    $ helm install RELEASE-NAME stable/hazelcast --set externalAccess.enabled=true
+    $ helm install my-release --set externalAccess.enabled=true hazelcast/hazelcast
 
 will create (by default) 3 LoadBalancer services one for each Hazelcast member since default value of member count for Hazelcast cluster is 3.
 

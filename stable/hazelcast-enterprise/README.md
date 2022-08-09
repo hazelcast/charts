@@ -202,6 +202,11 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |mancenter.ingress.hosts|List of hostnames for ingress, see values.yaml for example|[]|
 |mancenter.ingress.tls|List of TLS configuration for ingress, see values.yaml for example|[]|
 |mancenter.clusterConfig.create|Cluster config creation will create the connection to the Hazelcast cluster based on the hazelcast-client.yaml file embedded into values|true|
+|externalAccess.enabled| Enable external access to hazelcast nodes| false|
+|externalAccess.service.type| Kubernetes Service type for external access. It can be NodePort or LoadBalancer| LoadBalancer|
+|externalAccess.service.loadBalancerIPs| Array of load balancer IPs for hazelcast nodes| []|
+|externalAccess.service.loadBalancerSourceRanges| Address(es) that are allowed when service is LoadBalancer| []|
+|externalAccess.service.nodePorts| Array of node ports used to configure hazelcast external listener when service type is NodePort  | []|
 
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
@@ -385,6 +390,20 @@ mancenter:
     persistentVolumeClaim:
       claimName: mc-custom-local-pv-claim
 ```
+
+## Enabling External Access to Cluster
+
+Hazelcast Cluster Helm chart topology enables external access to any of the pods via any Hazelcast client. 
+The external access is not enabled by default. It can be enabled during deployment or by upgrading after deployment. Scaling down or scaling up via upgrading automatically removes or adds external services for the members.
+
+It can be enabled by changing configuration inside `values.yaml` in externalAccess section.
+
+Also it can be enabled by specifying externalAccess.enabled parameter using the `--set` argument to `helm install`. For example,
+    $ helm install my-release \
+    --set hazelcast.licenseKey=<license_key>,externalAccess.enabled=true \
+    hazelcast/hazelcast-enterprise
+
+will create (by default) 3 LoadBalancer services one for each Hazelcast member since default value of member count for Hazelcast cluster is 3.
 
 ## Notable changes
 
