@@ -60,7 +60,7 @@ jobs:
           project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: Authenticate to GCP
-        uses: 'google-github-actions/auth@v0.8.0'
+        uses: 'google-github-actions/auth@v0.8.1'
         with:
           credentials_json: ${{ secrets.GKE_SA_KEY }}
           
