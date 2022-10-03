@@ -329,14 +329,34 @@ mancenter:
 Hazelcast Cluster Helm chart topology enables external access to any of the pods via any Hazelcast client. 
 The external access is not enabled by default. It can be enabled during deployment or by upgrading after deployment. Scaling down or scaling up via upgrading automatically removes or adds external services for the members.
 
-It can be enabled by changing configuration inside `values.yaml` in externalAccess section.
+For external access to work correctly, each `LoadBalancer` service must get its external address before the matched member starts running. For this, you can use an init container that will wait for services to get their external IPs.
 
-Also it can be enabled by specifying externalAccess.enabled parameter using the `--set` argument to `helm install`. For example,
+To enable the external access feature, you should configure the `values.yaml` as following:
 
-    $ helm install my-release --set externalAccess.enabled=true hazelcast/hazelcast
+```
+hazelcast:
+  yaml:
+    hazelcast:
+      network:
+        join:
+          kubernetes:
+            service-per-pod-label-name: <LABEL_NAME>
+            service-per-pod-label-value: <LABEL_VALUE>
 
-will create (by default) 3 LoadBalancer services one for each Hazelcast member since default value of member count for Hazelcast cluster is 3.
+externalAccess:
+  enabled: true
+  service:
+    labels:
+      <LABEL_NAME>: <LABEL_VALUE>
 
+initContainers:
+  ## YOUR IMAGE WITH THE SERVICE WAIT LOGIC
+  # - name: service-wait
+```
+
+This configuration will create (by default) 3 LoadBalancer services one for each Hazelcast member since default value of member count for Hazelcast cluster is 3.
+
+NOTE: If you want to use external access feature without manual configuration, you can start using [Hazelcast Platform Operator](https://docs.hazelcast.com/operator/latest/connect-outside-kubernetes).
 
 # Notable changes
 
