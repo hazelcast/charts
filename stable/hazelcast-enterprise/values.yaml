@@ -550,6 +550,9 @@ externalAccess:
     #
     nodePorts: []
 
+    # Labels for the services that will be created.
+    labels: {}
+
 test:
   ## Hazelcast chart test hook image version
   image:
