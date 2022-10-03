@@ -95,7 +95,7 @@ spec:
         {{- if .Values.mancenter.readinessProbe.enabled }}
         readinessProbe:
           tcpSocket:
-            port: 8080
+            port: {{ if .Values.mancenter.ssl }}8443{{ else }}8080{{ end }}
           initialDelaySeconds: {{ .Values.mancenter.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.mancenter.readinessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.mancenter.readinessProbe.timeoutSeconds }}

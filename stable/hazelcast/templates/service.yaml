@@ -31,5 +31,5 @@ spec:
     {{- if .Values.service.nodePort }}
     nodePort: {{ .Values.service.nodePort }}
     {{- end }}
-    name: hzport
+    name: tcp-hzport
 {{- end -}}
