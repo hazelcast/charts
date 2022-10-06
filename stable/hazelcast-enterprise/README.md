@@ -398,7 +398,7 @@ The external access is not enabled by default. It can be enabled during deployme
 
 For external access to work correctly, each `LoadBalancer` service must get its external address before the matched member starts running. For this, you can use an init container that will wait for services to get their external IPs.
 
-To enable the external access feature, you should configure the `values.yaml` as following:
+To enable the external access feature, you should configure the `values.yaml` as following. Please note that you need to give values for `<LABEL_NAME>` and `<LABEL_VALUE>`.
 
 ```
 hazelcast:
@@ -417,11 +417,25 @@ externalAccess:
       <LABEL_NAME>: <LABEL_VALUE>
 
 initContainers:
-  ## YOUR IMAGE WITH THE SERVICE WAIT LOGIC
-  # - name: service-wait
+  - name: wait-for-lb
+    image: bitnami/kubectl:1.22
+    env:
+      - name: POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+    command:
+      - "sh"
+      - "-c"
+    args:
+      - until [ -n "$$(kubectl get svc -n $${POD_NAMESPACE} -l <LABEL_NAME>=<LABEL_VALUE> -ojsonpath="{.items[?(@.spec.selector.statefulset\.kubernetes\.io/pod-name==\"$${POD_NAME}\")].status.loadBalancer.ingress[0].ip}")" ]; do sleep 8; done
 ```
 
-This configuration will create (by default) 3 LoadBalancer services one for each Hazelcast member since default value of member count for Hazelcast cluster is 3.
+This configuration will create (by default) 3 LoadBalancer services one for each Hazelcast member since default value of member count for Hazelcast cluster is 3. For a full working example you can follow the [Kubernetes External Access Tutorial](https://docs.hazelcast.com/tutorials/kubernetes-external-client#smart-client).
 
 NOTE: If you want to use external access feature without manual configuration, you can start using [Hazelcast Platform Operator](https://docs.hazelcast.com/operator/latest/connect-outside-kubernetes).
 
