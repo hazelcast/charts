@@ -513,6 +513,46 @@ mancenter:
   # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
   # secretsMountName:
 
+## External Access to Hazelcast nodes configuration
+##
+externalAccess:
+  ## Enable Kubernetes external cluster access
+  ##
+  enabled: false
+
+  ## Parameters to configure K8s service(s) used to externally access Hazelcast pods
+  ## A new service per pod will be created
+  ##
+  service:
+    ## Service type. Allowed values: LoadBalancer or NodePort
+    ##
+    type: LoadBalancer
+    # # Array of load balancer IPs for each Hazelcast pod. Length must be the same as memberCount
+    # # Example:
+    # loadBalancerIPs:
+    #   - X.X.X.X
+    #   - Y.Y.Y.Y
+    loadBalancerIPs: []
+
+    ## Load Balancer sources
+    ## ref: https://kubernetes.io/docs/tasks/access-application-cluster
+    ## Example:
+    # loadBalancerSourceRanges:
+    # - 10.10.10.0/24
+    #
+    loadBalancerSourceRanges: []
+
+    ## Array of node ports used for each  Hazelcast pod. Length must be the same as memberCount
+    ## Example:
+    # nodePorts:
+    #   - 30001
+    #   - 30002
+    #
+    nodePorts: []
+
+    # Labels for the services that will be created.
+    labels: {}
+
 test:
   ## Hazelcast chart test hook image version
   image:

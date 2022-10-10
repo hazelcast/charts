@@ -196,7 +196,12 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | mancenter.ingress.tls | List of TLS configuration for ingress, see values.yaml for example| []|
 | mancenter.secretsMountName| Secret name that is mounted as '/secrets/' (e.g. with keystore/trustore files) | nil |
 | mancenter.clusterConfig.create|Cluster config creation will create the connection to the Hazelcast cluster based on the hazelcast-client.yaml file embedded into values|true|
-
+| externalAccess.enabled| Enable external access to hazelcast nodes| false|
+| externalAccess.service.type| Kubernetes Service type for external access. It can be NodePort or LoadBalancer| LoadBalancer|
+| externalAccess.service.loadBalancerIPs| Array of load balancer IPs for hazelcast nodes| []|
+| externalAccess.service.loadBalancerSourceRanges| Address(es) that are allowed when service is LoadBalancer| []|
+| externalAccess.service.nodePorts| Array of node ports used to configure hazelcast external listener when service type is NodePort  | []|
+| externalAccess.service.labels| Extra labels for the services for external access| {} |
 
 Specify each parameter using the `--set key=value,key=value` argument to `helm install`. For example,
 
@@ -318,6 +323,54 @@ mancenter:
     persistentVolumeClaim:
       claimName: mc-custom-local-pv-claim
 ```
+
+## Enabling External Access to Cluster
+
+Hazelcast Cluster Helm chart topology enables external access to any of the pods via any Hazelcast client. 
+The external access is not enabled by default. It can be enabled during deployment or by upgrading after deployment. Scaling down or scaling up via upgrading automatically removes or adds external services for the members.
+
+For external access to work correctly, each `LoadBalancer` service must get its external address before the matched member starts running. For this, you can use an init container that will wait for services to get their external IPs.
+
+To enable the external access feature, you should configure the `values.yaml` as following. Please note that you need to give values for `<LABEL_NAME>` and `<LABEL_VALUE>`.
+
+```
+hazelcast:
+  yaml:
+    hazelcast:
+      network:
+        join:
+          kubernetes:
+            service-per-pod-label-name: <LABEL_NAME>
+            service-per-pod-label-value: <LABEL_VALUE>
+
+externalAccess:
+  enabled: true
+  service:
+    labels:
+      <LABEL_NAME>: <LABEL_VALUE>
+
+initContainers:
+  - name: wait-for-lb
+    image: bitnami/kubectl:1.22
+    env:
+      - name: POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+    command:
+      - "sh"
+      - "-c"
+    args:
+      - until [ -n "$$(kubectl get svc -n $${POD_NAMESPACE} -l <LABEL_NAME>=<LABEL_VALUE> -ojsonpath="{.items[?(@.spec.selector.statefulset\.kubernetes\.io/pod-name==\"$${POD_NAME}\")].status.loadBalancer.ingress[0].ip}")" ]; do sleep 8; done
+```
+
+This configuration will create (by default) 3 LoadBalancer services one for each Hazelcast member since default value of member count for Hazelcast cluster is 3. For a full working example you can follow the [Kubernetes External Access Tutorial](https://docs.hazelcast.com/tutorials/kubernetes-external-client#smart-client).
+
+NOTE: If you want to use external access feature without manual configuration, you can start using [Hazelcast Platform Operator](https://docs.hazelcast.com/operator/latest/connect-outside-kubernetes).
 
 # Notable changes
 
