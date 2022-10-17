@@ -15,6 +15,9 @@ metadata:
 rules:
 - apiGroups:
   - ""
+{{- if .Values.hotRestart.enabled}}
+  - apps
+{{- end}}
   resources:
   - endpoints
   - pods
@@ -22,7 +25,13 @@ rules:
   - nodes
 {{- end }}
   - services
+{{- if .Values.hotRestart.enabled}}
+  - statefulsets
+{{- end}}
   verbs:
   - get
   - list
+{{- if .Values.hotRestart.enabled}}
+  - watch
+{{- end}}
 {{- end -}}
