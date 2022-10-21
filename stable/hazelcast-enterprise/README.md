@@ -319,6 +319,60 @@ Finally, run your cluster with SSL enabled and keystore secrets mounted into you
 
 For more information please check [Hazelcast Kubernetes SSL Guide](https://guides.hazelcast.org/kubernetes-ssl/).
 
+## Dynamic Persistence Configuration Support
+
+If you want to enable `Dynamic Persistence Configuration` feature on your cluster, there are few instructions that you must provide in chart configurations.
+
+The firts one is to change the Hazelcast configuration file path to `/data/external` directory. It can be achieved by `initContainers`. You also need to provide `Persistent Volume Claim` as external volume.
+
+```yaml
+externalVolume:
+  persistentVolumeClaim:
+    claimName: <your PVC>
+...
+initContainers:
+  - name: init-container
+    image: alpine
+    command: ["/bin/sh", "-c", "cp -n /data/hazelcast/hazelcast.yaml /data/external/hazelcast.yaml && chmod 777 /data/external/hazelcast.yaml"]
+    volumeMounts:
+    - name: hazelcast-external
+      mountPath: /data/external/
+    - name: hazelcast-storage
+      mountPath: /data/hazelcast/
+```
+
+Then, update the path of hazelcast configuration file.
+
+```yaml
+hazelcast:
+  javaOpts: -Dhazelcast.config=/data/external/hazelcast.yaml
+```
+
+Getting all these instructions together
+
+```yaml
+hazelcast:
+  licenseKey: <license key>
+  yaml:
+    hazelcast:
+      ...
+      dynamic-configuration:
+        persistence-enabled: true
+        backup-dir: /data/external/backups
+  javaOpts: -Dhazelcast.config=/data/external/hazelcast.yaml
+externalVolume:
+  persistentVolumeClaim:
+    claimName: <pvc>
+initContainers:
+  - name: init-container
+    image: alpine
+    command: ["/bin/sh", "-c", "cp -n /data/hazelcast/hazelcast.yaml /data/external/hazelcast.yaml && chmod 777 /data/external/hazelcast.yaml"]
+    volumeMounts:
+    - name: hazelcast-external
+      mountPath: /data/external/
+    - name: hazelcast-storage
+      mountPath: /data/hazelcast/
+```
 
 ## Adding custom JAR files to the IMDG/Management Center classpath
 
