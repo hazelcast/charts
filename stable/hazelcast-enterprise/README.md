@@ -112,6 +112,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |service.type|Kubernetes service type (`ClusterIP`, `LoadBalancer`, or `NodePort`|ClusterIP|
 |service.port|Kubernetes service port|5701|
 |service.clusterIP|IP of the service, `None` makes the service headless|None|
+|service.loadBalancerIP|IP of the load-balancer service| |
 |service.annotations|Extra annotations for the Hazelcast service| {} |
 |service.labels|Extra labels for the Hazelcast service| {} |
 |rbac.create|Enable installing RBAC Role authorization|true|
@@ -393,7 +394,7 @@ mancenter:
 
 ## Enabling External Access to Cluster
 
-Hazelcast Cluster Helm chart topology enables external access to any of the pods via any Hazelcast client. 
+Hazelcast Cluster Helm chart topology enables external access to any of the pods via any Hazelcast client.
 The external access is not enabled by default. It can be enabled during deployment or by upgrading after deployment. Scaling down or scaling up via upgrading automatically removes or adds external services for the members.
 
 For external access to work correctly, each `LoadBalancer` service must get its external address before the matched member starts running. For this, you can use an init container that will wait for services to get their external IPs.
