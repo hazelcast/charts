@@ -174,7 +174,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | mancenter.persistence.size| Size of the new Persistent Volume Claim | 8Gi |
 | mancenter.persistence.storageClass| Storage class name used for Management Center| nil |
 | mancenter.service.type| Kubernetes service type (`ClusterIP`, `LoadBalancer`, or `NodePort`) | LoadBalancer|
-| mancenter.service.port| Kubernetes service port| 5701|
+| mancenter.service.port| Kubernetes service port| 8080|
 | mancenter.service.loadBalancerIP| IP to be used to access management center for `LoadBalancer` service type| nil|
 | mancenter.service.annotations| Extra annotations for the mancenter service| {} |
 | mancenter.service.labels| Extra labels for the mancenter service| {} |

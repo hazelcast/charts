@@ -55,12 +55,12 @@ jobs:
           curl -L https://dl.k8s.io/release/v${{ env.KUBECTL_VERSION }}/bin/linux/amd64/kubectl -o ${GITHUB_WORKSPACE}/bin/kubectl && chmod +x ${GITHUB_WORKSPACE}/bin/kubectl
 
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0.6.0
+        uses: google-github-actions/setup-gcloud@v0.6.2
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: Authenticate to GCP
-        uses: 'google-github-actions/auth@v0.8.0'
+        uses: 'google-github-actions/auth@v0.8.3'
         with:
           credentials_json: ${{ secrets.GKE_SA_KEY }}
           
@@ -74,7 +74,7 @@ jobs:
           python-version: 3.7
                     
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.2.1
+        uses: helm/chart-testing-action@v2.3.1
 
       - name: Add values.yaml for testing
         run: |
