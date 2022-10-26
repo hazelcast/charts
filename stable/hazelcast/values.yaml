@@ -175,6 +175,8 @@ service:
   # clusterIP set to None makes the service headless
   # It is required if DNS Lookup is used (https://github.com/hazelcast/hazelcast-kubernetes#dns-lookup)
   clusterIP: "None"
+  # loadBalancerIP use statically set IP or set to empty to use dynamic IP allocation
+  loadBalancerIP: ""
   # service annotations for the Hazelcast service
   annotations: {}
   # service labels for the Hazelcast service
