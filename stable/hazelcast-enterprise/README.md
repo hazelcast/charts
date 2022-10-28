@@ -323,7 +323,11 @@ For more information please check [Hazelcast Kubernetes SSL Guide](https://guide
 
 If you want to enable `Dynamic Persistence Configuration` feature on your cluster, there are few instructions that you must provide in chart configurations.
 
-The firts one is to change the Hazelcast configuration file path to `/data/external` directory. It can be achieved by `initContainers`. You also need to provide `Persistent Volume Claim` as external volume.
+The first one is to change the Hazelcast configuration file path to `/data/external` directory. It can be achieved by `initContainers`. You also need to provide `Persistent Volume Claim` as external volume.
+
+> **Caution!**: The `AccessMode` of Persistent Volume has an important role in spreading out pods among nodes in the cluster. \
+__ReadWriteOnce__ - the volume can be mounted as read-write by a single node. ReadWriteOnce access mode still can allow multiple pods to access the volume when the pods are running on the same node.\
+__ReadWriteMany__ - the volume can be mounted as read-write by many nodes.
 
 ```yaml
 externalVolume:
@@ -348,7 +352,7 @@ hazelcast:
   javaOpts: -Dhazelcast.config=/data/external/hazelcast.yaml
 ```
 
-Getting all these instructions together
+Getting all these instructions together in values file
 
 ```yaml
 hazelcast:
