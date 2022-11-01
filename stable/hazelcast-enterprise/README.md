@@ -321,18 +321,36 @@ For more information please check [Hazelcast Kubernetes SSL Guide](https://guide
 
 ## Dynamic Persistence Configuration Support
 
-If you want to enable `Dynamic Persistence Configuration` feature on your cluster, there are few instructions that you must provide in chart configurations.
+If you want to enable `Dynamic Persistence Configuration` feature on your cluster, there are few instructions that you must apply in your chart configurations.
 
-The first one is to change the Hazelcast configuration file path to `/data/external` directory. It can be achieved by `initContainers`. You also need to provide `Persistent Volume Claim` as external volume.
+The first one is to change the Hazelcast configuration file path to `/data/external` directory. It can be achieved by `initContainers`. You also need to provide `PersistentVolumeClaim` as external volume.
+
+PersistentVolumeClaim sample:
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: <PVC Name>
+spec:
+  storageClassName: <Storage Class>
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+```
 
 > **Caution!**: The `AccessMode` of Persistent Volume has an important role in spreading out pods among nodes in the cluster. \
 __ReadWriteOnce__ - the volume can be mounted as read-write by a single node. ReadWriteOnce access mode still can allow multiple pods to access the volume when the pods are running on the same node.\
 __ReadWriteMany__ - the volume can be mounted as read-write by many nodes.
 
+Add initContainers, which changes Hazelcast configuration file path, in your values file.
+
 ```yaml
 externalVolume:
   persistentVolumeClaim:
-    claimName: <your PVC>
+    claimName: <PVC Name>
 ...
 initContainers:
   - name: init-container
@@ -345,14 +363,14 @@ initContainers:
       mountPath: /data/hazelcast/
 ```
 
-Then, update the path of hazelcast configuration file.
+Then, update the new path of Hazelcast configuration file.
 
 ```yaml
 hazelcast:
   javaOpts: -Dhazelcast.config=/data/external/hazelcast.yaml
 ```
 
-Getting all these instructions together in values file
+Getting all these instructions together in your values yaml file.
 
 ```yaml
 hazelcast:
