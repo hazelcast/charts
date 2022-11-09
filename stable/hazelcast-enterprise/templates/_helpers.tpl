@@ -46,10 +46,10 @@ Create the name of the service account to use
 Create the name of the service to use
 */}}
 {{- define "hazelcast.serviceName" -}}
-{{- if .Values.service.create -}}
-    {{ template "hazelcast.fullname" .}}
-{{- else -}}
+{{- if .Values.service.name -}}
     {{ default "default" .Values.service.name }}
+{{- else -}}
+    {{ template "hazelcast.fullname" .}}
 {{- end -}}
 {{- end -}}
 
