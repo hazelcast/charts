@@ -104,7 +104,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | podDisruptionBudget.maxUnavailable| Number of max unavailable pods| |
 | podDisruptionBudget.minAvailable| Number of min available pods| |
 | service.create | Enable installing Service| true|
-| service.name | Name of Service, by default generated using the fullname template. To override, two condition need to be met: service.create=false (service must exist before chart deploy) and value of service.name must not be nil | nil |
+| service.name | Name of the existing service for configuring Hazelcast Kubernetes discovery plugin. The field is taked into account only when `service.create` field is set to false (service must exist before chart deploy) | nil |
 | service.type | Kubernetes service type (`ClusterIP`, `LoadBalancer`, or `NodePort`) | ClusterIP|
 | service.port | Kubernetes service port| 5701|
 | service.clusterIP| IP of the service, "None" makes the service headless| None|
