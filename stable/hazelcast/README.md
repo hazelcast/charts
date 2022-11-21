@@ -203,6 +203,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | externalAccess.service.loadBalancerSourceRanges| Address(es) that are allowed when service is LoadBalancer| []|
 | externalAccess.service.nodePorts| Array of node ports used to configure hazelcast external listener when service type is NodePort  | []|
 | externalAccess.service.labels| Extra labels for the services for external access| {} |
+| extraDeploy| Array of extra objects to deploy with the release| [] |
 
 Specify each parameter using the `--set key=value,key=value` argument to `helm install`. For example,
 
