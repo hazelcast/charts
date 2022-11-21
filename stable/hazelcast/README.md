@@ -150,7 +150,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | mancenter.image.tag | Hazelcast Management Center Image tag (NOTE: must be the same or one minor release greater than Hazelcast image version) | {VERSION}|
 | mancenter.image.pullPolicy| Image pull policy| IfNotPresent|
 | mancenter.image.pullSecrets | Specify docker-registry secret names as an array| nil |
-| mancenter.contextPath | the value for the `MC_CONTEXT_PATH` environment variable, thus overriding the default context path for Hazelcast Management Center| nil |
+| mancenter.contextPath | The value for the `MC_CONTEXT_PATH` environment variable. It sets the prefix of all URL paths in Management Center| nil |
 | mancenter.ssl| Enable SSL for Management| false |
 | mancenter.devMode.enabled | Dev mode is for the Hazelcast clusters running on your local for development or evaluation purposes and it provides quick access to the Management Center without requiring any security credentials | false |
 | mancenter.javaOpts| Additional `JAVA_OPTS` properties for Hazelcast Management Center| nil |
