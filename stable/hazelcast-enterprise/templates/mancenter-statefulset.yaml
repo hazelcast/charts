@@ -107,6 +107,11 @@ spec:
           mountPath: /config
         - name: mancenter-storage
           mountPath: /data
+          {{- if .Values.mancenter.persistence.subPath }}
+          subPath: {{ .Values.mancenter.persistence.subPath }}
+          {{- else if .Values.mancenter.persistence.subPathExpr }}
+          subPathExpr: {{ .Values.mancenter.persistence.subPathExpr }}
+          {{- end }}
         {{- if .Values.mancenter.secretsMountName }}
         - name: mancenter-secrets
           mountPath: /secrets

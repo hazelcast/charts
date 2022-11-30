@@ -174,6 +174,8 @@ The following table lists the configurable parameters of the Hazelcast chart and
 | mancenter.persistence.accessModes | Access Modes of the new Persistent Volume Claim | ReadWriteOnce|
 | mancenter.persistence.size| Size of the new Persistent Volume Claim | 8Gi |
 | mancenter.persistence.storageClass| Storage class name used for Management Center| nil |
+| mancenter.persistence.subPath| Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's root).| nil |
+| mancenter.persistence.subPathExpr| Expanded path within the volume from which the container's volume should be mounted. Behaves similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the container's environment. Defaults to "" (volume's root). SubPathExpr and SubPath are mutually exclusive. | nil |
 | mancenter.service.type| Kubernetes service type (`ClusterIP`, `LoadBalancer`, or `NodePort`) | LoadBalancer|
 | mancenter.service.port| Kubernetes service port| 8080|
 | mancenter.service.loadBalancerIP| IP to be used to access management center for `LoadBalancer` service type| nil|

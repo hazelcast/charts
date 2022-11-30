@@ -416,6 +416,13 @@ mancenter:
     size: 8Gi
     # storageClass defines the storage class used for Management Center. Read more at: https://kubernetes.io/docs/concepts/storage/storage-classes/
     # storageClass:
+    # subPath Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's root).
+    # subPath:
+    # subPathExpr Expanded path within the volume from which the container's volume should be mounted.
+    # Behaves similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the
+    # container's environment. Defaults to "" (volume's root).
+    # SubPathExpr and SubPath are mutually exclusive.
+    # subPathExpr:
 
   # Hazelcast Management Center Service properties
   service:
