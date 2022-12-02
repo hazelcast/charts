@@ -98,7 +98,7 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |readinessProbe.timeoutSeconds|When the probe times out|1|
 |readinessProbe.successThreshold|Minimum consecutive successes for the probe to be considered successful after having failed|1|
 |readinessProbe.failureThreshold|Minimum consecutive failures for the probe to be considered failed after having succeeded.|3|
-|readinessProbe.path|URL path that will be called to check readiness.|/hazelcast/health/node-state|
+|readinessProbe.path|URL path that will be called to check readiness.|/hazelcast/health/ready|
 |readinessProbe.port|Port that will be used in readiness probe calls.|nil|
 |readinessProbe.scheme|HTTPS or HTTP scheme.|HTTP|
 |resources.limits.cpu|CPU resource limit|default|
