@@ -542,3 +542,7 @@ test:
   #   limits:
   #     memory: 1024Mi
   #     cpu: 200m
+
+## Array of extra objects to deploy with the release
+##
+extraDeploy: []

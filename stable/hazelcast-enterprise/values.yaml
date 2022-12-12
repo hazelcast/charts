@@ -576,3 +576,7 @@ test:
     runAsUser: 65534
     # runAsGroup is the primary group ID used to run all processes within any container of the pod
     runAsGroup: 65534
+
+## Array of extra objects to deploy with the release
+##
+extraDeploy: []
