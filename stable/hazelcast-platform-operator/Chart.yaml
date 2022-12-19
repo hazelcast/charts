@@ -2,5 +2,5 @@ apiVersion: v2
 name: hazelcast-platform-operator
 description: A Helm chart for Hazelcast Platform Operator which automates common management tasks such as configuring, creating, scaling, and recovering Hazelcast clusters on Kubernetes and Red Hat OpenShift. By taking care of manual deployment and life-cycle management, Hazelcast Platform Operator makes it simpler to work with Hazelcast clusters.
 type: application
-version: 5.0.6
+version: 5.0.6-alpha
 appVersion: "5.0.6"
