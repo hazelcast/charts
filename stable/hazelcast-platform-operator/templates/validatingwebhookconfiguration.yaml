@@ -1,8 +1,8 @@
-{{- $fullName := include "hazelcast-platform-operator.fullname" . -}}
+{{- $fullname := include "hazelcast-platform-operator.fullname" . -}}
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name: {{ $fullName }}
+  name: {{ $fullname }}
   labels:
     {{- include "hazelcast-platform-operator.labels" . | nindent 4 }}
 webhooks:
@@ -10,7 +10,7 @@ webhooks:
       - v1
     clientConfig:
       service:
-        name: {{ $fullName }}
+        name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-cronhotbackup
     failurePolicy: Ignore
@@ -30,7 +30,7 @@ webhooks:
       - v1
     clientConfig:
       service:
-        name: {{ $fullName }}
+        name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-hazelcast
     failurePolicy: Ignore
@@ -50,7 +50,7 @@ webhooks:
       - v1
     clientConfig:
       service:
-        name: {{ $fullName }}
+        name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-hotbackup
     failurePolicy: Ignore
@@ -70,7 +70,7 @@ webhooks:
       - v1
     clientConfig:
       service:
-        name: {{ $fullName }}
+        name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-managementcenter
     failurePolicy: Ignore
@@ -90,7 +90,7 @@ webhooks:
       - v1
     clientConfig:
       service:
-        name: {{ $fullName }}
+        name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-map
     failurePolicy: Ignore
@@ -110,7 +110,7 @@ webhooks:
       - v1
     clientConfig:
       service:
-        name: {{ $fullName }}
+        name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-multimap
     failurePolicy: Ignore
@@ -130,7 +130,7 @@ webhooks:
       - v1
     clientConfig:
       service:
-        name: {{ $fullName }}
+        name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-queue
     failurePolicy: Ignore
@@ -150,7 +150,7 @@ webhooks:
       - v1
     clientConfig:
       service:
-        name: {{ $fullName }}
+        name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-topic
     failurePolicy: Ignore
@@ -170,7 +170,7 @@ webhooks:
       - v1
     clientConfig:
       service:
-        name: {{ $fullName }}
+        name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-wanreplication
     failurePolicy: Ignore
@@ -190,7 +190,7 @@ webhooks:
       - v1
     clientConfig:
       service:
-        name: {{ $fullName }}
+        name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-cache
     failurePolicy: Ignore
@@ -210,7 +210,7 @@ webhooks:
       - v1
     clientConfig:
       service:
-        name: {{ $fullName }}
+        name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-replicatedmap
     failurePolicy: Ignore
