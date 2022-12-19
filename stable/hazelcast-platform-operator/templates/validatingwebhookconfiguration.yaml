@@ -2,7 +2,6 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  creationTimestamp: null
   name: {{ $fullName }}
   labels:
     {{- include "hazelcast-platform-operator.labels" . | nindent 4 }}

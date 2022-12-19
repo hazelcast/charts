@@ -10,8 +10,8 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest-snapshot
 
-developerModeEnabled: "true"
-phoneHomeEnabled: "false"
+developerModeEnabled: true
+phoneHomeEnabled: false
 
 imagePullSecrets: []
 nameOverride: ""

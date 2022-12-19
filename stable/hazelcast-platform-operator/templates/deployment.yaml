@@ -73,14 +73,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
             - name: DEVELOPER_MODE_ENABLED
               value: {{ .Values.developerModeEnabled | quote }}
             - name: PHONE_HOME_ENABLED
