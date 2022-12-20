@@ -1,0 +1,156 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "hazelcast-platform-operator.fullname" . }}
+  labels:
+    {{- include "hazelcast-platform-operator.labels" . | nindent 4 }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - events
+      - pods
+      - serviceaccounts
+      - services
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+      - pods
+      - serviceaccounts
+      - services
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    verbs:
+      - get
+  - apiGroups:
+      - apps
+    resources:
+      - statefulsets
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - hazelcast.com
+    resources:
+      - hazelcasts
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - hazelcast.com
+    resources:
+      - hazelcasts/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - hazelcast.com
+    resources:
+      - hazelcasts/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - hazelcast.com
+    resources:
+      - hotbackups
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - hazelcast.com
+    resources:
+      - hotbackups/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - hazelcast.com
+    resources:
+      - hotbackups/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - hazelcast.com
+    resources:
+      - managementcenters
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - hazelcast.com
+    resources:
+      - managementcenters/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - hazelcast.com
+    resources:
+      - managementcenters/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - rolebindings
+      - roles
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
