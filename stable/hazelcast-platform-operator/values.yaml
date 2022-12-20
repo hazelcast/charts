@@ -12,6 +12,7 @@ image:
 
 developerModeEnabled: false
 phoneHomeEnabled: true
+watchNamespace: default
 
 imagePullSecrets: []
 nameOverride: ""

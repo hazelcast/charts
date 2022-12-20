@@ -61,10 +61,6 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-            - name: WATCH_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
@@ -73,6 +69,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: WATCH_NAMESPACE
+              value: {{ .Values.watchNamespace }}
             - name: DEVELOPER_MODE_ENABLED
               value: {{ .Values.developerModeEnabled | quote }}
             - name: PHONE_HOME_ENABLED
