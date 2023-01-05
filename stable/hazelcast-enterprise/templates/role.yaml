@@ -15,7 +15,7 @@ metadata:
 rules:
 - apiGroups:
   - ""
-{{- if .Values.hotRestart.enabled}}
+{{- if .Values.persistence.enabled}}
   - apps
 {{- end}}
   resources:
@@ -25,13 +25,13 @@ rules:
   - nodes
 {{- end }}
   - services
-{{- if .Values.hotRestart.enabled}}
+{{- if .Values.persistence.enabled}}
   - statefulsets
 {{- end}}
   verbs:
   - get
   - list
-{{- if .Values.hotRestart.enabled}}
+{{- if .Values.persistence.enabled}}
   - watch
 {{- end}}
 {{- end -}}

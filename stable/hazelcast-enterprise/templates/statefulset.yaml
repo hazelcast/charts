@@ -132,9 +132,9 @@ spec:
         volumeMounts:
         - name: hazelcast-storage
           mountPath: /data/hazelcast
-        {{- if .Values.hotRestart.enabled }}
-        - name: hot-restart-persistence
-          mountPath: /data/hot-restart
+        {{- if .Values.persistence.enabled }}
+        - name: persistence
+          mountPath: /data/persistence
         {{- end }}
         {{- if .Values.secretsMountName }}
         - name: hazelcast-secrets
@@ -172,7 +172,7 @@ spec:
           value: "{{ .Values.metrics.service.port }}"
         {{- end }}
         - name: JAVA_OPTS
-          value: "-Dhazelcast.config=/data/hazelcast/hazelcast.yaml -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.hotRestart={{ .Values.hotRestart.enabled }} {{ if .Values.hotRestart.enabled }}-Dhazelcast.stale.join.prevention.duration.seconds=5{{ end }} -Dhz.jet.enabled={{ .Values.jet.enabled }} {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} -Dhazelcast.cluster.version.auto.upgrade.enabled={{ .Values.hazelcast.updateClusterVersionAfterRollingUpgrade }} {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.hazelcast.javaOpts }}"
+          value: "-Dhazelcast.config=/data/hazelcast/hazelcast.yaml -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.persistence={{ .Values.persistence.enabled }} {{ if .Values.persistence.enabled }}-Dhazelcast.stale.join.prevention.duration.seconds=5{{ end }} -Dhz.jet.enabled={{ .Values.jet.enabled }} {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} -Dhazelcast.cluster.version.auto.upgrade.enabled={{ .Values.hazelcast.updateClusterVersionAfterRollingUpgrade }} {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.hazelcast.javaOpts }}"
         {{- if .Values.hazelcast.loggingLevel }}
         - name: LOGGING_LEVEL
           value: {{ .Values.hazelcast.loggingLevel }}
@@ -217,26 +217,26 @@ spec:
         - name: hazelcast-custom
 {{ toYaml .Values.customVolume | indent 10 }}
             {{- end }}
-        {{- if .Values.hotRestart.enabled }}
-        {{- if .Values.hotRestart.hostPath }}
-        - name: hot-restart-persistence
+        {{- if .Values.persistence.enabled }}
+        {{- if .Values.persistence.hostPath }}
+        - name: persistence
           hostPath:
-            path: {{ .Values.hotRestart.hostPath }}
+            path: {{ .Values.persistence.hostPath }}
         {{- end }}
-        {{- if .Values.hotRestart.existingClaim }}
-        - name: hot-restart-persistence
+        {{- if .Values.persistence.existingClaim }}
+        - name: persistence
           persistentVolumeClaim:
-            claimName: {{ .Values.hotRestart.existingClaim }}
+            claimName: {{ .Values.persistence.existingClaim }}
         {{- end }}
         {{- end }}
         {{- if .Values.externalVolume }}
         - name: hazelcast-external
 {{ toYaml .Values.externalVolume | indent 10 }}
         {{- end }}
-  {{- if and (and (eq .Values.hotRestart.enabled true) (empty .Values.hotRestart.existingClaim)) (empty .Values.hotRestart.hostPath) }}
+  {{- if and (and (eq .Values.persistence.enabled true) (empty .Values.persistence.existingClaim)) (empty .Values.persistence.hostPath) }}
   volumeClaimTemplates:
   - metadata:
-      name: hot-restart-persistence
+      name: persistence
       labels:
         app.kubernetes.io/name: {{ template "hazelcast.name" . }}
         helm.sh/chart: "{{ .Chart.Name }}"
@@ -244,17 +244,17 @@ spec:
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
     spec:
       accessModes:
-      {{- range .Values.hotRestart.accessModes }}
+      {{- range .Values.persistence.accessModes }}
         - {{ . | quote }}
       {{- end }}
       resources:
         requests:
-          storage: {{ .Values.hotRestart.size | quote }}
-      {{- if .Values.hotRestart.storageClass }}
-      {{- if (eq "-" .Values.hotRestart.storageClass) }}
+          storage: {{ .Values.persistence.size | quote }}
+      {{- if .Values.persistence.storageClass }}
+      {{- if (eq "-" .Values.persistence.storageClass) }}
       storageClassName: ""
       {{- else }}
-      storageClassName: "{{ .Values.hotRestart.storageClass }}"
+      storageClassName: "{{ .Values.persistence.storageClass }}"
       {{- end }}
       {{- end }}
   {{- end }}
