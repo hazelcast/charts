@@ -5,14 +5,20 @@
 replicaCount: 1
 
 image:
+  imageOverride: ""
   repository: hazelcast/hazelcast-platform-operator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest-snapshot
 
+installCRDs: false
 developerModeEnabled: false
 phoneHomeEnabled: true
 watchNamespace: default
+
+debug:
+  enabled: false
+  port: 40000
 
 imagePullSecrets: []
 nameOverride: ""

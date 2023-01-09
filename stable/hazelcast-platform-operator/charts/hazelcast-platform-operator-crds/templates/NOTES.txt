@@ -1,0 +1,1 @@
+Hazelcast Platform Operator Custom Resource Definitions installed.

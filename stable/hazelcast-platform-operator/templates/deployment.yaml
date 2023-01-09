@@ -24,6 +24,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      # TODO: Add if check
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
@@ -37,8 +38,16 @@ spec:
           name: manager
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: {{ include "hazelcast-platform-operator.imageName" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 9443
+              name: webhook-server
+              protocol: TCP
+            {{- if .Values.debug.enabled }}
+            - containerPort: {{ .Values.debug.port }}
+            {{- end }}
+          {{- if not .Values.debug.enabled }}
           livenessProbe:
             httpGet:
               path: /healthz
@@ -51,10 +60,7 @@ spec:
               port: 8081
             initialDelaySeconds: 5
             periodSeconds: 10
-          ports:
-            - containerPort: 9443
-              name: webhook-server
-              protocol: TCP
+          {{- end }}
           volumeMounts:
             - mountPath: /tmp/k8s-webhook-server/serving-certs
               name: cert
