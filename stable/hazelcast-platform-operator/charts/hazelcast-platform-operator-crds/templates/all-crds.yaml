@@ -296,16 +296,16 @@ spec:
             properties:
               agent:
                 default:
-                  repository: docker.io/kutluhanhazelcast/platform-operator-agent
-                  version: 0.1.14
+                  repository: docker.io/hazelcast/platform-operator-agent
+                  version: 0.1.12
                 description: B&R Agent configurations
                 properties:
                   repository:
-                    default: docker.io/kutluhanhazelcast/platform-operator-agent
+                    default: docker.io/hazelcast/platform-operator-agent
                     description: Repository to pull Hazelcast Platform Operator Agent(https://github.com/hazelcast/platform-operator-agent)
                     type: string
                   version:
-                    default: 0.1.14
+                    default: 0.1.12
                     description: Version of Hazelcast Platform Operator Agent.
                     type: string
                 type: object
@@ -397,6 +397,13 @@ spec:
                     - Unisocket
                     type: string
                 type: object
+              highAvailabilityMode:
+                description: Configuration to create clusters resilient to node and
+                  zone failures
+                enum:
+                - NODE
+                - ZONE
+                type: string
               imagePullPolicy:
                 default: IfNotPresent
                 description: Pull policy for the Hazelcast Platform image
