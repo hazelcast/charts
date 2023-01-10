@@ -541,8 +541,8 @@ The parameter `hotRestart` has been renamed to `persistence`. To use the persist
 are updated. For example:
 
     persistence:
-        enabled: true
-        base-dir: /data/persistence
-        validation-timeout-seconds: 1200
-        data-load-timeout-seconds: 900
-        auto-remove-stale-data: true
+      enabled: true
+      base-dir: /data/persistence
+      validation-timeout-seconds: 1200
+      data-load-timeout-seconds: 900
+      auto-remove-stale-data: true
