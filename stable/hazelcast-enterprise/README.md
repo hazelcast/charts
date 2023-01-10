@@ -534,3 +534,15 @@ Hazelcast REST Endpoints are no longer enabled by default and the parameter `haz
           enabled: true
         CLUSTER_WRITE:
           enabled: true
+
+### 5.8.0
+
+The parameter `hotRestart` has been renamed to `persistence`. To use the persistence feature make sure that your `values` 
+are updated. For example:
+
+    persistence:
+        enabled: true
+        base-dir: /data/persistence
+        validation-timeout-seconds: 1200
+        data-load-timeout-seconds: 900
+        auto-remove-stale-data: true
