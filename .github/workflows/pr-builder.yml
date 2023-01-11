@@ -48,12 +48,6 @@ jobs:
           git remote add hazelcast https://github.com/hazelcast/charts.git
           git fetch hazelcast master
 
-      - name: Install kubectl
-        run: |
-          mkdir -p ${GITHUB_WORKSPACE}/bin
-          echo "${GITHUB_WORKSPACE}/bin" >> ${GITHUB_PATH}
-          curl -L https://dl.k8s.io/release/v${{ env.KUBECTL_VERSION }}/bin/linux/amd64/kubectl -o ${GITHUB_WORKSPACE}/bin/kubectl && chmod +x ${GITHUB_WORKSPACE}/bin/kubectl
-
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1.0.1
         with:
@@ -65,9 +59,9 @@ jobs:
           credentials_json: ${{ secrets.GKE_SA_KEY }}
           
       - name: Set up Helm
-        uses: azure/setup-helm@v3
+        uses: azure/setup-helm@v3.5
         with:
-          version: v3.4.0
+          version: v3.10.3
 
       - uses: actions/setup-python@v4
         with:
@@ -117,7 +111,11 @@ jobs:
           sleep 30
 
       - name: Connect to the GKE cluster
-        run: gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --zone ${{ env.GKE_ZONE }} --project ${{ env.GCP_PROJECT_ID }}
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          cluster_name: ${{ env.CLUSTER_NAME }}
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          location: ${{ env.GKE_ZONE }}
 
       - name: Test Charts
         run: |

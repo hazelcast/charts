@@ -60,9 +60,9 @@ hazelcast:
             namespace: ${namespace}
         rest-api:
           enabled: true
-      hot-restart-persistence:
-        enabled: ${hazelcast.hotRestart}
-        base-dir: /data/hot-restart
+      persistence:
+        enabled: ${hazelcast.persistence}
+        base-dir: /data/persistence
         validation-timeout-seconds: 1200
         data-load-timeout-seconds: 900
         auto-remove-stale-data: true
@@ -238,7 +238,7 @@ securityContext:
   readOnlyRootFilesystem: true
 
 # Hazelcast Hot Restart persistence feature
-hotRestart:
+persistence:
   # enabled is a flag to enabled Hot Restart feature
   enabled: false
   # existingClaim is a name of the existing Persistence Volume Claim that will be used for the Hot Restart persistence

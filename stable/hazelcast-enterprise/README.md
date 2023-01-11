@@ -125,11 +125,11 @@ The following table lists the configurable parameters of the Hazelcast chart and
 |securityContext.runAsGroup|Primary Group ID used to run all processes in the Hazelcast Jet and Hazelcast Jet Management Center containers|65534|
 |securityContext.fsGroup|Group ID associated with the Hazelcast and Management Center container|65534|
 |securityContext.readOnlyRootFilesystem|Enables readOnlyRootFilesystem in the Hazelcast security context|true|
-|hotRestart.enabled|Turn on and off Hazelcast Hot Restart feature (Hazelcast configuration must be also updated with the map/cache configuration)|false|
-|hotRestart.existingClaim|Name of the existing Persistence Volume Claim, if not defined, a new is created|nil|
-|hotRestart.accessModes|Access Modes of the new Persistent Volume Claim|ReadWriteOnce|
-|hotRestart.size|Size of the new Persistent Volume Claim|8Gi|
-|hotRestart.hostPath|Path of node machine used for persistent storage; if defined, it’s used instead of Persistent Volume Claim|nil|
+|persistence.enabled|Turn on and off Hazelcast Persistence feature (Hazelcast configuration must be also updated with the map/cache configuration)|false|
+|persistence.existingClaim|Name of the existing Persistence Volume Claim, if not defined, a new is created|nil|
+|persistence.accessModes|Access Modes of the new Persistent Volume Claim|ReadWriteOnce|
+|persistence.size|Size of the new Persistent Volume Claim|8Gi|
+|persistence.hostPath|Path of node machine used for persistent storage; if defined, it’s used instead of Persistent Volume Claim|nil|
 |jet.enabled|Turn on and off Hazelcast Jet engine |true|
 |metrics.enabled|Turn on and off JMX Prometheus metrics available at `/metrics`|false|
 |metrics.service.type|Type of the metrics service|ClusterIP|
@@ -534,3 +534,15 @@ Hazelcast REST Endpoints are no longer enabled by default and the parameter `haz
           enabled: true
         CLUSTER_WRITE:
           enabled: true
+
+### 5.8.0
+
+The parameter `hotRestart` has been renamed to `persistence`. To use the persistence feature make sure that your `values.yaml` 
+is updated. For example:
+
+    persistence:
+      enabled: true
+      base-dir: /data/persistence
+      validation-timeout-seconds: 1200
+      data-load-timeout-seconds: 900
+      auto-remove-stale-data: true
