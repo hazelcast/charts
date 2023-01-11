@@ -6,9 +6,9 @@ description: A Helm chart for installing the Hazelcast Platform Operator Custom 
 
 type: application
 
-version: 5.0.6
+version: 5.6.0
 
-appVersion: "5.0.6"
+appVersion: "5.6.0"
 
 home: https://github.com/hazelcast/hazelcast-platform-operator
 
