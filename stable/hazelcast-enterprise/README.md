@@ -537,8 +537,8 @@ Hazelcast REST Endpoints are no longer enabled by default and the parameter `haz
 
 ### 5.8.0
 
-The parameter `hotRestart` has been renamed to `persistence`. To use the persistence feature make sure that your `values` 
-are updated. For example:
+The parameter `hotRestart` has been renamed to `persistence`. To use the persistence feature make sure that your `values.yaml` 
+is updated. For example:
 
     persistence:
       enabled: true
