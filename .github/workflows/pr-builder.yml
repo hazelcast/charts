@@ -5,6 +5,7 @@ on:
       - master
     paths-ignore:
       - '**.md'
+      - 'stable/hazelcast-platform-operator'
   pull_request_target:
     types: [labeled]
     branches:
