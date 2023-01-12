@@ -1,7 +1,7 @@
 name: Push Hazelcast-Platform-Operator Helm chart to the repo
 
 on:
-  workflow_call:
+  workflow_dispatch:
 
 jobs:
   build:
