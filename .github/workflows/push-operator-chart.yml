@@ -25,6 +25,7 @@ jobs:
       - name: Package operator chart and add it into index.yaml
         run: |
           helm package ./stable/hazelcast-platform-operator
+          helm package ./stable/hazelcast-platform-operator/charts/hazelcast-platform-operator-crds
           aws s3 cp s3://hazelcast-charts/index.yaml .
           helm repo index --url=https://hazelcast-charts.s3.amazonaws.com --merge ./index.yaml .
 
