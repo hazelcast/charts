@@ -436,6 +436,26 @@ spec:
                     description: When true, enables resource uploading for Jet jobs.
                     type: boolean
                 type: object
+              jvm:
+                description: Hazelcast JVM configuration
+                properties:
+                  memory:
+                    description: Memory is a JVM memory configuration
+                    properties:
+                      initialRAMPercentage:
+                        description: InitialRAMPercentage configures JVM initial heap
+                          size
+                        type: string
+                      maxRAMPercentage:
+                        description: MaxRAMPercentage sets the maximum heap size for
+                          a JVM
+                        type: string
+                      minRAMPercentage:
+                        description: MinRAMPercentage sets the minimum heap size for
+                          a JVM
+                        type: string
+                    type: object
+                type: object
               licenseKeySecret:
                 description: Name of the secret with Hazelcast Enterprise License
                   Key.
