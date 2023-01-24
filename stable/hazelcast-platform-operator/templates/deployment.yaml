@@ -24,26 +24,35 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      # TODO: Add if check
+      {{- with .Values.podSecurityContext }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
-        - emptyDir: { }
-          name: cert
+      {{- if .Values.webhook.enabled }}
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: {{ include "hazelcast-platform-operator.fullname" . }}
+      {{- end }}
       containers:
         - command:
           - /manager
           args:
           - --leader-elect=false
           name: manager
+          {{- with .Values.securityContext }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           image: {{ include "hazelcast-platform-operator.imageName" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
+            {{- if .Values.webhook.enabled }}
             - containerPort: 9443
               name: webhook-server
               protocol: TCP
+            {{- end }}
             {{- if .Values.debug.enabled }}
             - containerPort: {{ .Values.debug.port }}
             {{- end }}
@@ -62,8 +71,11 @@ spec:
             periodSeconds: 10
           {{- end }}
           volumeMounts:
+            {{- if .Values.webhook.enabled }}
             - mountPath: /tmp/k8s-webhook-server/serving-certs
               name: cert
+              readOnly: true
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
@@ -76,7 +88,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: WATCH_NAMESPACE
-              value: {{ .Values.watchNamespace }}
+              value: {{ include "watched-namespace" . | quote }}
             - name: DEVELOPER_MODE_ENABLED
               value: {{ .Values.developerModeEnabled | quote }}
             - name: PHONE_HOME_ENABLED

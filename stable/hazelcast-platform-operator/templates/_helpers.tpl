@@ -71,3 +71,23 @@ Create the image name of the deployment
 {{- .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
 {{- end }}
 {{- end }}
+
+{{/*
+Watched namespace name
+*/}}
+{{- define "watched-namespace" -}}
+{{- if .Values.watchedNamespace }} 
+{{- .Values.watchedNamespace }}
+{{- else }}
+{{- .Release.Namespace }}
+{{- end }}
+{{- end }}
+
+
+{{/*
+Label selector for watched namespace
+*/}}
+{{- define "watched-namespace.labelSelector" -}}
+matchLabels:
+  kubernetes.io/metadata.name: {{ include "watched-namespace" . }}
+{{- end }}

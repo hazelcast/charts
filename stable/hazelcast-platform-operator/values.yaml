@@ -14,7 +14,10 @@ image:
 installCRDs: false
 developerModeEnabled: false
 phoneHomeEnabled: true
-watchNamespace: default
+# Namespace operator watches, if empty string or omitted release namespace is watched.
+watchedNamespace: ""
+webhook:
+  enabled: true
 
 debug:
   enabled: false
