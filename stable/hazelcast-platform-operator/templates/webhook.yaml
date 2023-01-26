@@ -266,7 +266,7 @@ webhooks:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "hazelcast-platform-operator.fullname" . }}
+  name: {{ $fullname }}
   labels:
     {{- include "hazelcast-platform-operator.labels" . | nindent 4 }}
 spec:

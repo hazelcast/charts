@@ -11,13 +11,19 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest-snapshot
 
-installCRDs: false
 developerModeEnabled: false
 phoneHomeEnabled: true
-# Namespace operator watches, if empty string or omitted release namespace is watched.
-watchedNamespace: ""
+
+# Guard field to make sure no clusterrole permission is used when deploying the operator.
+# If false and Helm is misconfigured, it will fail the release.
+allowClusterScopedPermissions: true
 webhook:
   enabled: true
+# Namespace that operator watches. If empty string or omitted, release namespace is watched.
+watchedNamespace: ""
+# If true, create ClusterRole and ClusterRoleBinding for getting node resources. 
+enableHazelcastNodeDiscovery: true
+installCRDs: true
 
 debug:
   enabled: false
