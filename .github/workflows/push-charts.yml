@@ -1,12 +1,13 @@
 name: Push Helm charts to the repo
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
     paths:
-      - "stable/hazelcast"
-      - "stable/hazelcast-enterprise"
+      - "stable/hazelcast/**"
+      - "stable/hazelcast-enterprise/**"
       - "artifacthub-repo.yml"
 
 jobs:
