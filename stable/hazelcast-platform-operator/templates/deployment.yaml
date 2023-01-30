@@ -90,6 +90,8 @@ spec:
                   fieldPath: metadata.name
             - name: WATCHED_NAMESPACES
               value: {{ include "watched-namespaces.string" . | quote }}
+            - name: HAZELCAST_NODE_DISCOVERY_ENABLED
+              value: {{ .Values.enableHazelcastNodeDiscovery | quote }}
             - name: DEVELOPER_MODE_ENABLED
               value: {{ .Values.developerModeEnabled | quote }}
             - name: PHONE_HOME_ENABLED
