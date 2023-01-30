@@ -11,7 +11,7 @@
   {{- fail "Hazelcast Node discovery cannot be enabled when cluster-scoped permission usage is disabled" -}}
   {{- end -}}
 
-  {{- if has .Values.watchedNamespace (list "" "*" ) -}}
-  {{- fail "Operator can watch only a single namespace when cluster-scoped permission usage is disabled" -}}
+  {{- if has (include "watched-namespaces.string" .) (list "" "*" ) -}}
+  {{- fail "Operator cannot watch all namespaces when cluster-scoped permission usage is disabled" -}}
   {{- end -}}
 {{- end -}}

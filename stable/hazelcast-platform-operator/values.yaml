@@ -19,9 +19,9 @@ phoneHomeEnabled: true
 createClusterScopedResources: true
 webhook:
   enabled: true
-# Namespace that operator watches.
-# If "" or "*" operator will watch every namespace
-watchedNamespace: "*"
+# List of watched namespaces, by default operator watches all namespaces
+# If [], [""] or ["*"] operator will watch every namespace.
+watchedNamespaces: ["*"]
 # If true, create ClusterRole and ClusterRoleBinding for getting node resources. 
 enableHazelcastNodeDiscovery: true
 installCRDs: true

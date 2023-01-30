@@ -73,14 +73,26 @@ Create the image name of the deployment
 {{- end }}
 
 {{/*
+Watched namespaces list concatenated as comma separated string
+*/}}
+{{- define "watched-namespaces.string" -}}
+{{ trim (join "," .Values.watchedNamespaces) }}
+{{- end -}}
+
+{{/*
 Label selector for watched namespace
 */}}
-{{- define "watched-namespace.labelSelector" -}}
-{{- if has .Values.watchedNamespace (list "" "*" ) -}}
+{{- define "watched-namespaces.labelSelector" -}}
+{{- if has (include "watched-namespaces.string" .) (list "" "*" ) -}}
 matchLabels: {}
 {{- else -}}
-matchLabels:
-  kubernetes.io/metadata.name: {{ .Values.watchedNamespace }}
+matchExpressions:
+- key: kubernetes.io/metadata.name
+  operator: In
+  values:
+{{- range $watchedNamespace := .Values.watchedNamespaces }}
+  - {{ trim $watchedNamespace }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 

@@ -1,0 +1,31 @@
+{{- $watchAllNamespaces := (has (include "watched-namespaces.string" .) (list "" "*" )) -}}
+{{- if not $watchAllNamespaces }}
+{{- range $watchedNamespace := .Values.watchedNamespaces }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "hazelcast-platform-operator.fullname" $ }}-watched-ns
+  namespace: {{ trim $watchedNamespace }}
+  labels:
+    {{- include "hazelcast-platform-operator.labels" $ | nindent 4 }}
+rules:
+{{- include "hazelcast-platform-operator.watchedNamespaceRules" $ | nindent 0 }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "hazelcast-platform-operator.fullname" $ }}-watched-ns
+  namespace: {{ trim $watchedNamespace }}
+  labels:
+    {{- include "hazelcast-platform-operator.labels" $ | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "hazelcast-platform-operator.fullname" $ }}-watched-ns
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "hazelcast-platform-operator.serviceAccountName" $ }}
+    namespace: {{ $.Release.Namespace }}
+{{- end }}
+{{- end -}}
