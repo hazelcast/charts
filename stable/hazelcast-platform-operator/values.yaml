@@ -16,11 +16,12 @@ phoneHomeEnabled: true
 
 # Guard field to make sure no clusterrole permission is used when deploying the operator.
 # If false and Helm is misconfigured, it will fail the release.
-allowClusterScopedPermissions: true
+createClusterScopedResources: true
 webhook:
   enabled: true
-# Namespace that operator watches. If empty string or omitted, release namespace is watched.
-watchedNamespace: ""
+# Namespace that operator watches.
+# If "" or "*" operator will watch every namespace
+watchedNamespace: "*"
 # If true, create ClusterRole and ClusterRoleBinding for getting node resources. 
 enableHazelcastNodeDiscovery: true
 installCRDs: true

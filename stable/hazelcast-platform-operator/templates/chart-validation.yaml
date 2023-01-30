@@ -1,4 +1,4 @@
-{{- if (not .Values.allowClusterScopedPermissions) -}}
+{{- if (not .Values.createClusterScopedResources) -}}
   {{- if .Values.webhook.enabled -}}
   {{- fail "Webhook cannot be enabled when cluster-scoped permission usage is disabled." -}}
   {{- end -}}
@@ -11,7 +11,7 @@
   {{- fail "Hazelcast Node discovery cannot be enabled when cluster-scoped permission usage is disabled" -}}
   {{- end -}}
 
-  {{- if ne .Release.Namespace (include "watched-namespace" .) -}}
-  {{- fail "Operator can watch only its own namespace when cluster-scoped permission usage is disabled" -}}
+  {{- if has .Values.watchedNamespace (list "" "*" ) -}}
+  {{- fail "Operator can watch only a single namespace when cluster-scoped permission usage is disabled" -}}
   {{- end -}}
 {{- end -}}

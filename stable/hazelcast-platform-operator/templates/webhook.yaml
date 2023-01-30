@@ -31,7 +31,7 @@ webhooks:
           - cronhotbackups
     sideEffects: None
     namespaceSelector: 
-    {{- include "watched-namespace.labelSelector" . | nindent 6 }}
+      {{- include "watched-namespace.labelSelector" . | nindent 6 }}
   - admissionReviewVersions:
       - v1
     clientConfig:
@@ -54,7 +54,7 @@ webhooks:
           - hazelcasts
     sideEffects: None
     namespaceSelector:
-    {{- include "watched-namespace.labelSelector" . | nindent 6 }}
+      {{- include "watched-namespace.labelSelector" . | nindent 6 }}
   - admissionReviewVersions:
       - v1
     clientConfig:
@@ -77,7 +77,7 @@ webhooks:
           - hotbackups
     sideEffects: None
     namespaceSelector:
-    {{- include "watched-namespace.labelSelector" . | nindent 6 }}
+      {{- include "watched-namespace.labelSelector" . | nindent 6 }}
   - admissionReviewVersions:
       - v1
     clientConfig:
@@ -100,7 +100,7 @@ webhooks:
           - managementcenters
     sideEffects: None
     namespaceSelector:
-    {{- include "watched-namespace.labelSelector" . | nindent 6 }}
+      {{- include "watched-namespace.labelSelector" . | nindent 6 }}
   - admissionReviewVersions:
       - v1
     clientConfig:
@@ -123,7 +123,7 @@ webhooks:
           - maps
     sideEffects: None
     namespaceSelector:
-    {{- include "watched-namespace.labelSelector" . | nindent 6 }}
+      {{- include "watched-namespace.labelSelector" . | nindent 6 }}
   - admissionReviewVersions:
       - v1
     clientConfig:
@@ -146,7 +146,7 @@ webhooks:
           - multimaps
     sideEffects: None
     namespaceSelector:
-    {{- include "watched-namespace.labelSelector" . | nindent 6 }}
+      {{- include "watched-namespace.labelSelector" . | nindent 6 }}
   - admissionReviewVersions:
       - v1
     clientConfig:
@@ -169,7 +169,7 @@ webhooks:
           - queues
     sideEffects: None
     namespaceSelector:
-    {{- include "watched-namespace.labelSelector" . | nindent 6 }}
+      {{- include "watched-namespace.labelSelector" . | nindent 6 }}
   - admissionReviewVersions:
       - v1
     clientConfig:
@@ -192,7 +192,7 @@ webhooks:
           - topics
     sideEffects: None
     namespaceSelector:
-    {{- include "watched-namespace.labelSelector" . | nindent 6 }}
+      {{- include "watched-namespace.labelSelector" . | nindent 6 }}
   - admissionReviewVersions:
       - v1
     clientConfig:
@@ -215,7 +215,7 @@ webhooks:
           - wanreplications
     sideEffects: None
     namespaceSelector:
-    {{- include "watched-namespace.labelSelector" . | nindent 6 }}
+      {{- include "watched-namespace.labelSelector" . | nindent 6 }}
   - admissionReviewVersions:
       - v1
     clientConfig:
@@ -238,7 +238,7 @@ webhooks:
           - caches
     sideEffects: None
     namespaceSelector:
-    {{- include "watched-namespace.labelSelector" . | nindent 6 }}
+      {{- include "watched-namespace.labelSelector" . | nindent 6 }}
   - admissionReviewVersions:
       - v1
     clientConfig:
@@ -261,12 +261,13 @@ webhooks:
           - replicatedmaps
     sideEffects: None
     namespaceSelector:
-    {{- include "watched-namespace.labelSelector" . | nindent 6 }}
+      {{- include "watched-namespace.labelSelector" . | nindent 6 }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ $fullname }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "hazelcast-platform-operator.labels" . | nindent 4 }}
 spec:

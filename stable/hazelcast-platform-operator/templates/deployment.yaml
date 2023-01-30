@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "hazelcast-platform-operator.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "hazelcast-platform-operator.labels" . | nindent 4 }}
 spec:
@@ -88,7 +89,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: WATCH_NAMESPACE
-              value: {{ include "watched-namespace" . | quote }}
+              value: {{ .Values.watchedNamespace | quote }}
             - name: DEVELOPER_MODE_ENABLED
               value: {{ .Values.developerModeEnabled | quote }}
             - name: PHONE_HOME_ENABLED

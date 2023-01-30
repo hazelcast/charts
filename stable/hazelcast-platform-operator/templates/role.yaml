@@ -1,370 +1,59 @@
+{{- $watchOwnNamespace := (eq .Release.Namespace .Values.watchedNamespace) -}}
+{{- $watchAllNamespace := (has .Values.watchedNamespace (list "" "*" )) -}}
+{{- $watchOtherNamespace := (and (not $watchAllNamespace) (not $watchOwnNamespace) ) -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ include "hazelcast-platform-operator.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "hazelcast-platform-operator.labels" . | nindent 4 }}
 rules:
-- apiGroups:
-    - apps
-  resources:
-    - deployments
-  verbs:
-    - get
-- apiGroups:
-    - coordination.k8s.io
-  resources:
-    - leases
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - ""
-  resources:
-    - configmaps
-    - events
-    - pods
-    - serviceaccounts
-    - services
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - ""
-  resources:
-    - endpoints
-    - pods
-    - services
-  verbs:
-    - get
-    - list
-- apiGroups:
-    - ""
-  resources:
-    - secrets
-  verbs:
-    - create
-    - get
-    - list
-    - watch
-- apiGroups:
-    - apps
-  resources:
-    - statefulsets
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - caches
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - caches/finalizers
-  verbs:
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - caches/status
-  verbs:
-    - get
-    - patch
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - cronhotbackups
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - cronhotbackups/finalizers
-  verbs:
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - cronhotbackups/status
-  verbs:
-    - get
-    - patch
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - hazelcasts
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - hazelcasts/finalizers
-  verbs:
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - hazelcasts/status
-  verbs:
-    - get
-    - patch
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - hotbackups
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - hotbackups/finalizers
-  verbs:
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - hotbackups/status
-  verbs:
-    - get
-    - patch
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - managementcenters
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - managementcenters/finalizers
-  verbs:
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - managementcenters/status
-  verbs:
-    - get
-    - patch
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - maps
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - maps/finalizers
-  verbs:
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - maps/status
-  verbs:
-    - get
-    - patch
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - multimaps
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - multimaps/finalizers
-  verbs:
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - multimaps/status
-  verbs:
-    - get
-    - patch
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - queues
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - queues/finalizers
-  verbs:
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - queues/status
-  verbs:
-    - get
-    - patch
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - replicatedmaps
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - replicatedmaps/finalizers
-  verbs:
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - replicatedmaps/status
-  verbs:
-    - get
-    - patch
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - topics
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - topics/finalizers
-  verbs:
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - topics/status
-  verbs:
-    - get
-    - patch
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - wanreplications
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - wanreplications/finalizers
-  verbs:
-    - update
-- apiGroups:
-    - hazelcast.com
-  resources:
-    - wanreplications/status
-  verbs:
-    - get
-    - patch
-    - update
-- apiGroups:
-    - rbac.authorization.k8s.io
-  resources:
-    - rolebindings
-    - roles
-  verbs:
-    - create
-    - delete
-    - get
-    - list
-    - patch
-    - update
-    - watch
+{{- include "hazelcast-platform-operator.operatorNamespaceRules" . | nindent 0  }}
+{{- if $watchOwnNamespace }}
+{{- include "hazelcast-platform-operator.watchedNamespaceRules" . | nindent 0  }}
+{{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "hazelcast-platform-operator.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "hazelcast-platform-operator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "hazelcast-platform-operator.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "hazelcast-platform-operator.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- if $watchOtherNamespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "hazelcast-platform-operator.fullname" . }}-other-ns
+  namespace: {{ .Values.watchedNamespace }}
+  labels:
+    {{- include "hazelcast-platform-operator.labels" . | nindent 4 }}
+rules:
+{{- include "hazelcast-platform-operator.watchedNamespaceRules" . | nindent 0 }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "hazelcast-platform-operator.fullname" . }}-other-ns
+  namespace: {{ .Values.watchedNamespace }}
+  labels:
+    {{- include "hazelcast-platform-operator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "hazelcast-platform-operator.fullname" . }}-other-ns
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "hazelcast-platform-operator.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end -}}
