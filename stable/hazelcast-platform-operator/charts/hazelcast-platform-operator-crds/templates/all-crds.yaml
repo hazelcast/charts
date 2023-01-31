@@ -4127,6 +4127,9 @@ spec:
                     publisherId:
                       description: PublisherId is the ID used for WAN publisher ID
                       type: string
+                    resourceName:
+                      description: ResourceName is the name of the Map CR
+                      type: string
                     status:
                       description: Status is the status of WAN replication
                       type: string
