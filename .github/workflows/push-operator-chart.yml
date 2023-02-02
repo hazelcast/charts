@@ -2,10 +2,26 @@ name: Push Hazelcast-Platform-Operator Helm chart to the repo
 
 on:
   workflow_dispatch:
+    inputs:
+      RELEASE_VERSION:
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      RELEASE_VERSION:
+        required: true
+        type: string
+  push:
+    branches:
+      - master
+    paths:
+      - "stable/hazelcast-platform-operator/**"
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_VERSION: ${{ github.event.inputs.RELEASE_VERSION }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -17,10 +33,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - uses: azure/setup-helm@v3
-        with:
-          version: 'v3.2.1'
-        id: install
+      - name: Convert latest-snapshot to release version
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
+        run: |
+          sed -i "s|latest-snapshot|${RELEASE_VERSION}|" stable/hazelcast-platform-operator/Chart.yaml
+          sed -i "s|latest-snapshot|${RELEASE_VERSION}|" stable/hazelcast-platform-operator/values.yaml
+          sed -i "s|latest-snapshot|${RELEASE_VERSION}|" stable/hazelcast-platform-operator/charts/hazelcast-platform-operator-crds/Chart.yaml
 
       - name: Package operator chart and add it into index.yaml
         run: |
@@ -34,6 +52,9 @@ jobs:
           for CHART_TGZ in *.tgz; do aws s3 cp ${CHART_TGZ} s3://hazelcast-charts; done
           aws s3 cp ./index.yaml s3://hazelcast-charts
 
-      - name: Push ArtifactHub metadata YAML to the S3 bucket
+      - name: Create a new tag
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
         run: |
-          aws s3 cp ./artifacthub-repo.yml s3://hazelcast-charts
+          TAG_VERSION=v${RELEASE_VERSION}-operator
+          git tag ${TAG_VERSION}
+          git push origin ${TAG_VERSION}
