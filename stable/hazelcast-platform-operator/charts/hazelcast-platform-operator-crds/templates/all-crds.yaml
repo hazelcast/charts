@@ -473,6 +473,44 @@ spec:
                 - TRACE
                 - ALL
                 type: string
+              nativeMemory:
+                description: Hazelcast Native Memory (HD Memory) configuration
+                properties:
+                  allocatorType:
+                    default: STANDARD
+                    description: AllocatorType specifies one of 2 types of mechanism
+                      for allocating memory to HD
+                    enum:
+                    - STANDARD
+                    - POOLED
+                    type: string
+                  metadataSpacePercentage:
+                    default: 12
+                    description: MetadataSpacePercentage defines percentage of the
+                      allocated native memory that is used for the metadata of other
+                      map components such as index (for predicates), offset, etc.
+                    format: int32
+                    type: integer
+                  minBlockSize:
+                    description: MinBlockSize is the size of smallest block that will
+                      be allocated. It is used only by the POOLED memory allocator.
+                    format: int32
+                    type: integer
+                  pageSize:
+                    default: 4194304
+                    description: PageSize is the size of the page in bytes to allocate
+                      memory as a block. It is used only by the POOLED memory allocator.
+                    format: int32
+                    type: integer
+                  size:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    default: 512M
+                    description: Size of the total native memory to allocate
+                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                    x-kubernetes-int-or-string: true
+                type: object
               persistence:
                 description: Persistence configuration
                 properties:
