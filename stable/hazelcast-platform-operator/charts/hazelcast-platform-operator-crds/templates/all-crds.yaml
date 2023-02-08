@@ -2047,6 +2047,25 @@ spec:
                   type: LoadBalancer
                 description: Configuration to expose Management Center to outside.
                 properties:
+                  ingress:
+                    description: Ingress configuration of Management Center
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: Annotations added to the ingress object.
+                        type: object
+                      hostname:
+                        description: Hostname of Management Center exposed by Ingress.
+                          Ingress controller will use this hostname to route inbound
+                          traffic.
+                        type: string
+                      ingressClassName:
+                        description: IngressClassName of the ingress object.
+                        type: string
+                    required:
+                    - hostname
+                    type: object
                   type:
                     default: LoadBalancer
                     description: 'How Management Center is exposed. Valid values are:
