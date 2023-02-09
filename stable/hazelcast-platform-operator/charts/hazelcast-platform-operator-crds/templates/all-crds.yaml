@@ -178,7 +178,11 @@ spec:
                       backup.
                     properties:
                       bucketURI:
-                        description: URL of the bucket to download HotBackup folders.
+                        description: 'URL of the bucket to download HotBackup folders.
+                          AWS S3, GCP Bucket and Azure Blob storage buckets are supported.
+                          Example bucket URIs: - AWS S3     -> s3://bucket-name/path/to/folder
+                          - GCP Bucket -> gs://bucket-name/path/to/folder - Azure
+                          Blob -> azblob://bucket-name/path/to/folder'
                         type: string
                       hazelcastResourceName:
                         description: HazelcastResourceName defines the name of the
@@ -1946,7 +1950,10 @@ spec:
             description: HotBackupSpec defines the Spec of HotBackup
             properties:
               bucketURI:
-                description: URL of the bucket to download HotBackup folders.
+                description: 'URL of the bucket to download HotBackup folders. AWS
+                  S3, GCP Bucket and Azure Blob storage buckets are supported. Example
+                  bucket URIs: - AWS S3     -> s3://bucket-name/path/to/folder - GCP
+                  Bucket -> gs://bucket-name/path/to/folder - Azure Blob -> azblob://bucket-name/path/to/folder'
                 type: string
               hazelcastResourceName:
                 description: HazelcastResourceName defines the name of the Hazelcast
