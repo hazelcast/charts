@@ -33,12 +33,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Convert latest-snapshot to release version
+      - name: Convert versions from snapshot to release version
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
         run: |
-          sed -i "s|latest-snapshot|${RELEASE_VERSION}|" stable/hazelcast-platform-operator/Chart.yaml
-          sed -i "s|latest-snapshot|${RELEASE_VERSION}|" stable/hazelcast-platform-operator/values.yaml
-          sed -i "s|latest-snapshot|${RELEASE_VERSION}|" stable/hazelcast-platform-operator/charts/hazelcast-platform-operator-crds/Chart.yaml
+          HELM_RELEASE_VERSION=${RELEASE_VERSION}.0
+          sed -i "s|version: .*|version: ${HELM_RELEASE_VERSION}|" stable/hazelcast-platform-operator/Chart.yaml
+          sed -i "s|appVersion: .*|appVersion: \"${HELM_RELEASE_VERSION}\"|" stable/hazelcast-platform-operator/Chart.yaml
+          
+          sed -i "s|version: .*|version: ${HELM_RELEASE_VERSION}|" stable/hazelcast-platform-operator/charts/hazelcast-platform-operator-crds/Chart.yaml
+          sed -i "s|appVersion: .*|appVersion: \"${HELM_RELEASE_VERSION}\"|" stable/hazelcast-platform-operator/charts/hazelcast-platform-operator-crds/Chart.yaml
+          
+          sed -i "s|tag: .*|tag: ${RELEASE_VERSION}|" stable/hazelcast-platform-operator/values.yaml
 
       - name: Package operator chart and add it into index.yaml
         run: |
@@ -47,14 +52,19 @@ jobs:
           aws s3 cp s3://hazelcast-charts/index.yaml .
           helm repo index --url=https://hazelcast-charts.s3.amazonaws.com --merge ./index.yaml .
 
-      - name: Push operator chart and index.yaml to S3 bucket
-        run: |
-          for CHART_TGZ in *.tgz; do aws s3 cp ${CHART_TGZ} s3://hazelcast-charts; done
-          aws s3 cp ./index.yaml s3://hazelcast-charts
+#      - name: Push operator chart and index.yaml to S3 bucket
+#        run: |
+#          for CHART_TGZ in *.tgz; do aws s3 cp ${CHART_TGZ} s3://hazelcast-charts; done
+#          aws s3 cp ./index.yaml s3://hazelcast-charts
 
       - name: Create a new tag
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
         run: |
+          git config user.email "devopshelm@hazelcast.com"
+          git config user.name "devOpsHelm"
+          git add stable/hazelcast-platform-operator
+          git commit --signoff -m "Update Operator Chart to ${RELEASE_VERSION}"
+          
           TAG_VERSION=v${RELEASE_VERSION}-operator
           git tag ${TAG_VERSION}
           git push origin ${TAG_VERSION}
