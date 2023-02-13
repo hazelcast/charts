@@ -52,10 +52,10 @@ jobs:
           aws s3 cp s3://hazelcast-charts/index.yaml .
           helm repo index --url=https://hazelcast-charts.s3.amazonaws.com --merge ./index.yaml .
 
-#      - name: Push operator chart and index.yaml to S3 bucket
-#        run: |
-#          for CHART_TGZ in *.tgz; do aws s3 cp ${CHART_TGZ} s3://hazelcast-charts; done
-#          aws s3 cp ./index.yaml s3://hazelcast-charts
+      - name: Push operator chart and index.yaml to S3 bucket
+        run: |
+          for CHART_TGZ in *.tgz; do aws s3 cp ${CHART_TGZ} s3://hazelcast-charts; done
+          aws s3 cp ./index.yaml s3://hazelcast-charts
 
       - name: Create a new tag
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
