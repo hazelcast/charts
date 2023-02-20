@@ -2070,6 +2070,17 @@ spec:
                     required:
                     - hostname
                     type: object
+                  route:
+                    description: OpenShift Route configuration of Management Center
+                    properties:
+                      hostname:
+                        description: Hostname of Management Center exposed by route.
+                          Openshift routers will use this hostname to route inbound
+                          traffic.
+                        type: string
+                    required:
+                    - hostname
+                    type: object
                   type:
                     default: LoadBalancer
                     description: 'How Management Center is exposed. Valid values are:
