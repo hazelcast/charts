@@ -62,7 +62,7 @@ spec:
                 type: integer
               hazelcastResourceName:
                 description: HazelcastResourceName defines the name of the Hazelcast
-                  resource.
+                  resource that this resource is created for.
                 minLength: 1
                 type: string
               keyType:
@@ -95,10 +95,13 @@ spec:
                   - Persisting
                   - Terminating
                   type: string
+                description: Holds status of data structure for each Hazelcast member
                 type: object
               message:
+                description: Message explaining the current state
                 type: string
               state:
+                description: State of the data structure
                 enum:
                 - Success
                 - Failed
@@ -324,6 +327,7 @@ spec:
                 minimum: 0
                 type: integer
               durableExecutorServices:
+                description: Durable Executor Service configurations, see https://docs.hazelcast.com/hazelcast/latest/computing/durable-executor-service
                 items:
                   properties:
                     capacity:
@@ -350,6 +354,7 @@ spec:
                   type: object
                 type: array
               executorServices:
+                description: Java Executor Service configurations, see https://docs.hazelcast.com/hazelcast/latest/computing/executor-service
                 items:
                   properties:
                     name:
@@ -466,7 +471,7 @@ spec:
                 type: string
               loggingLevel:
                 default: INFO
-                description: LoggingLevel controlls log verbosity for Hazelcast.
+                description: Logging level for Hazelcast members
                 enum:
                 - "OFF"
                 - FATAL
@@ -565,7 +570,11 @@ spec:
                           be downloaded.
                         properties:
                           bucketURI:
-                            description: Full path to blob storage bucket.
+                            description: 'URL of the bucket to download HotBackup
+                              folders. AWS S3, GCP Bucket and Azure Blob storage buckets
+                              are supported. Example bucket URIs: - AWS S3     ->
+                              s3://bucket-name/path/to/folder - GCP Bucket -> gs://bucket-name/path/to/folder
+                              - Azure Blob -> azblob://bucket-name/path/to/folder'
                             minLength: 6
                             type: string
                           secret:
@@ -595,6 +604,7 @@ spec:
               properties:
                 additionalProperties:
                   type: string
+                description: Hazelcast system properties, see https://docs.hazelcast.com/hazelcast/latest/system-properties
                 type: object
               repository:
                 default: docker.io/hazelcast/hazelcast
@@ -627,6 +637,7 @@ spec:
                     type: object
                 type: object
               scheduledExecutorServices:
+                description: Scheduled Executor Service configurations, see https://docs.hazelcast.com/hazelcast/latest/computing/scheduled-executor-service
                 items:
                   properties:
                     capacity:
@@ -1752,10 +1763,15 @@ spec:
                 description: User Codes to Download into CLASSPATH
                 properties:
                   bucketConfig:
-                    description: Jar files in the bucket will be put under CLASSPATH.
+                    description: Bucket config where JAR files will be downloaded
+                      into Java CLASSPATH.
                     properties:
                       bucketURI:
-                        description: Full path to blob storage bucket.
+                        description: 'URL of the bucket to download HotBackup folders.
+                          AWS S3, GCP Bucket and Azure Blob storage buckets are supported.
+                          Example bucket URIs: - AWS S3     -> s3://bucket-name/path/to/folder
+                          - GCP Bucket -> gs://bucket-name/path/to/folder - Azure
+                          Blob -> azblob://bucket-name/path/to/folder'
                         minLength: 6
                         type: string
                       secret:
@@ -1771,7 +1787,8 @@ spec:
                     description: When true, allows user code deployment from clients.
                     type: boolean
                   configMaps:
-                    description: Files in the ConfigMaps will be put under CLASSPATH.
+                    description: Names of the list of ConfigMaps. Files in each ConfigMap
+                      will be put under Java CLASSPATH.
                     items:
                       type: string
                     type: array
@@ -3437,7 +3454,7 @@ spec:
                 type: object
               hazelcastResourceName:
                 description: HazelcastResourceName defines the name of the Hazelcast
-                  resource.
+                  resource that this resource is created for.
                 minLength: 1
                 type: string
               inMemoryFormat:
@@ -3460,7 +3477,7 @@ spec:
                         type: string
                       type: array
                     bitMapIndexOptions:
-                      description: Options for "BITMAP" index type.
+                      description: Options for "BITMAP" index type. See https://docs.hazelcast.com/hazelcast/latest/query/indexing-maps#configuring-bitmap-indexes
                       properties:
                         uniqueKey:
                           type: string
@@ -3478,7 +3495,7 @@ spec:
                       description: Name of the index config.
                       type: string
                     type:
-                      description: Type of the index.
+                      description: Type of the index. See https://docs.hazelcast.com/hazelcast/latest/query/indexing-maps#index-types
                       enum:
                       - SORTED
                       - HASH
@@ -3650,7 +3667,7 @@ spec:
               binary:
                 default: false
                 description: 'Specifies in which format data will be stored in your
-                  multiMap. false: OBJECT true: BINARY'
+                  MultiMap. false: OBJECT true: BINARY'
                 type: boolean
               collectionType:
                 default: SET
@@ -3661,7 +3678,7 @@ spec:
                 type: string
               hazelcastResourceName:
                 description: HazelcastResourceName defines the name of the Hazelcast
-                  resource.
+                  resource that this resource is created for.
                 minLength: 1
                 type: string
               name:
@@ -3684,10 +3701,13 @@ spec:
                   - Persisting
                   - Terminating
                   type: string
+                description: Holds status of data structure for each Hazelcast member
                 type: object
               message:
+                description: Message explaining the current state
                 type: string
               state:
+                description: State of the data structure
                 enum:
                 - Success
                 - Failed
@@ -3774,7 +3794,7 @@ spec:
                 type: integer
               hazelcastResourceName:
                 description: HazelcastResourceName defines the name of the Hazelcast
-                  resource.
+                  resource that this resource is created for.
                 minLength: 1
                 type: string
               maxSize:
@@ -3807,10 +3827,13 @@ spec:
                   - Persisting
                   - Terminating
                   type: string
+                description: Holds status of data structure for each Hazelcast member
                 type: object
               message:
+                description: Message explaining the current state
                 type: string
               state:
+                description: State of the data structure
                 enum:
                 - Success
                 - Failed
@@ -3912,10 +3935,13 @@ spec:
                   - Persisting
                   - Terminating
                   type: string
+                description: Holds status of data structure for each Hazelcast member
                 type: object
               message:
+                description: Message explaining the current state
                 type: string
               state:
+                description: State of the data structure
                 enum:
                 - Success
                 - Failed
@@ -3980,8 +4006,8 @@ spec:
             properties:
               globalOrderingEnabled:
                 default: false
-                description: When true all nodes listening to the same topic get their
-                  messages in the same order
+                description: globalOrderingEnabled allows all nodes listening to the
+                  same topic get their messages in the same order the same order
                 type: boolean
               hazelcastResourceName:
                 description: HazelcastResourceName defines the name of the Hazelcast
@@ -3990,8 +4016,8 @@ spec:
                 type: string
               multiThreadingEnabled:
                 default: false
-                description: When true enables multi-threaded processing of incoming
-                  messages, otherwise a single thread will handle all topic messages
+                description: multiThreadingEnabled enables multi-threaded processing
+                  of incoming messages a single thread will handle all topic messages
                 type: boolean
               name:
                 description: Name of the topic config to be created. If empty, CR
@@ -4012,10 +4038,13 @@ spec:
                   - Persisting
                   - Terminating
                   type: string
+                description: Holds status of data structure for each Hazelcast member
                 type: object
               message:
+                description: Message explaining the current state
                 type: string
               state:
+                description: State of the data structure
                 enum:
                 - Success
                 - Failed
@@ -4123,7 +4152,8 @@ spec:
                     type: integer
                 type: object
               endpoints:
-                description: Endpoints is the target cluster endpoints.
+                description: Endpoints is the target cluster comma separated endpoint
+                  list .
                 minLength: 1
                 type: string
               queue:
@@ -4200,12 +4230,15 @@ spec:
                       description: PublisherId is the ID used for WAN publisher ID
                       type: string
                     resourceName:
-                      description: ResourceName is the name of the Map CR
+                      description: ResourceName is the name of the Map Custom Resource.
                       type: string
                     status:
                       description: Status is the status of WAN replication
                       type: string
                   type: object
+                description: WanReplicationMapsStatus is the Wan Replication status
+                  of the Maps given in the spec directly or indirectly by Hazelcast
+                  resource.
                 type: object
             type: object
         required:
