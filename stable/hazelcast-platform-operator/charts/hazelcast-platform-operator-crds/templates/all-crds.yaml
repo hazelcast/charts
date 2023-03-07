@@ -65,6 +65,15 @@ spec:
                   resource that this resource is created for.
                 minLength: 1
                 type: string
+              inMemoryFormat:
+                default: BINARY
+                description: InMemoryFormat specifies in which format data will be
+                  stored in your cache
+                enum:
+                - BINARY
+                - OBJECT
+                - NATIVE
+                type: string
               keyType:
                 description: Class name of the key type
                 type: string
@@ -3464,6 +3473,7 @@ spec:
                 enum:
                 - BINARY
                 - OBJECT
+                - NATIVE
                 type: string
               indexes:
                 description: Indexes to be created for the map data. You can learn
@@ -3915,6 +3925,7 @@ spec:
                 enum:
                 - BINARY
                 - OBJECT
+                - NATIVE
                 type: string
               name:
                 description: Name of the ReplicatedMap config to be created. If empty,
