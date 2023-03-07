@@ -457,6 +457,25 @@ spec:
               jvm:
                 description: Hazelcast JVM configuration
                 properties:
+                  gc:
+                    description: GC is for configuring JVM Garbage Collector
+                    properties:
+                      args:
+                        description: Args is for arbitrary garbage collection arguments
+                        items:
+                          type: string
+                        type: array
+                      collector:
+                        description: Collector is the Garbage Collector type
+                        enum:
+                        - Serial
+                        - Parallel
+                        - G1
+                        type: string
+                      logging:
+                        description: Logging enables logging when set to true
+                        type: boolean
+                    type: object
                   memory:
                     description: Memory is a JVM memory configuration
                     properties:
