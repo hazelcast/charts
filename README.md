@@ -15,7 +15,7 @@ See corresponding page from below for each chart for step-by-step installation:
 
     $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
     $ helm repo update
-    $ helm install operator hazelcast/hazelcast-platform-operator --version=5.6.0 --set installCRDs=true
+    $ helm install operator hazelcast/hazelcast-platform-operator --set installCRDs=true
 
 The documentation for the Hazelcast Platform Operator can be found [here](https://docs.hazelcast.com/operator/latest/get-started#step-1-deploy-hazelcast-platform-operator).
 
