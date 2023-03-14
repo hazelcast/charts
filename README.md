@@ -11,9 +11,6 @@ See corresponding page from below for each chart for step-by-step installation:
 - [Hazelcast](https://docs.hazelcast.com/hazelcast/latest/kubernetes/helm-hazelcast-chart)
 - [Hazelcast Enterprise](https://docs.hazelcast.com/hazelcast/latest/kubernetes/helm-hazelcast-enterprise-chart)
 
-We also have specific instructions for [IBM Cloud](https://docs.hazelcast.com/hazelcast/latest/kubernetes/helm-ibm-cloud).
-
-
 ## Quick Start with Hazelcast Platform Operator
 
     $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
