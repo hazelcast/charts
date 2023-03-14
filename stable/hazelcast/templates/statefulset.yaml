@@ -138,6 +138,9 @@ spec:
         - name: hazelcast-external
           mountPath: /data/external
         {{- end }}
+        {{- with .Values.extraVolumeMounts }}
+{{ toYaml . | indent 8 }}
+        {{- end }}
         env:
         - name: POD_NAME
           valueFrom:
@@ -195,5 +198,8 @@ spec:
       {{- if .Values.externalVolume }}
       - name: hazelcast-external
 {{ toYaml .Values.externalVolume | indent 8 }}
+      {{- end }}
+      {{- with .Values.extraVolumes }}
+{{ toYaml . | indent 6 }}
       {{- end }}
 {{- end }}

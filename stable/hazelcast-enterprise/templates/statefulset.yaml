@@ -148,6 +148,9 @@ spec:
         - name: hazelcast-external
           mountPath: /data/external
         {{- end }}
+        {{- with .Values.extraVolumeMounts }}
+{{ toYaml . | indent 8 }}
+        {{- end }}
         env:
         {{- if .Values.hazelcast.licenseKeySecretName }}
         - name: HZ_LICENSEKEY
@@ -232,6 +235,9 @@ spec:
         {{- if .Values.externalVolume }}
         - name: hazelcast-external
 {{ toYaml .Values.externalVolume | indent 10 }}
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+{{ toYaml . | indent 8 }}
         {{- end }}
   {{- if and (and (eq .Values.persistence.enabled true) (empty .Values.persistence.existingClaim)) (empty .Values.persistence.hostPath) }}
   volumeClaimTemplates:

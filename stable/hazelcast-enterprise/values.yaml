@@ -587,3 +587,16 @@ test:
 ## Array of extra objects to deploy with the release
 ##
 extraDeploy: []
+
+## Extra Volumes for the pod
+##
+extraVolumes: []
+  # - name: example
+  #   configMap:
+  #     name: example
+
+## Extra Volume Mounts for the Hazelcast container
+#
+extraVolumeMounts: []
+  # - name: example
+  #   mountPath: /example
