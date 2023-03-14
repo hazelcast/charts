@@ -2,7 +2,7 @@
 
 A Helm chart to install the Hazelcast Platform Operator
 
-For more information about the ECK Operator, see:
+For more information about the Hazelcast Platform Operator, see:
 - [Documentation](https://docs.hazelcast.com/operator/latest/)
 - [GitHub repo](https://github.com/hazelcast/hazelcast-platform-operator)
 
