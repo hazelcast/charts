@@ -68,4 +68,3 @@ Members {size:2, ver:2} [
 # IBM Kubernetes Service ("IKS")
 
 IKS is a standard Kubernetes service, so to deploy Hazelcast, you need to follow the instructions [here](https://github.com/hazelcast/charts/tree/master/stable/hazelcast-enterprise).
-
