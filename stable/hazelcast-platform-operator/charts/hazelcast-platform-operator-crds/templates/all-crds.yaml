@@ -310,6 +310,32 @@ spec:
               repository: docker.io/hazelcast/hazelcast
             description: Initial values will be filled with its fields' default values.
             properties:
+              advancedNetwork:
+                description: Hazelcast Advanced Network configuration
+                properties:
+                  memberServerSocketEndpointConfig:
+                    properties:
+                      interfaces:
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  wan:
+                    items:
+                      properties:
+                        name:
+                          type: string
+                        port:
+                          type: integer
+                        portCount:
+                          type: integer
+                        serviceType:
+                          description: Service Type string describes ingress methods
+                            for a service
+                          type: string
+                      type: object
+                    type: array
+                type: object
               agent:
                 default:
                   repository: docker.io/hazelcast/platform-operator-agent
@@ -1826,7 +1852,7 @@ spec:
                     type: string
                 type: object
               version:
-                default: 5.2.1
+                default: latest-snapshot
                 description: Version of Hazelcast Platform.
                 type: string
             type: object
@@ -4266,7 +4292,7 @@ spec:
                       description: Status is the status of WAN replication
                       type: string
                   type: object
-                description: WanReplicationMapsStatus is the Wan Replication status
+                description: WanReplicationMapsStatus is the WAN Replication status
                   of the Maps given in the spec directly or indirectly by Hazelcast
                   resource.
                 type: object
