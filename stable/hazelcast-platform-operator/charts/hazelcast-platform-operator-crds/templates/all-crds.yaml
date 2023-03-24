@@ -1852,7 +1852,7 @@ spec:
                     type: string
                 type: object
               version:
-                default: 5.2.3-SNAPSHOT
+                default: 5.2.3
                 description: Version of Hazelcast Platform.
                 type: string
             type: object
