@@ -536,6 +536,25 @@ spec:
                 - TRACE
                 - ALL
                 type: string
+              managementCenter:
+                description: Hazelcast Management Center Configuration
+                properties:
+                  consoleEnabled:
+                    default: false
+                    description: Allows you to execute commands from a built-in console
+                      in the user interface.
+                    type: boolean
+                  dataAccessEnabled:
+                    default: false
+                    description: Allows you to access contents of Hazelcast data structures
+                      via SQL Browser or Map Browser.
+                    type: boolean
+                  scriptingEnabled:
+                    default: false
+                    description: Allows you to execute scripts that can automate interactions
+                      with the cluster.
+                    type: boolean
+                type: object
               nativeMemory:
                 description: Hazelcast Native Memory (HD Memory) configuration
                 properties:
