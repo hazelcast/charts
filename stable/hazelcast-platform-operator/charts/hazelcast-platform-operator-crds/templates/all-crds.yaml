@@ -3970,7 +3970,6 @@ spec:
                 enum:
                 - BINARY
                 - OBJECT
-                - NATIVE
                 type: string
               name:
                 description: Name of the ReplicatedMap config to be created. If empty,
