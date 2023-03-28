@@ -478,6 +478,14 @@ mancenter:
   # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
   # secretsMountName:
 
+  # Additional Environment variables
+  env: []
+    # - name: DB_USERNAME
+    #   valueFrom:
+    #     secretKeyRef:
+    #       key: db-username
+    #       name: servicename-db-creds
+
 ## External Access to Hazelcast nodes configuration
 ##
 externalAccess:
