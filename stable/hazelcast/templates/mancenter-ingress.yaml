@@ -1,9 +1,4 @@
 {{- if .Values.mancenter.ingress.enabled -}}
-{{- if and .Values.mancenter.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
-{{- if not (hasKey .Values.mancenter.ingress.annotations "kubernetes.io/ingress.class") }}
-{{- $_ := set .Values.mancenter.ingress.annotations "kubernetes.io/ingress.class" .Values.mancenter.ingress.className}}
-{{- end }}
-{{- end }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -18,9 +13,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
 {{- end }}
 spec:
-{{- if and .Values.mancenter.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.mancenter.ingress.className }}
-{{- end }}
 {{- if .Values.mancenter.ingress.tls }}
   tls:
   {{- range .Values.mancenter.ingress.tls }}
