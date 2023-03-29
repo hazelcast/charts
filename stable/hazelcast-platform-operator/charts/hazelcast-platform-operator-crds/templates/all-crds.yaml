@@ -483,14 +483,14 @@ spec:
               jvm:
                 description: Hazelcast JVM configuration
                 properties:
+                  args:
+                    description: Args is for arbitrary JVM arguments
+                    items:
+                      type: string
+                    type: array
                   gc:
                     description: GC is for configuring JVM Garbage Collector
                     properties:
-                      args:
-                        description: Args is for arbitrary garbage collection arguments
-                        items:
-                          type: string
-                        type: array
                       collector:
                         description: Collector is the Garbage Collector type
                         enum:
