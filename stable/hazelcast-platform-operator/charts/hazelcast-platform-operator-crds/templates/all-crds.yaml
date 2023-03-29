@@ -3523,6 +3523,7 @@ spec:
                     - USED_NATIVE_MEMORY_PERCENTAGE
                     - FREE_NATIVE_MEMORY_SIZE
                     - FREE_NATIVE_MEMORY_PERCENTAGE
+                    - ENTRY_COUNT
                     type: string
                 type: object
               hazelcastResourceName:
@@ -3631,6 +3632,81 @@ spec:
                   CR name will be used. It cannot be updated after the config is created
                   successfully.
                 type: string
+              nearCache:
+                description: InMemoryFormat specifies near cache configuration for
+                  map
+                properties:
+                  cacheLocalEntries:
+                    default: true
+                    description: CacheLocalEntries specifies whether the local entries
+                      are cached
+                    type: boolean
+                  eviction:
+                    description: NearCacheEviction specifies the eviction behavior
+                      in Near Cache
+                    properties:
+                      evictionPolicy:
+                        default: NONE
+                        description: EvictionPolicy to be applied when near cache
+                          reaches its max size according to the max size policy.
+                        enum:
+                        - NONE
+                        - LRU
+                        - LFU
+                        - RANDOM
+                        type: string
+                      maxSizePolicy:
+                        default: ENTRY_COUNT
+                        description: MaxSizePolicy for deciding if the maxSize is
+                          reached.
+                        enum:
+                        - PER_NODE
+                        - PER_PARTITION
+                        - USED_HEAP_SIZE
+                        - USED_HEAP_PERCENTAGE
+                        - FREE_HEAP_SIZE
+                        - FREE_HEAP_PERCENTAGE
+                        - USED_NATIVE_MEMORY_SIZE
+                        - USED_NATIVE_MEMORY_PERCENTAGE
+                        - FREE_NATIVE_MEMORY_SIZE
+                        - FREE_NATIVE_MEMORY_PERCENTAGE
+                        - ENTRY_COUNT
+                        type: string
+                      size:
+                        description: Size is maximum size of the Near Cache used for
+                          max-size-policy
+                        format: int32
+                        type: integer
+                    type: object
+                  inMemoryFormat:
+                    default: BINARY
+                    description: InMemoryFormat specifies in which format data will
+                      be stored in your near cache
+                    enum:
+                    - BINARY
+                    - OBJECT
+                    - NATIVE
+                    type: string
+                  invalidateOnChange:
+                    default: true
+                    description: InvalidateOnChange specifies whether the cached entries
+                      are evicted when the entries are updated or removed
+                    type: boolean
+                  maxIdleSeconds:
+                    default: 0
+                    description: MaxIdleSeconds Maximum number of seconds each entry
+                      can stay in the Near Cache as untouched (not read)
+                    type: integer
+                  name:
+                    default: default
+                    description: Name is name of the near cache
+                    type: string
+                  timeToLiveSeconds:
+                    default: 0
+                    description: TimeToLiveSeconds maximum number of seconds for each
+                      entry to stay in the Near Cache
+                    type: integer
+                type: object
               persistenceEnabled:
                 default: false
                 description: When enabled, map data will be persisted. It cannot be
