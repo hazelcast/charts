@@ -370,6 +370,7 @@ mancenter:
   ingress:
     enabled: false
     annotations: {}
+    # className: nginx
     # hosts:
     # - hazelcast-mancenter.cluster.domain
     # tls:
