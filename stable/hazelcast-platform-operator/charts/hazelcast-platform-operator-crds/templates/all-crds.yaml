@@ -1832,6 +1832,13 @@ spec:
                       type: object
                     type: array
                 type: object
+              tls:
+                description: Hazelcast TLS configuration
+                properties:
+                  secretName:
+                    description: Name of the secret with TLS certificate and key.
+                    type: string
+                type: object
               userCodeDeployment:
                 description: User Codes to Download into CLASSPATH
                 properties:
@@ -2196,6 +2203,14 @@ spec:
                       description: Name of the Hazelcast cluster that Management Center
                         will connect to, default is dev.
                       type: string
+                    tls:
+                      description: TLS client configuration.
+                      properties:
+                        secretName:
+                          description: Name of the secret with TLS certificate and
+                            key.
+                          type: string
+                      type: object
                   required:
                   - address
                   type: object

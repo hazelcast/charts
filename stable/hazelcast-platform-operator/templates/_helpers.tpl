@@ -155,6 +155,7 @@ Rules needed for operator watched namespaces
   - ""
   resources:
   - configmaps
+  - secrets
   - events
   - pods
   - serviceaccounts
