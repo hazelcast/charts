@@ -283,6 +283,10 @@ spec:
       jsonPath: .status.externalAddresses
       name: External-Addresses
       type: string
+    - description: WAN addresses of the Hazelcast cluster
+      jsonPath: .status.wanAddresses
+      name: WAN-Addresses
+      type: string
     - description: Message for the current Hazelcast Config
       jsonPath: .status.message
       name: Message
@@ -1991,6 +1995,9 @@ spec:
                     - Succeeded
                     type: string
                 type: object
+              wanAddresses:
+                description: WAN addresses of the Hazelcast cluster members
+                type: string
             type: object
         type: object
     served: true
