@@ -3973,6 +3973,7 @@ spec:
                 default: 0
                 description: Max size of the queue.
                 format: int32
+                minimum: 0
                 type: integer
               name:
                 description: Name of the data structure config to be created. If empty,
