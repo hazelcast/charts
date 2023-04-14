@@ -483,6 +483,10 @@ mancenter:
     # service labels for management center
     labels: {}
     #  key: value
+    # ClusterIP of the service
+    clusterIP: 
+    # loadBalancerIP statically set IP or set empty to use dynamic IP allocation
+    loadBalancerIP:
 
   # customVolume is the configuration for any volume mounted as '/data/custom/' (e.g. to mount a volume with custom JARs)
   # customVolume:
@@ -571,6 +575,8 @@ externalAccess:
     # Labels for the services that will be created.
     labels: {}
 
+    # Annotations for the services that will be created.
+    annotations: {}
 test:
   ## Hazelcast chart test hook image version
   image:
