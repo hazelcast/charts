@@ -31,7 +31,7 @@ spec:
   clusterIP: {{ .Values.mancenter.service.clusterIP }}
   {{- end }}
   {{- if (and (eq .Values.mancenter.service.type "LoadBalancer") (.Values.mancenter.service.loadBalancerIP)) }}
-loadBalancerIP: {{ .Values.mancenter.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.mancenter.service.loadBalancerIP }}
   {{- end }}
   selector:
     app.kubernetes.io/name: {{ template "mancenter.name" . }}

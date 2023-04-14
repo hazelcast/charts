@@ -15,6 +15,10 @@ metadata:
     {{- range $key, $value := $.Values.externalAccess.service.labels }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
+{{- with $.Values.externalAccess.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
 spec:
   type: {{ $.Values.externalAccess.service.type }}
   {{- if $.Values.externalAccess.service.loadBalancerIPs }}
