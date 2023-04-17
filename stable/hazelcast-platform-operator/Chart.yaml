@@ -6,9 +6,9 @@ description: A Helm chart for installing Hazelcast Platform Operator which autom
 
 type: application
 
-version: 5.7.0-snapshot
+version: 5.8.0-snapshot
 
-appVersion: "5.7.0-snapshot"
+appVersion: "5.8.0-snapshot"
 
 home: https://github.com/hazelcast/hazelcast-platform-operator
 
@@ -22,5 +22,5 @@ maintainers:
 
 dependencies:
   - name: hazelcast-platform-operator-crds
-    version: 5.7.0-snapshot
+    version: 5.8.0-snapshot
     condition: installCRDs
