@@ -9,7 +9,7 @@ image:
   repository: hazelcast/hazelcast-platform-operator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: latest-snapshot
+  tag: 5.7
 
 developerModeEnabled: false
 phoneHomeEnabled: true
