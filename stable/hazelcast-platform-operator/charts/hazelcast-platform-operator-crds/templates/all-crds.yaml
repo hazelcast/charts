@@ -497,10 +497,66 @@ spec:
                     - bucketURI
                     - secret
                     type: object
+                  edgeDefaults:
+                    description: Jet Edge Defaults Configuration
+                    properties:
+                      packetSizeLimit:
+                        description: Limits the size of the packet in bytes.
+                        format: int32
+                        type: integer
+                      queueSize:
+                        description: Sets the capacity of processor-to-processor concurrent
+                          queues.
+                        format: int32
+                        type: integer
+                      receiveWindowMultiplier:
+                        description: Sets the scaling factor used by the adaptive
+                          receive window sizing function.
+                        type: integer
+                    type: object
                   enabled:
                     default: true
                     description: When false, disables Jet Engine.
                     type: boolean
+                  instance:
+                    description: Jet Instance Configuration
+                    properties:
+                      backupCount:
+                        default: 1
+                        description: The number of synchronous backups to configure
+                          on the IMap that Jet needs internally to store job metadata
+                          and snapshots.
+                        format: int32
+                        maximum: 6
+                        type: integer
+                      cooperativeThreadCount:
+                        description: The number of threads Jet creates in its cooperative
+                          multithreading pool.
+                        format: int32
+                        type: integer
+                      flowControlPeriodMillis:
+                        default: 100
+                        description: The duration of the interval between flow-control
+                          packets.
+                        format: int32
+                        type: integer
+                      losslessRestartEnabled:
+                        default: false
+                        description: Specifies whether the Lossless Cluster Restart
+                          feature is enabled.
+                        type: boolean
+                      maxProcessorAccumulatedRecords:
+                        description: Specifies the maximum number of records that
+                          can be accumulated by any single processor instance.
+                        format: int64
+                        type: integer
+                      scaleUpDelayMillis:
+                        default: 10000
+                        description: The delay after which the auto-scaled jobs restart
+                          if a new member joins the cluster.
+                        format: int32
+                        type: integer
+                    type: object
                   resourceUploadEnabled:
                     default: false
                     description: When true, enables resource uploading for Jet jobs.
