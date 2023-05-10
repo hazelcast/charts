@@ -343,7 +343,7 @@ spec:
               agent:
                 default:
                   repository: docker.io/hazelcast/platform-operator-agent
-                  version: 0.1.17
+                  version: 0.1.19
                 description: B&R Agent configurations
                 properties:
                   repository:
@@ -351,7 +351,7 @@ spec:
                     description: Repository to pull Hazelcast Platform Operator Agent(https://github.com/hazelcast/platform-operator-agent)
                     type: string
                   version:
-                    default: 0.1.17
+                    default: 0.1.19
                     description: Version of Hazelcast Platform Operator Agent.
                     type: string
                 type: object
@@ -2235,6 +2235,26 @@ spec:
           spec:
             description: JetJobSpec defines the desired state of JetJob
             properties:
+              bucketConfig:
+                description: Bucket Configuration from which the JAR files specified
+                  in JarName be downloaded and the jor will be run.
+                properties:
+                  bucketURI:
+                    description: 'URL of the bucket to download HotBackup folders.
+                      AWS S3, GCP Bucket and Azure Blob storage buckets are supported.
+                      Example bucket URIs: - AWS S3     -> s3://bucket-name/path/to/folder
+                      - GCP Bucket -> gs://bucket-name/path/to/folder - Azure Blob
+                      -> azblob://bucket-name/path/to/folder'
+                    minLength: 6
+                    type: string
+                  secret:
+                    description: Name of the secret with credentials for cloud providers.
+                    minLength: 1
+                    type: string
+                required:
+                - bucketURI
+                - secret
+                type: object
               hazelcastResourceName:
                 description: HazelcastResourceName defines the name of the Hazelcast
                   resource that this resource is created for.
