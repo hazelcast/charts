@@ -343,7 +343,7 @@ spec:
               agent:
                 default:
                   repository: docker.io/hazelcast/platform-operator-agent
-                  version: 0.1.19
+                  version: 0.1.20
                 description: B&R Agent configurations
                 properties:
                   repository:
@@ -351,7 +351,7 @@ spec:
                     description: Repository to pull Hazelcast Platform Operator Agent(https://github.com/hazelcast/platform-operator-agent)
                     type: string
                   version:
-                    default: 0.1.19
+                    default: 0.1.20
                     description: Version of Hazelcast Platform Operator Agent.
                     type: string
                 type: object
@@ -476,9 +476,7 @@ spec:
                 description: Jet Engine configuration
                 properties:
                   bucketConfig:
-                    description: Bucket Configuration from which the JAR files be
-                      downloaded and accessible for the member. These JAR files will
-                      not be placed in the CLASSPATH.
+                    description: Bucket config from where the JAR files will be downloaded.
                     properties:
                       bucketURI:
                         description: 'URL of the bucket to download HotBackup folders.
@@ -497,6 +495,12 @@ spec:
                     - bucketURI
                     - secret
                     type: object
+                  configMaps:
+                    description: Names of the list of ConfigMaps. Files in each ConfigMap
+                      will be downloaded.
+                    items:
+                      type: string
+                    type: array
                   edgeDefaults:
                     description: Jet Edge Defaults Configuration
                     properties:
@@ -557,6 +561,11 @@ spec:
                         format: int32
                         type: integer
                     type: object
+                  remoteURLs:
+                    description: List of URLs from where the files will be downloaded.
+                    items:
+                      type: string
+                    type: array
                   resourceUploadEnabled:
                     default: false
                     description: When true, enables resource uploading for Jet jobs.
@@ -1925,8 +1934,7 @@ spec:
                 description: User Codes to Download into CLASSPATH
                 properties:
                   bucketConfig:
-                    description: Bucket config where JAR files will be downloaded
-                      into Java CLASSPATH.
+                    description: Bucket config from where the JAR files will be downloaded.
                     properties:
                       bucketURI:
                         description: 'URL of the bucket to download HotBackup folders.
@@ -1950,13 +1958,12 @@ spec:
                     type: boolean
                   configMaps:
                     description: Names of the list of ConfigMaps. Files in each ConfigMap
-                      will be put under Java CLASSPATH.
+                      will be downloaded.
                     items:
                       type: string
                     type: array
                   remoteURLs:
-                    description: List of URLs. Files downloaded from the URLs will
-                      be put under Java CLASSPATH.
+                    description: List of URLs from where the files will be downloaded.
                     items:
                       type: string
                     type: array
@@ -2236,8 +2243,7 @@ spec:
             description: JetJobSpec defines the desired state of JetJob
             properties:
               bucketConfig:
-                description: Bucket Configuration from which the JAR files specified
-                  in JarName be downloaded and the jor will be run.
+                description: Bucket config from where the JAR files will be downloaded.
                 properties:
                   bucketURI:
                     description: 'URL of the bucket to download HotBackup folders.
@@ -2272,6 +2278,9 @@ spec:
               name:
                 description: Name of the JetJob to be created. If empty, CR name will
                   be used. It cannot be updated after the config is created successfully.
+                type: string
+              remoteURL:
+                description: URL from where the file will be downloaded.
                 type: string
               state:
                 default: Running
