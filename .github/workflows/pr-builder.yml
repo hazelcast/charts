@@ -50,7 +50,7 @@ jobs:
           git fetch hazelcast master
 
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1.1.0
+        uses: google-github-actions/setup-gcloud@v1.1.1
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
 
