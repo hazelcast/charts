@@ -1931,6 +1931,15 @@ spec:
               tls:
                 description: Hazelcast TLS configuration
                 properties:
+                  mutualAuthentication:
+                    default: None
+                    description: Mutual authentication configuration. It’s None by
+                      default which means the client side of connection is not authenticated.
+                    enum:
+                    - None
+                    - Required
+                    - Optional
+                    type: string
                   secretName:
                     description: Name of the secret with TLS certificate and key.
                     type: string
@@ -2457,6 +2466,16 @@ spec:
                     tls:
                       description: TLS client configuration.
                       properties:
+                        mutualAuthentication:
+                          default: None
+                          description: Mutual authentication configuration. It’s None
+                            by default which means the client side of connection is
+                            not authenticated.
+                          enum:
+                          - None
+                          - Required
+                          - Optional
+                          type: string
                         secretName:
                           description: Name of the secret with TLS certificate and
                             key.
