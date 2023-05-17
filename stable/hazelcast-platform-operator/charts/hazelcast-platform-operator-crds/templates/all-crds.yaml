@@ -201,6 +201,9 @@ spec:
                           Hazelcast resource
                         type: string
                       secret:
+                        description: secret is a deprecated alias for secretName.
+                        type: string
+                      secretName:
                         description: Name of the secret with credentials for cloud
                           providers.
                         type: string
@@ -2170,6 +2173,9 @@ spec:
                   resource
                 type: string
               secret:
+                description: secret is a deprecated alias for secretName.
+                type: string
+              secretName:
                 description: Name of the secret with credentials for cloud providers.
                 type: string
             required:
@@ -2503,6 +2509,9 @@ spec:
                   x-kubernetes-map-type: atomic
                 type: array
               licenseKeySecret:
+                description: licenseKeySecret is a deprecated alias for licenseKeySecretName.
+                type: string
+              licenseKeySecretName:
                 description: Name of the secret with Hazelcast Enterprise License
                   Key.
                 type: string
