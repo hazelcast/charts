@@ -539,8 +539,10 @@ spec:
                         type: integer
                       cooperativeThreadCount:
                         description: The number of threads Jet creates in its cooperative
-                          multithreading pool.
+                          multithreading pool. Its default value is the number of
+                          cores
                         format: int32
+                        minimum: 1
                         type: integer
                       flowControlPeriodMillis:
                         default: 100
@@ -555,7 +557,8 @@ spec:
                         type: boolean
                       maxProcessorAccumulatedRecords:
                         description: Specifies the maximum number of records that
-                          can be accumulated by any single processor instance.
+                          can be accumulated by any single processor instance. Default
+                          value is Long.MAX_VALUE
                         format: int64
                         type: integer
                       scaleUpDelayMillis:
