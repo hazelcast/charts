@@ -1936,6 +1936,144 @@ spec:
                       type: object
                     type: array
                 type: object
+              serialization:
+                description: Hazelcast serialization configuration
+                properties:
+                  allowUnsafe:
+                    default: false
+                    description: Allow the usage of unsafe.
+                    type: boolean
+                  byteOrder:
+                    default: BigEndian
+                    description: Specifies the byte order that the serialization will
+                      use.
+                    enum:
+                    - Native
+                    - BigEndian
+                    - LittleEndian
+                    type: string
+                  compactSerialization:
+                    description: Configuration attributes the compact serialization.
+                    minProperties: 1
+                    properties:
+                      classes:
+                        description: Classes is the list of class names for which
+                          a zero-config serializer will be registered, without implementing
+                          an explicit serializer.
+                        items:
+                          type: string
+                        type: array
+                      serializers:
+                        description: Serializers is the list of explicit serializers
+                          to be registered.
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  dataSerializableFactories:
+                    description: Lists class implementations of Hazelcast's DataSerializableFactory.
+                    items:
+                      type: string
+                    type: array
+                  enableCompression:
+                    default: false
+                    description: Enables compression when default Java serialization
+                      is used.
+                    type: boolean
+                  enableSharedObject:
+                    default: false
+                    description: Enables shared object when default Java serialization
+                      is used.
+                    type: boolean
+                  globalSerializer:
+                    description: List of global serializers.
+                    properties:
+                      className:
+                        description: Class name of the GlobalSerializer.
+                        type: string
+                      overrideJavaSerialization:
+                        description: If set to true, will replace the internal Java
+                          serialization.
+                        type: boolean
+                    required:
+                    - className
+                    type: object
+                  javaSerializationFilter:
+                    description: Blacklist and whitelist for deserialized classes
+                      when Java serialization is used.
+                    minProperties: 1
+                    properties:
+                      blacklist:
+                        description: Java deserialization protection Blacklist.
+                        minProperties: 1
+                        properties:
+                          classes:
+                            description: List of class names to be filtered.
+                            items:
+                              type: string
+                            type: array
+                          packages:
+                            description: List of packages to be filtered
+                            items:
+                              type: string
+                            type: array
+                          prefixes:
+                            description: List of prefixes to be filtered.
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                      whitelist:
+                        description: Java deserialization protection Whitelist.
+                        minProperties: 1
+                        properties:
+                          classes:
+                            description: List of class names to be filtered.
+                            items:
+                              type: string
+                            type: array
+                          packages:
+                            description: List of packages to be filtered
+                            items:
+                              type: string
+                            type: array
+                          prefixes:
+                            description: List of prefixes to be filtered.
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                    type: object
+                  overrideDefaultSerializers:
+                    default: false
+                    description: Allows override of built-in default serializers.
+                    type: boolean
+                  portableFactories:
+                    description: Lists class implementations of Hazelcast's PortableFactory.
+                    items:
+                      type: string
+                    type: array
+                  serializers:
+                    description: List of serializers (classes) that implemented using
+                      Hazelcast's StreamSerializer, ByteArraySerializer etc.
+                    items:
+                      description: Serializer allows to plug in a custom serializer
+                        for serializing objects.
+                      properties:
+                        className:
+                          description: Class name of the implementation of the serializer
+                            class.
+                          type: string
+                        typeClass:
+                          description: Name of the class that will be serialized via
+                            this implementation.
+                          type: string
+                      required:
+                      - className
+                      - typeClass
+                      type: object
+                    type: array
+                type: object
               tls:
                 description: Hazelcast TLS configuration
                 properties:
