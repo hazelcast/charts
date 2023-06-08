@@ -2094,6 +2094,8 @@ spec:
                   secretName:
                     description: Name of the secret with TLS certificate and key.
                     type: string
+                required:
+                - secretName
                 type: object
               userCodeDeployment:
                 description: User Codes to Download into CLASSPATH
@@ -2634,6 +2636,8 @@ spec:
                           description: Name of the secret with TLS certificate and
                             key.
                           type: string
+                      required:
+                      - secretName
                       type: object
                   required:
                   - address
