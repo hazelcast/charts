@@ -370,6 +370,11 @@ spec:
                 format: int32
                 minimum: 0
                 type: integer
+              customConfigCmName:
+                description: Name of the ConfigMap with the Hazelcast custom configuration.
+                  This configuration from the ConfigMap might be overridden by the
+                  Hazelcast CR configuration.
+                type: string
               durableExecutorServices:
                 description: Durable Executor Service configurations, see https://docs.hazelcast.com/hazelcast/latest/computing/durable-executor-service
                 items:
