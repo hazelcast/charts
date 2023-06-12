@@ -2481,13 +2481,14 @@ spec:
                 type: integer
               phase:
                 enum:
+                - Failed
                 - NotRunning
                 - Starting
                 - Running
                 - Suspended
                 - SuspendedExportingSnapshot
                 - Completing
-                - Failed
+                - ExecutionFailed
                 - Completed
                 type: string
               submissionTime:
