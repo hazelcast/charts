@@ -168,65 +168,7 @@ spec:
         {{- if .Values.mancenter.clusterConfig.create }}
         {{- $clusterConfigCommand = "./bin/mc-conf.sh cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml; " }}
         {{- end }}
-        {{- if and .Values.mcm.enabled (not .Values.mcm.baseURL) }}
-        - name: CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
-              key: CLIENT_ID
-        - name: CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
-              key: client_secret
-        - name: AUTHORIZE_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
-              key: AUTHORIZE_ENDPOINT
-        - name: USER_INFO_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
-              key: USER_INFO_ENDPOINT
-        - name: TOKEN_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
-              key: TOKEN_ENDPOINT
-        - name: JWK_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
-              key: JWK_ENDPOINT
-        - name: OIDC_ISSUER_URL
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
-              key: OIDC_ISSUER_URL
-        - name: TRUSTED_URI_PREFIX_0
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "mancenter.fullname" . }}-oidc-reg-secret
-              key: TRUSTED_URI_PREFIX_0
-        - name: MC_INIT_CMD
-          value: "{{ $clusterConfigCommand }}./bin/mc-conf.sh security reset -H /data; ./bin/mc-conf.sh oidc configure -H /data \
-                  --client-id $(CLIENT_ID) \
-                  --client-secret $(CLIENT_SECRET) \
-                  --authorization-endpoint $(AUTHORIZE_ENDPOINT) \
-                  --user-info-endpoint $(USER_INFO_ENDPOINT) \
-                  --token-endpoint $(TOKEN_ENDPOINT) \
-                  --jwk-set-endpoint $(JWK_ENDPOINT) \
-                  --issuer $(OIDC_ISSUER_URL) \
-                  --groups-claim-name 'groups' \
-                  --admin-groups 'icpusers' \
-                  --read-write-groups 'icpusers' \
-                  --read-only-groups 'icpusers' \
-                  --metrics-only-groups 'icpusers' \
-                  --redirect-url $(TRUSTED_URI_PREFIX_0)/oidc/auth \
-                  --user-info-request-http-method POST \
-                  --send-client-info-in-token-request"
-        {{- else if .Values.mancenter.devMode.enabled }}
+        {{- if .Values.mancenter.devMode.enabled }}
         - name: MC_INIT_CMD
           value: "{{ $clusterConfigCommand }}./bin/mc-conf.sh dev-mode configure"
         {{- else if .Values.mancenter.clusterConfig.create }}
