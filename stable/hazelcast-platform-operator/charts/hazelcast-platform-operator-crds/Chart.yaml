@@ -6,7 +6,7 @@ description: A Helm chart for installing Hazelcast Platform Operator Custom Reso
 
 type: application
 
-version: 5.8.0-snapshot
+version: "5.8.0-snapshot"
 
 appVersion: "5.8.0-snapshot"
 
