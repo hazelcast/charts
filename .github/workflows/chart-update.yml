@@ -112,8 +112,8 @@ jobs:
                 echo "MC_UPDATED=true" >> $GITHUB_ENV
               fi
               if [[ $HZ_LATEST_TAG == $APP_VERSION && $MC_LATEST_TAG == $MC_VERSION ]]; then
-                echo "No new tag found for HZ. The latest is: $hz_latest_tag"
-                echo "No new tag found for MC. The latest is: $mc_latest_tag"
+                echo "No new tag found for HZ. The latest is: $HZ_LATEST_TAG"
+                echo "No new tag found for MC. The latest is: $MC_LATEST_TAG"
               fi
             done
           }
@@ -141,7 +141,6 @@ jobs:
         run: |
           git config user.email "devopshelm@hazelcast.com"
           git config user.name "devOpsHelm"
-          BRANCH_NAME=update-to-${{ env.HZ_LATEST_TAG }}
           git checkout -b ${{ env.BRANCH }}
           git add .
           git commit --signoff -m "${{ env.TITLE }}"
