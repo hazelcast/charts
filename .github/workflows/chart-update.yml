@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Delete Old Workflow Run
         run: |
-          echo ${{ secrets.GH_TOKEN }} | gh auth login --with-token
+          echo ${{ secrets.DEVOPS_GITHUB_TOKEN }} | gh auth login --with-token
           WORKFLOW_ID=$(gh api repos/${GITHUB_REPOSITORY}/actions/workflows | jq '.workflows[] | select(.["name"] | contains("Chart Version Update")) | .id')
           RUN_ID=$(gh api repos/${GITHUB_REPOSITORY}/actions/workflows/${WORKFLOW_ID}/runs --paginate | jq '.workflow_runs[] | select(.["status"] | contains("completed")) | select(.head_commit.message) | .id')
           if [[ -n "$RUN_ID" ]]; then
@@ -42,7 +42,7 @@ jobs:
 
           # Function to get the latest Git tag from the specified repository
           get_latest_tag() {
-            echo ${{ secrets.GH_TOKEN }} | gh auth login --with-token
+            echo ${{ secrets.DEVOPS_GITHUB_TOKEN }} | gh auth login --with-token
             local LATEST_TAG=$(gh api repos/$1/git/matching-refs/tags --jq '.[].ref | select(test("^refs/tags/v[0-9]+\\.[0-9]+\\.[0-9]+$")) | sub("^refs/tags/v"; "")' | sort -V | tail -n1)
             echo "$LATEST_TAG"
           }
@@ -149,7 +149,7 @@ jobs:
       - name: Create PR to Main Branch
         if: (steps.update_version.outputs.HZ_UPDATED == 'true' || steps.update_version.outputs.MC_UPDATED == 'true')
         run: |
-          echo ${{ secrets.GH_TOKEN }} | gh auth login --with-token
+          echo ${{ secrets.DEVOPS_GITHUB_TOKEN }} | gh auth login --with-token
           gh pr create --fill \
           --label "safe-to-test" \
           --reviewer "hazelcast/cloud-native"
