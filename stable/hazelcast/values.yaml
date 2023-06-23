@@ -534,6 +534,8 @@ externalAccess:
     annotations: {}
 
 test:
+  hazelcast: true
+  mancenter: true
   ## Hazelcast chart test hook image version
   image:
     # repository is the chart test hook image name

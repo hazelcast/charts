@@ -1,4 +1,4 @@
-{{- if .Values.hazelcast.enabled }}
+{{- if and .Values.hazelcast.enabled .Values.test.hazelcast }}
 apiVersion: v1
 kind: Pod
 metadata:
