@@ -534,7 +534,9 @@ externalAccess:
     annotations: {}
 
 test:
+  # whether to deploy test apps to validate cluster
   hazelcast: true
+  # whether to deploy test apps to validate management center
   mancenter: true
   ## Hazelcast chart test hook image version
   image:
