@@ -26,7 +26,11 @@ spec:
   {{- end }}
   containers:
   - name: "{{ template "hazelcast.fullname" . }}-test"
+    {{- if empty .Values.test.image.tag }}
+    image: "{{ .Values.test.image.repository }}@{{ .Values.test.image.digest }}"
+    {{- else }}
     image: "{{ .Values.test.image.repository }}:{{ .Values.test.image.tag }}"
+    {{- end }}
     command:
     - "sh"
     - "-c"

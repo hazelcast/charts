@@ -584,6 +584,8 @@ test:
     repository: "alpine"
     # tag is the chart test hook image tag
     tag: "latest"
+    # digest is the image digest that will be used only if the test hook image tag is empty
+    digest: ""
     # pullPolicy is the Docker image pull policy
     # It's recommended to change this to 'Always' if the image tag is 'latest'
     # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
