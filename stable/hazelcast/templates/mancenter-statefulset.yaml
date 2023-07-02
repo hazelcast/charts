@@ -169,7 +169,24 @@ spec:
           value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} {{ if or .Values.mancenter.readinessProbe.enabled .Values.mancenter.livenessProbe.enabled }}-Dhazelcast.mc.healthCheck.enable=true{{ end }} -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
         {{- with .Values.mancenter.env }}
           {{- toYaml . | nindent 8 }}
-        {{- end }}        
+        {{- end }}
+        {{- range $key, $val := .Values.mancenter.envMap }}
+        - name: {{ $key }}
+          value: {{ $val }}
+        {{- end }}
+        {{- range $key, $val := .Values.mancenter.envFromField }}
+        - name: {{ $key }}
+          valueFrom:
+            fieldRef:
+              fieldPath: {{ $val }}
+        {{- end }}
+        {{- range $key, $val := .Values.mancenter.envFromSecrets }}
+        - name:
+          valueFrom:
+            secretKeyRef:
+              key: {{ $val.secretKey }}
+              name: {{ $val.secretName }}
+        {{- end }}
         {{- if .Values.securityContext.enabled }}
         securityContext:
           runAsNonRoot: {{ if eq (int .Values.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}

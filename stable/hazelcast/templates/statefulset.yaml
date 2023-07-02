@@ -139,10 +139,6 @@ spec:
           mountPath: /data/external
         {{- end }}
         env:
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
         {{- if .Values.customVolume }}
         - name: CLASSPATH
           value: "/data/custom:/data/custom/*"
@@ -159,6 +155,23 @@ spec:
         {{- if .Values.hazelcast.loggingLevel }}
         - name: LOGGING_LEVEL
           value: {{ .Values.hazelcast.loggingLevel }}
+        {{- end }}
+        {{- range $key, $val := .Values.envMap }}
+        - name: {{ $key }}
+          value: {{ $val }}
+        {{- end }}
+        {{- range $key, $val := .Values.envFromField }}
+        - name: {{ $key }}
+          valueFrom:
+            fieldRef:
+              fieldPath: {{ $val }}
+        {{- end }}
+        {{- range $key, $val := .Values.envFromSecrets }}
+        - name:
+          valueFrom:
+            secretKeyRef:
+              key: {{ $val.secretKey }}
+              name: {{ $val.secretName }}
         {{- end }}
         {{- if .Values.securityContext.enabled }}
         securityContext:

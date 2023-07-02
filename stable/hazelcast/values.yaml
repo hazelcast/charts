@@ -286,6 +286,17 @@ env: []
   #     secretKeyRef:
   #       key: db-username
   #       name: servicename-db-creds
+# Additional environment variables as key-value pairs.
+# Helps in aggregating environment variables sourced from multiple values file
+envMap: {}
+# Additional environment variables sourced from secrets as key-value (where value is object type)
+envFromSecrets: {}
+  # someSecret:
+  #   secretKey: key
+  #   secretName: name
+# Additional environment variables sourced from fields. Provided as key-value pairs
+envFromField:
+  POD_NAME: metadata.name
 
 # Hazelcast Jet Engine
 jet:
@@ -489,6 +500,16 @@ mancenter:
     #     secretKeyRef:
     #       key: db-username
     #       name: servicename-db-creds
+  # Additional environment variables as key-value pairs.
+  # Helps in aggregating environment variables sourced from multiple values file
+  envMap: {}
+  # Additional environment variables sourced from secrets as key-value (where value is object type)
+  envFromSecrets: {}
+    # someSecret:
+    #   secretKey: key
+    #   secretName: name
+  # Additional environment variables sourced from fields. Provided as key-value pairs
+  envFromField: {}
 
 ## External Access to Hazelcast nodes configuration
 ##
