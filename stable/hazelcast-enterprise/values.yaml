@@ -96,7 +96,7 @@ affinity:
 # tolerations:
 
 # topologySpreadConstraints enable deployment spread based on topology
-topologySpreadConstraints: {}
+topologySpreadConstraints: []
 
 # nodeSelector is an array of Hazelcast Node labels for POD assignments
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
@@ -420,7 +420,7 @@ mancenter:
   # tolerations:
 
   # topologySpreadConstraints enable deployment spread based on topology
-  topologySpreadConstraints: {}
+  topologySpreadConstraints: []
 
   # nodeSelector is an array of Hazelcast Management Center Node labels for POD assignments
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
