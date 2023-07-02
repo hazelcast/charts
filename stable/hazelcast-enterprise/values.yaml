@@ -165,6 +165,27 @@ readinessProbe:
   # HTTPS or HTTP scheme
   scheme: HTTP
 
+# Hazelcast Startup probe
+startupProbe:
+  # enabled is a flag to used to enable startup probe
+  enabled: false
+  # initialDelaySeconds is a delay before startup probe is initiated
+  initialDelaySeconds: 30
+  # periodSeconds decides how often to perform the probe
+  periodSeconds: 10
+  # timeoutSeconds decides when the probe times out
+  timeoutSeconds: 10
+  # successThreshold is the minimum consecutive successes for the probe to be considered successful after having failed
+  successThreshold: 1
+  # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
+  failureThreshold: 10
+  # url path that will be called to check startup
+  path: /hazelcast/health/node-state
+  # port that will be used in startup probe calls
+  # port:
+  # HTTPS or HTTP scheme
+  scheme: HTTP
+
 # Configure resource requests and limits
 # ref: http://kubernetes.io/docs/user-guide/compute-resources/
 #
@@ -515,6 +536,20 @@ mancenter:
     periodSeconds: 10
     # timeoutSeconds decides when the probe times out
     timeoutSeconds: 1
+    # successThreshold is the minimum consecutive successes for the probe to be considered successful after having failed
+    successThreshold: 1
+    # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
+    failureThreshold: 3
+  # Hazelcast Management Center Startup probe
+  startupProbe:
+    # enabled is a flag to used to enable startup probe
+    enabled: false
+    # initialDelaySeconds is a delay before startup probe is initiated
+    initialDelaySeconds: 30
+    # periodSeconds decides how often to perform the probe
+    periodSeconds: 10
+    # timeoutSeconds decides when the probe times out
+    timeoutSeconds: 5
     # successThreshold is the minimum consecutive successes for the probe to be considered successful after having failed
     successThreshold: 1
     # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
