@@ -158,7 +158,7 @@ spec:
         {{- end }}
         {{- range $key, $val := .Values.envMap }}
         - name: {{ $key }}
-          value: {{ $val }}
+          value: {{ $val | quote }}
         {{- end }}
         {{- range $key, $val := .Values.envFromField }}
         - name: {{ $key }}
