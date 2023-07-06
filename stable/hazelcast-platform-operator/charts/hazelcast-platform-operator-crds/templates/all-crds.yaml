@@ -62,6 +62,23 @@ spec:
                 maximum: 6
                 minimum: 0
                 type: integer
+              eventJournal:
+                description: EventJournal specifies event journal configuration of
+                  the Cache
+                properties:
+                  capacity:
+                    default: 10000
+                    description: Capacity sets the capacity of the ringbuffer underlying
+                      the event journal.
+                    format: int32
+                    type: integer
+                  timeToLiveSeconds:
+                    default: 0
+                    description: TimeToLiveSeconds indicates how long the items remain
+                      in the event journal before they are expired.
+                    format: int32
+                    type: integer
+                type: object
               hazelcastResourceName:
                 description: HazelcastResourceName defines the name of the Hazelcast
                   resource that this resource is created for.
@@ -2438,6 +2455,10 @@ spec:
                   resource that this resource is created for.
                 minLength: 1
                 type: string
+              initialSnapshotResourceName:
+                description: InitialSnapshotResourceName specify the name of the JetJobSnapshot
+                  object from which the JetJob is initialized.
+                type: string
               jarName:
                 description: JarName specify the name of the Jar to run that is present
                   on the member.
@@ -2500,6 +2521,100 @@ spec:
             - id
             - phase
             type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.10.0
+  creationTimestamp: null
+  name: jetjobsnapshots.hazelcast.com
+spec:
+  group: hazelcast.com
+  names:
+    kind: JetJobSnapshot
+    listKind: JetJobSnapshotList
+    plural: jetjobsnapshots
+    shortNames:
+    - jjs
+    singular: jetjobsnapshot
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: Current state of the JetJobSnapshot
+      jsonPath: .status.state
+      name: State
+      type: string
+    - description: Time when the JetJobSnapshot was created, if created
+      jsonPath: .status.creationTime
+      name: CreationTime
+      type: string
+    - description: Message for the JetJobSnapshot
+      jsonPath: .status.message
+      name: Message
+      priority: 1
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: JetJobSnapshot is the Schema for the jetjobsnapshots API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: JetJobSnapshotSpec defines the desired state of JetJobSnapshot
+            properties:
+              cancelJob:
+                default: false
+                description: CancelJob determines whether the job is canceled after
+                  exporting snapshot
+                type: boolean
+              jetJobResourceName:
+                description: JetJobResourceName is the name of the JetJob CR where
+                  the Snapshot is exported from
+                minLength: 1
+                type: string
+              name:
+                description: Name of the exported snapshot
+                type: string
+            required:
+            - jetJobResourceName
+            type: object
+          status:
+            default:
+              state: Waiting
+            description: JetJobSnapshotStatus defines the observed state of JetJobSnapshot
+            properties:
+              creationTime:
+                format: date-time
+                type: string
+              message:
+                type: string
+              state:
+                enum:
+                - Waiting
+                - Exporting
+                - Exported
+                - Failed
+                type: string
+            type: object
+        required:
+        - spec
         type: object
     served: true
     storage: true
@@ -3935,6 +4050,23 @@ spec:
                   - className
                   type: object
                 type: array
+              eventJournal:
+                description: EventJournal specifies event journal configuration of
+                  the Map
+                properties:
+                  capacity:
+                    default: 10000
+                    description: Capacity sets the capacity of the ringbuffer underlying
+                      the event journal.
+                    format: int32
+                    type: integer
+                  timeToLiveSeconds:
+                    default: 0
+                    description: TimeToLiveSeconds indicates how long the items remain
+                      in the event journal before they are expired.
+                    format: int32
+                    type: integer
+                type: object
               eviction:
                 default:
                   evictionPolicy: NONE

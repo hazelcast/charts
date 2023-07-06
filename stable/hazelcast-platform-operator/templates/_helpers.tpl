@@ -423,6 +423,32 @@ Rules needed for operator watched namespaces
 - apiGroups:
   - hazelcast.com
   resources:
+  - jetjobsnapshots
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hazelcast.com
+  resources:
+  - jetjobsnapshots/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - hazelcast.com
+  resources:
+  - jetjobsnapshots/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - hazelcast.com
+  resources:
   - queues
   verbs:
   - create
