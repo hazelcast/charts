@@ -42,7 +42,7 @@ jobs:
 
           # Function to get the latest Git tag from the specified repository
           get_latest_tag() {
-            echo ${{ secrets.GH_TOKEN }} | gh auth login --with-token
+            echo ${{ secrets.DEVOPS_GITHUB_TOKEN }} | gh auth login --with-token
             local LATEST_TAG=$(gh api repos/$1/git/matching-refs/tags --jq '.[].ref | select(test("^refs/tags/v[0-9]+\\.[0-9]+\\.[0-9]+$")) | sub("^refs/tags/v"; "")' | sort -V | tail -n1)
             echo "$LATEST_TAG"
           }
