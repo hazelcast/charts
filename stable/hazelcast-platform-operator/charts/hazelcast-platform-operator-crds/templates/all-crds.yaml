@@ -2776,6 +2776,15 @@ spec:
                   type: object
                   x-kubernetes-map-type: atomic
                 type: array
+              jvm:
+                description: ManagementCenter JVM configuration
+                properties:
+                  args:
+                    description: Args is for arbitrary JVM arguments
+                    items:
+                      type: string
+                    type: array
+                type: object
               licenseKeySecret:
                 description: licenseKeySecret is a deprecated alias for licenseKeySecretName.
                 type: string
