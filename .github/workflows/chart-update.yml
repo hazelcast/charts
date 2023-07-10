@@ -63,24 +63,24 @@ jobs:
 
           # Function to update the chart version based on the latest tag and app version
           update_version() {
-            local HZ_LATEST_TAG="$1"
+            local LATEST_TAG="$1"
             local APP_VERSION="$2"
             local CHART_VERSION="$3"
 
             # Extract version parts from the latest tag, app version, and chart version
-            IFS=',' read -r HZ_MAJOR HZ_MINOR HZ_PATCH <<< "$(extract_version_parts "$HZ_LATEST_TAG")"
+            IFS=',' read -r LATEST_MAJOR LATEST_MINOR LATEST_PATCH <<< "$(extract_version_parts "$LATEST_TAG")"
             IFS=',' read -r APP_MAJOR APP_MINOR APP_PATCH <<< "$(extract_version_parts "$APP_VERSION")"
             IFS=',' read -r CHART_MAJOR CHART_MINOR CHART_PATCH <<< "$(extract_version_parts "$CHART_VERSION")"
 
             # Compare the version parts and update the chart version if necessary
-            if [[ $HZ_MAJOR != $APP_MAJOR ]]; then
+            if [[ $LATEST_MAJOR != $APP_MAJOR ]]; then
               CHART_MINOR=0
               CHART_PATCH=0
               CHART_MAJOR=$(increment_version "$CHART_MAJOR")
-            elif [[ $HZ_MINOR != $APP_MINOR ]]; then
+            elif [[ $LATEST_MINOR != $APP_MINOR ]]; then
               CHART_MINOR=$(increment_version "$CHART_MINOR")
               CHART_PATCH=0
-            elif [[ $HZ_PATCH != $APP_PATCH ]]; then
+            elif [[ $LATEST_PATCH != $APP_PATCH ]]; then
               CHART_PATCH=$(increment_version "$CHART_PATCH")
             fi
               echo "$CHART_MAJOR.$CHART_MINOR.$CHART_PATCH"
@@ -98,22 +98,30 @@ jobs:
               echo "HZ_LATEST_TAG=${HZ_LATEST_TAG}" >> $GITHUB_ENV
               echo "MC_LATEST_TAG=${MC_LATEST_TAG}" >> $GITHUB_ENV
           
-              if [[ $HZ_LATEST_TAG != $APP_VERSION ]]; then
+              if [[ $HZ_LATEST_TAG != $APP_VERSION && $MC_LATEST_TAG != $MC_VERSION ]]; then
+                NEW_CHART_VERSION=$(update_version "$HZ_LATEST_TAG" "$APP_VERSION" "$CHART_VERSION")
+                sed -i -E -e 's/(version: ).*/\1'"$NEW_CHART_VERSION"'/' -e 's/(appVersion: ).*/\1'\"$HZ_LATEST_TAG\"'/' "$path/Chart.yaml"
+                awk '/^image:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$HZ_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
+                awk '/^mancenter:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$MC_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
+                echo "HZ_UPDATED=true" >> $GITHUB_OUTPUT
+                echo "HZ_UPDATED=true" >> $GITHUB_ENV
+                echo "MC_UPDATED=true" >> $GITHUB_OUTPUT
+                echo "MC_UPDATED=true" >> $GITHUB_ENV
+              elif [[ $HZ_LATEST_TAG != $APP_VERSION && $MC_LATEST_TAG == $MC_VERSION ]]; then
                 NEW_CHART_VERSION=$(update_version "$HZ_LATEST_TAG" "$APP_VERSION" "$CHART_VERSION")
                 sed -i -E -e 's/(version: ).*/\1'"$NEW_CHART_VERSION"'/' -e 's/(appVersion: ).*/\1'\"$HZ_LATEST_TAG\"'/' "$path/Chart.yaml"
                 awk '/^image:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$HZ_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
                 echo "HZ_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "HZ_UPDATED=true" >> $GITHUB_ENV
-              fi
-          
-              if [[ $MC_LATEST_TAG != $MC_VERSION ]]; then
+              elif [[ $HZ_LATEST_TAG == $APP_VERSION && $MC_LATEST_TAG != $MC_VERSION ]]; then
+                NEW_CHART_VERSION=$(update_version "$MC_LATEST_TAG" "$MC_VERSION" "$CHART_VERSION")
+                sed -i -E -e 's/(version: ).*/\1'"$NEW_CHART_VERSION"'/' "$path/Chart.yaml"
                 awk '/^mancenter:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$MC_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
                 echo "MC_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "MC_UPDATED=true" >> $GITHUB_ENV
-              fi
-              if [[ $HZ_LATEST_TAG == $APP_VERSION && $MC_LATEST_TAG == $MC_VERSION ]]; then
-                echo "No new tag found for HZ. The latest is: $HZ_LATEST_TAG"
-                echo "No new tag found for MC. The latest is: $MC_LATEST_TAG"
+              else 
+                echo "No new tag found for HZ in '$path' path. The latest tag is: $HZ_LATEST_TAG"
+                echo "No new tag found for MC in '$path' path. The latest tag is: $MC_LATEST_TAG"
               fi
             done
           }
