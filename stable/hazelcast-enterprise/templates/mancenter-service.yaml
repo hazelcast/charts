@@ -5,12 +5,6 @@ metadata:
 {{- if .Values.mancenter.service.annotations }}
   annotations:
 {{ toYaml .Values.mancenter.service.annotations | indent 4 }}
-{{ else if and .Values.mcm.enabled .Values.mcm.baseURL }}
-  annotations:
-    name: Hazelcast Management Center
-    id: applications
-    roles: ClusterAdministrator,Administrator,Operator,Viewer
-    url: "http://{{ template "mancenter.fullname" . }}-{{ .Release.Namespace }}.{{ .Values.mcm.baseURL }}"
 {{- end }}
   name: {{ template "mancenter.fullname" . }}
   labels:
@@ -18,10 +12,6 @@ metadata:
     helm.sh/chart: {{ template "hazelcast.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-{{- if and .Values.mcm.enabled .Values.mcm.baseURL }}
-    inmenu: "true"
-    target: ManagementCenter
-{{- end }}
     {{- range $key, $value := .Values.mancenter.service.labels }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
