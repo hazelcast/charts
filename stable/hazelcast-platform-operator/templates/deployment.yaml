@@ -6,7 +6,6 @@ metadata:
   labels:
     {{- include "hazelcast-platform-operator.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "hazelcast-platform-operator.selectorLabels" . | nindent 6 }}
