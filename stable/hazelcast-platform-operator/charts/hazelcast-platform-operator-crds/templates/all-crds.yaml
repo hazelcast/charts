@@ -4196,7 +4196,7 @@ spec:
                     format: int32
                     minimum: 1
                     type: integer
-                  writeCoealescing:
+                  writeCoalescing:
                     default: true
                     description: It is meaningful if you are using write behind in
                       MapStore. When it is set to true, only the latest store operation
