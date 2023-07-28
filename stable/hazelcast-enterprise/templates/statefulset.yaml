@@ -220,7 +220,6 @@ spec:
       name: hot-restart-persistence
       labels:
         app.kubernetes.io/name: {{ template "hazelcast.name" . }}
-        helm.sh/chart: {{ template "hazelcast.chart" . }}
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
     spec:
