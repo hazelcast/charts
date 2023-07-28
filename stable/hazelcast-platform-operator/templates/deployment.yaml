@@ -20,9 +20,9 @@ spec:
     spec:
       serviceAccountName: {{ include "hazelcast-platform-operator.serviceAccountName" . }}
       terminationGracePeriodSeconds: 10
-      {{- with .Values.imagePullSecrets }}
+      {{- if include "hazelcast-platform-operator.imagePullSecrets" . }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+        {{- include "hazelcast-platform-operator.imagePullSecrets" . | indent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

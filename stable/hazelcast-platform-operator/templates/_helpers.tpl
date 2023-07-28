@@ -51,6 +51,21 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Return the proper Image Pull Secret Names
+*/}}
+{{- define "hazelcast-platform-operator.imagePullSecrets" -}}
+{{ if .Values.image.pullSecrets }}
+{{- range .Values.image.pullSecrets }}
+- name: {{ . }}
+{{- end }}
+{{- else }}
+{{- range .Values.imagePullSecrets }}
+- name: {{ . }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "hazelcast-platform-operator.serviceAccountName" -}}

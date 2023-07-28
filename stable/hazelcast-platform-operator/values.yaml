@@ -8,6 +8,7 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest-snapshot
+  pullSecrets: []
 
 developerModeEnabled: false
 phoneHomeEnabled: true
@@ -28,7 +29,8 @@ debug:
   enabled: false
   port: 40000
 
-imagePullSecrets: []
+## DEPRECATED: Use 'image.pullSecrets' instead of imagePullSecrets.
+# imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
