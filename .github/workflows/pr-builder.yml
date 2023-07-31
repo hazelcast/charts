@@ -53,11 +53,25 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1.1.1
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
+          
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2.0.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
+      - name: Get Secrets
+        uses: aws-actions/aws-secretsmanager-get-secrets@v1
+        with:
+          secret-ids: |
+            GKE_SA_KEY,CN/GKE_SA_KEY
+            HZ_LICENSE_KEY,CN/HZ_LICENSE_KEY
+            
       - name: Authenticate to GCP
         uses: 'google-github-actions/auth@v1.1.1'
         with:
-          credentials_json: ${{ secrets.GKE_SA_KEY }}
+          credentials_json: ${{ env.GKE_SA_KEY }}
           
       - name: Set up Helm
         uses: azure/setup-helm@v3.5
@@ -80,7 +94,7 @@ jobs:
               mkdir -p ${GITHUB_WORKSPACE}/stable/hazelcast/ci
               cat << EOF > ${GITHUB_WORKSPACE}/stable/hazelcast/ci/gha_gke-values.yaml
           mancenter:
-            licenseKey: ${{ secrets.HZ_LICENSE_KEY }}
+            licenseKey: ${{ env.HZ_LICENSE_KEY }}
             devMode:
               enabled: true
             javaOpts: "-Dhazelcast.mc.rest.enabled=true"
@@ -91,7 +105,7 @@ jobs:
               mkdir -p ${GITHUB_WORKSPACE}/stable/hazelcast-enterprise/ci
               cat << EOF > ${GITHUB_WORKSPACE}/stable/hazelcast-enterprise/ci/gha_gke-values.yaml
           hazelcast:
-            licenseKey: ${{ secrets.HZ_LICENSE_KEY }}
+            licenseKey: ${{ env.HZ_LICENSE_KEY }}
           mancenter:
             devMode:
               enabled: true
