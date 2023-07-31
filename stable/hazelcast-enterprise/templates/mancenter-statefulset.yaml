@@ -266,7 +266,6 @@ spec:
       labels:
         app.kubernetes.io/name: {{ template "mancenter.name" . }}
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-        app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
     spec:
       accessModes:
