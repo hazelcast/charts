@@ -46,7 +46,7 @@ jobs:
       - name: Add remote hazelcast
         run: |
           git remote add hazelcast https://github.com/hazelcast/charts.git
-          git fetch hazelcast master
+          git fetch hazelcast 4.2.z
 
       - name: Install kubectl
         run: |
