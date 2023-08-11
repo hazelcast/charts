@@ -28,6 +28,7 @@ jobs:
       GCP_PROJECT_ID: hazelcast-33
       GCP_NETWORK: operator-test-network
       GKE_ZONE: europe-west1-b
+      AWS_REGION: us-east-1
     steps:
       - name: Decide which ref to checkout
         id: decide-ref
