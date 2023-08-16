@@ -2097,6 +2097,27 @@ spec:
                       type: object
                     type: array
                 type: object
+              sql:
+                description: Hazelcast SQL configuration
+                properties:
+                  catalogPersistenceEnabled:
+                    default: false
+                    description: CatalogPersistenceEnabled sets whether SQL Catalog
+                      persistence is enabled for the node. With SQL Catalog persistence
+                      enabled you can restart the whole cluster without losing schema
+                      definition objects (such as MAPPINGs, TYPEs, VIEWs and DATA
+                      CONNECTIONs). The feature is implemented on top of the Hot Restart
+                      feature of Hazelcast which persists the data to disk. If enabled,
+                      you have to also configure Hot Restart. Feature is disabled
+                      by default.
+                    type: boolean
+                  statementTimeout:
+                    default: 0
+                    description: StatementTimeout defines the timeout in milliseconds
+                      that is applied to queries without an explicit timeout.
+                    format: int32
+                    type: integer
+                type: object
               tls:
                 description: Hazelcast TLS configuration
                 properties:
