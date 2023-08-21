@@ -3966,7 +3966,7 @@ spec:
                     type: array
                 type: object
               version:
-                default: 5.3.1
+                default: 5.3.2
                 description: Version of Management Center.
                 type: string
             type: object
