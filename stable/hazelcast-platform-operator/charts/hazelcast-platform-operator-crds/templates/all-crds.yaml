@@ -2180,7 +2180,7 @@ spec:
                     type: string
                 type: object
               version:
-                default: 5.3.1
+                default: 5.3.2
                 description: Version of Hazelcast Platform.
                 type: string
             type: object
