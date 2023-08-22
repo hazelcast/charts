@@ -38,6 +38,9 @@ hazelcast:
   # yaml is the Hazelcast YAML configuration file
   yaml:
     hazelcast:
+      cp-subsystem:
+        # default of 0 means that the CP subsystem is disabled
+        cp-member-count: 0
       network:
         join:
           kubernetes:
