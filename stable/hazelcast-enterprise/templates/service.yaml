@@ -34,5 +34,5 @@ spec:
     {{- if .Values.service.nodePort }}
     nodePort: {{ .Values.service.nodePort }}
     {{- end }}
-    name: tcp-hzport
+    name: hazelcast
 {{- end -}}
