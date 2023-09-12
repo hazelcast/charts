@@ -54,6 +54,19 @@ Create the name of the service to use
 {{- end -}}
 
 {{/*
+Create the config of the service-name to use
+*/}}
+{{- define "hazelcast.serviceNameConfig" -}}
+{{- if or (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "service-dns") 
+          (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "service-label-name")
+          (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "pod-label-name") -}}
+    {{ default "" }}
+{{- else -}}
+    {{ template "hazelcast.serviceName" .}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified Management Center app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
