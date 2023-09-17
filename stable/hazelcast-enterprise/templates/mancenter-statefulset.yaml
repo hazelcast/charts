@@ -232,7 +232,7 @@ spec:
     spec:
       accessModes:
       {{- range .Values.mancenter.persistence.accessModes }}
-      - {{ . | quote }}
+        - {{ . | quote }}
       {{- end }}
       {{- if .Values.mancenter.persistence.storageClass }}
       {{- if (eq "-" .Values.mancenter.persistence.storageClass) }}
@@ -244,5 +244,5 @@ spec:
       resources:
         requests:
           storage: {{ .Values.mancenter.persistence.size | quote }}
-      {{- end }}
+  {{- end -}}
 {{- end -}}

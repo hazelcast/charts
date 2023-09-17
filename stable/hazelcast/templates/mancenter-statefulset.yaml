@@ -85,6 +85,7 @@ spec:
           httpGet:
             path: {{ if .Values.mancenter.contextPath }}{{ .Values.mancenter.contextPath }}{{ end }}/health
             port: 8081
+            scheme: HTTP
           initialDelaySeconds: {{ .Values.mancenter.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.mancenter.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.mancenter.livenessProbe.timeoutSeconds }}
@@ -150,9 +151,18 @@ spec:
             secretKeyRef:
               name: {{ .Values.mancenter.licenseKeySecretName }}
               key: key
-        {{- else if .Values.mancenter.licenseKey}}
+        {{- else if .Values.mancenter.licenseKey }}
         - name: MC_LICENSE_KEY
           value: {{ .Values.mancenter.licenseKey }}
+        {{- else if .Values.hazelcast.licenseKeySecretName }}
+        - name: MC_LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.hazelcast.licenseKeySecretName }}
+              key: key
+        {{- else if .Values.hazelcast.licenseKey}}
+        - name: MC_LICENSE_KEY
+          value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
         {{- $clusterConfigCommand := "" }}
         {{- if .Values.mancenter.clusterConfig.create }}
@@ -166,7 +176,7 @@ spec:
           value: "{{ $clusterConfigCommand }}"
         {{- end }}
         - name: JAVA_OPTS
-          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} {{ if or .Values.mancenter.readinessProbe.enabled .Values.mancenter.livenessProbe.enabled }}-Dhazelcast.mc.healthCheck.enable=true{{ end }} -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
+          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName .Values.hazelcast.licenseKey .Values.hazelcast.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} {{ if or .Values.mancenter.readinessProbe.enabled .Values.mancenter.livenessProbe.enabled }}-Dhazelcast.mc.healthCheck.enable=true{{ end }} -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} -Dmancenter.ssl={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
         {{- with .Values.mancenter.env }}
           {{- toYaml . | nindent 8 }}
         {{- end }}        
@@ -188,36 +198,35 @@ spec:
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
       automountServiceAccountToken: {{ .Values.serviceAccount.automountToken }}
       volumes:
-      - name: config
-        configMap:
-           {{- if .Values.mancenter.existingConfigMap }}
-           name: {{ .Values.mancenter.existingConfigMap }}
-           {{- else }}
-           name: {{ template "mancenter.fullname" . }}-configuration
-           {{- end }}
-      {{- if .Values.mancenter.secretsMountName }}
-      - name: mancenter-secrets
-        secret:
-          secretName: {{ .Values.mancenter.secretsMountName }}
-      {{- end }}
-      - name: mancenter-storage
-        {{- if and (eq .Values.mancenter.persistence.enabled true) .Values.mancenter.persistence.existingClaim }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.mancenter.persistence.existingClaim }}
-        {{- else if (eq .Values.mancenter.persistence.enabled false) }}
-        emptyDir: {}
+        - name: config
+          configMap:
+            {{- if .Values.mancenter.existingConfigMap }}
+            name: {{ .Values.mancenter.existingConfigMap }}
+            {{- else }}
+            name: {{ template "mancenter.fullname" . }}-configuration
+            {{- end }}
+        {{- if .Values.mancenter.secretsMountName }}
+        - name: mancenter-secrets
+          secret:
+            secretName: {{ .Values.mancenter.secretsMountName }}
         {{- end }}
-      {{- if .Values.mancenter.customVolume }}
-      - name: mancenter-custom
-{{ toYaml .Values.mancenter.customVolume | indent 8 }}
-      {{- end }}
-    {{ if and (eq .Values.mancenter.persistence.enabled true) (empty .Values.mancenter.persistence.existingClaim) }}
+        - name: mancenter-storage
+          {{- if and (eq .Values.mancenter.persistence.enabled true) .Values.mancenter.persistence.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.mancenter.persistence.existingClaim }}
+          {{- else if (eq .Values.mancenter.persistence.enabled false) }}
+          emptyDir: {}
+          {{- end }}
+        {{- if .Values.mancenter.customVolume }}
+        - name: mancenter-custom
+{{ toYaml .Values.mancenter.customVolume | indent 10 }}
+        {{- end }}
+      {{ if and (eq .Values.mancenter.persistence.enabled true) (empty .Values.mancenter.persistence.existingClaim) }}
   volumeClaimTemplates:
   - metadata:
       name: mancenter-storage
       labels:
         app.kubernetes.io/name: {{ template "mancenter.name" . }}
-        helm.sh/chart: "{{ .Chart.Name }}"
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
     spec:

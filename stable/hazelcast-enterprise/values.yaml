@@ -343,7 +343,6 @@ mancenter:
     tag: "5.3.2"
     # digest is the Hazelcast Management Center image digest that will be used only if the tag is empty
     digest: ""
-    #
     # pullPolicy is the Docker image pull policy
     # It's recommended to change this to 'Always' if the image tag is 'latest'
     # ref: http://kubernetes.io/docs/user-guide/images/#updating-images
@@ -391,7 +390,6 @@ mancenter:
 
   # adminCredentialsSecretName is Kubernetes Secret Name for admin credentials. Secret has to contain `username` and `password` literals. please check Management Center documentation for password requirements
   # adminCredentialsSecretName:
-
 
   # existingConfigMap defines a ConfigMap which contains Hazelcast Client configuration file(s) that are used instead of hazelcast-client.yaml configuration below
   # existingConfigMap:
@@ -478,7 +476,7 @@ mancenter:
     labels: {}
     #  key: value
     # ClusterIP of the service
-    clusterIP: 
+    clusterIP:
     # loadBalancerIP statically set IP or set empty to use dynamic IP allocation
     loadBalancerIP:
 
@@ -516,13 +514,13 @@ mancenter:
 
   # Cluster config creation will create the connection to the Hazelcast cluster based on the yaml.hazelcast-client
   clusterConfig:
+    # create is a flag used to enable cluster config creation
     create: true
-
   # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
   # secretsMountName:
 
   # Additional Environment variables
-  env: [] 
+  env: []
     # - name: DB_USERNAME
     #   valueFrom:
     #     secretKeyRef:
@@ -566,11 +564,12 @@ externalAccess:
     #
     nodePorts: []
 
-    # Labels for the services that will be created.
+    ## Labels for the services that will be created.
     labels: {}
 
     # Annotations for the services that will be created.
     annotations: {}
+
 test:
   ## Hazelcast chart test hook image version
   image:
@@ -592,6 +591,17 @@ test:
     runAsUser: 65534
     # runAsGroup is the primary group ID used to run all processes within any container of the pod
     runAsGroup: 65534
+
+  # Configure resource requests and limits
+  # ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  #
+  # resources:
+  #   requests:
+  #     memory: 256Mi
+  #     cpu: 100m
+  #   limits:
+  #     memory: 1024Mi
+  #     cpu: 200m
 
 ## Array of extra objects to deploy with the release
 ##

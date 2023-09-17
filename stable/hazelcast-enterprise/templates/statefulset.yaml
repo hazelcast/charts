@@ -159,14 +159,14 @@ spec:
         - name: HZ_LICENSEKEY
           value: {{ .Values.hazelcast.licenseKey }}
           {{- end }}
-        {{- if .Values.customVolume }}
-        - name: CLASSPATH
-          value: "/data/custom:/data/custom/*"
-        {{- end }}
         - name: POD_NAME
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
+        {{- if .Values.customVolume }}
+        - name: CLASSPATH
+          value: "/data/custom:/data/custom/*"
+        {{- end }}
         {{- if .Values.metrics.enabled }}
         - name: PROMETHEUS_PORT
           value: "{{ .Values.metrics.service.port }}"
@@ -216,7 +216,7 @@ spec:
         {{- if .Values.customVolume }}
         - name: hazelcast-custom
 {{ toYaml .Values.customVolume | indent 10 }}
-            {{- end }}
+        {{- end }}
         {{- if .Values.persistence.enabled }}
         {{- if .Values.persistence.hostPath }}
         - name: persistence

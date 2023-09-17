@@ -121,6 +121,8 @@ livenessProbe:
   path: /hazelcast/health/node-state
   # port that will be used in liveness probe calls
   # port:
+  # HTTPS or HTTP scheme
+  scheme: HTTP
 
 # Hazelcast Readiness probe
 readinessProbe:
@@ -140,6 +142,8 @@ readinessProbe:
   path: /hazelcast/health/ready
   # port that will be used in readiness probe calls
   # port:
+  # HTTPS or HTTP scheme
+  scheme: HTTP
 
 # Configure resource requests and limits
 # ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -213,6 +217,11 @@ securityContext:
   # readOnlyRootFilesystem is a flag to enable readOnlyRootFilesystem for the Hazelcast security context
   readOnlyRootFilesystem: true
 
+# Hazelcast Jet Engine
+jet:
+  # enabled is a flag to enabled Jet engine
+  enabled: true
+
 # Allows to enable a Prometheus to scrape pods, implemented for Hazelcast version >= 3.12 (or 'latest')
 metrics:
   enabled: false
@@ -261,6 +270,9 @@ metrics:
   #        description: |
   #          Hazelcast instance {{ "{{ $labels.pod }}" }} is using {{ "{{ $value }}" }}% of its available memory.
 
+# secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
+# secretsMountName:
+
 # customVolume is the configuration for any volume mounted as '/data/custom/' and exposed to classpath (e.g. to mount a volume with custom JARs)
 # customVolume:
 
@@ -286,11 +298,6 @@ env: []
   #     secretKeyRef:
   #       key: db-username
   #       name: servicename-db-creds
-
-# Hazelcast Jet Engine
-jet:
-  # enabled is a flag to enabled Jet engine
-  enabled: true
 
 # Hazelcast Management Center application properties
 mancenter:
