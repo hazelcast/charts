@@ -164,19 +164,33 @@ spec:
         - name: MC_LICENSE_KEY
           value: {{ .Values.hazelcast.licenseKey }}
         {{- end }}
+        {{- $securityResetCommand := "" }}
+        {{- $securityConfigureCommand := "" }}
+        {{- with .Values.mancenter.security}}
+          {{- if or .activeDirectory.enabled .devMode.enabled}}
+            {{- $securityResetCommand = "./bin/mc-conf.sh security reset --lenient=true -H /data; " }}
+          {{- end }}
+          {{- if .activeDirectory.enabled }}
+            {{- with .activeDirectory }}
+              {{- $adminGroups := join ";" .adminGroups }}
+              {{- $userGroups := join ";" .userGroups }} 
+              {{- $readOnlyGroups := join ";" .readOnlyGroups }}
+              {{- $metricOnlyGroups := join ";" .metricOnlyGroups }}
+              {{- $nestedGroups := ternary "--nested-group-search" "" .nestedGroupSearch }}
+              {{- $securityConfigureCommand = printf "./bin/mc-conf.sh active-directory configure --home=/data --lenient=true --url='%s' --domain='%s' --user-search-filter='%s' --admin-groups='%s' --read-write-groups='%s' --read-only-groups='%s' --metrics-only-groups='%s' %s --verbose; " .url .domain .userSearchFilter  $adminGroups $userGroups $readOnlyGroups $metricOnlyGroups $nestedGroups }}
+            {{- end }}
+          {{- else if or $.Values.mancenter.devMode.enabled .devMode.enabled }}
+            {{- $securityConfigureCommand = "./bin/mc-conf.sh dev-mode configure; " }}
+          {{- end }}
+        {{- end }}
         {{- $clusterConfigCommand := "" }}
         {{- if .Values.mancenter.clusterConfig.create }}
         {{- $clusterConfigCommand = "./bin/mc-conf.sh cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml; " }}
         {{- end }}
-        {{- if .Values.mancenter.devMode.enabled }}
         - name: MC_INIT_CMD
-          value: "{{ $clusterConfigCommand }}./bin/mc-conf.sh dev-mode configure"
-        {{- else if .Values.mancenter.clusterConfig.create }}
-        - name: MC_INIT_CMD
-          value: "{{ $clusterConfigCommand }}"
-        {{- end }}
+          value: "{{ $securityResetCommand }}{{ $securityConfigureCommand }}{{ $clusterConfigCommand }}{{ $securityResetCommand }}{{ $securityConfigureCommand }}"
         - name: JAVA_OPTS
-          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName .Values.hazelcast.licenseKey .Values.hazelcast.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} {{ if or .Values.mancenter.readinessProbe.enabled .Values.mancenter.livenessProbe.enabled }}-Dhazelcast.mc.healthCheck.enable=true{{ end }} -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} -Dmancenter.ssl={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
+          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName .Values.hazelcast.licenseKey .Values.hazelcast.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} {{ if or .Values.mancenter.readinessProbe.enabled .Values.mancenter.livenessProbe.enabled }}-Dhazelcast.mc.healthCheck.enable=true{{ end }} {{ if $securityResetCommand }} -Dhazelcast.mc.lock.skip=true {{ end }} -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} -Dmancenter.ssl={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
         {{- with .Values.mancenter.env }}
           {{- toYaml . | nindent 8 }}
         {{- end }}        

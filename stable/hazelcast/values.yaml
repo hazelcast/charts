@@ -121,8 +121,6 @@ livenessProbe:
   path: /hazelcast/health/node-state
   # port that will be used in liveness probe calls
   # port:
-  # HTTPS or HTTP scheme
-  scheme: HTTP
 
 # Hazelcast Readiness probe
 readinessProbe:
@@ -142,8 +140,6 @@ readinessProbe:
   path: /hazelcast/health/ready
   # port that will be used in readiness probe calls
   # port:
-  # HTTPS or HTTP scheme
-  scheme: HTTP
 
 # Configure resource requests and limits
 # ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -217,11 +213,6 @@ securityContext:
   # readOnlyRootFilesystem is a flag to enable readOnlyRootFilesystem for the Hazelcast security context
   readOnlyRootFilesystem: true
 
-# Hazelcast Jet Engine
-jet:
-  # enabled is a flag to enabled Jet engine
-  enabled: true
-
 # Allows to enable a Prometheus to scrape pods, implemented for Hazelcast version >= 3.12 (or 'latest')
 metrics:
   enabled: false
@@ -270,9 +261,6 @@ metrics:
   #        description: |
   #          Hazelcast instance {{ "{{ $labels.pod }}" }} is using {{ "{{ $value }}" }}% of its available memory.
 
-# secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
-# secretsMountName:
-
 # customVolume is the configuration for any volume mounted as '/data/custom/' and exposed to classpath (e.g. to mount a volume with custom JARs)
 # customVolume:
 
@@ -299,6 +287,11 @@ env: []
   #       key: db-username
   #       name: servicename-db-creds
 
+# Hazelcast Jet Engine
+jet:
+  # enabled is a flag to enabled Jet engine
+  enabled: true
+
 # Hazelcast Management Center application properties
 mancenter:
   # enabled is a flag to enable Management Center application
@@ -323,11 +316,6 @@ mancenter:
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
     # pullSecrets:
     # - myRegistryKeySecretName
-
-  # Dev mode is for the Hazelcast clusters running on your local for development
-  # or evaluation purposes and it provides quick access to the Management Center without requiring any security credentials
-  devMode:
-    enabled: false
 
   # ingress configuration for mancenter
   ingress:
@@ -358,8 +346,34 @@ mancenter:
   # licenseKeySecretName is the name of the secret where the Hazelcast Management Center License Key is stored (can be used instead of licenseKey)
   # licenseKeySecretName:
 
+  # Dev mode is for the Hazelcast clusters running on your local for development or evaluation purposes and it provides quick access to the Management Center without requiring any security credentials
+  # Deprected in favor of the `security` config block.
+  # This is mutually exclusive with adminCredentialsSecretName
+  devMode:
+    enabled: false
+
   # adminCredentialsSecretName is Kubernetes Secret Name for admin credentials. Secret has to contain `username` and `password` literals. please check Management Center documentation for password requirements
+  # If this is set it will conflict with devMode or security.activeDirectory.enabled == true
   # adminCredentialsSecretName:
+
+  security:
+    # The follow options are mutually exclusive
+    devMode:
+      enabled: false
+    activeDirectory:
+      enabled: false
+      url: ldap://localhost:10389
+      domain: example.com
+      userSearchFilter: "(&(objectClass=user)(userPrincipalName={0}))"
+      nestedGroupSearch: true
+      adminGroups: #[]
+        - HazelcastMCAdmin
+      userGroups: #[]
+        - HazelcastMCUser
+      readOnlyGroups: #[]
+        - HazelcastMCReadonlyUser
+      metricOnlyGroups: #[]
+        - HazelcastMCMetricsOnlyUser
 
   # existingConfigMap defines a ConfigMap which contains Hazelcast Client configuration file(s) that are used instead of hazelcast-client.yaml configuration below
   # existingConfigMap:
@@ -371,6 +385,10 @@ mancenter:
           enabled: true
           service-name: ${serviceName}
           namespace: ${namespace}
+  # Cluster config creation will create the connection to the Hazelcast cluster based on the yaml.hazelcast-client
+  clusterConfig:
+    # create is a flag used to enable cluster config creation
+    create: true
 
   # annotations is an array of metadata for Management Center Statefulset
   annotations: {}
@@ -482,10 +500,6 @@ mancenter:
     # failureThreshold is the minimum consecutive failures for the probe to be considered failed after having succeeded
     failureThreshold: 3
 
-  # Cluster config creation will create the connection to the Hazelcast cluster based on the yaml.hazelcast-client
-  clusterConfig:
-    # create is a flag used to enable cluster config creation
-    create: true
   # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
   # secretsMountName:
 
