@@ -67,6 +67,10 @@ spec:
       topologySpreadConstraints:
 {{ toYaml .Values.mancenter.topologySpreadConstraints | indent 8 }}
       {{- end }}
+      {{- if .Values.mancenter.initContainers }}
+      initContainers:
+{{ toYaml .Values.mancenter.initContainers | nindent 8 }}
+      {{- end }}
       containers:
       - name: {{ template "mancenter.fullname" . }}
         {{- if empty .Values.mancenter.image.tag }}

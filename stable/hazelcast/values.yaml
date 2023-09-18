@@ -296,6 +296,7 @@ jet:
 mancenter:
   # enabled is a flag to enable Management Center application
   enabled: true
+
   ## Hazelcast Management Center image version
   ## ref: https://hub.docker.com/r/hazelcast/management-center/tags/
   ##
@@ -316,6 +317,12 @@ mancenter:
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
     # pullSecrets:
     # - myRegistryKeySecretName
+
+  # Init containers for Management Center
+  initContainers: []
+  #  - name: init-myservice
+  #    image: busybox:1.28
+  #    command: ['sh', '-c', "sleep 2"]
 
   # ingress configuration for mancenter
   ingress:
