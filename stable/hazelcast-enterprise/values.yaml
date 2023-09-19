@@ -25,6 +25,12 @@ cluster:
   # memberCount is the number Hazelcast members
   memberCount: 3
 
+# Labels to add to all deployed objects
+commonLabels: {}
+
+# Annotations to add to all deployed objects
+commonAnnotations: {}
+
 # Hazelcast properties
 hazelcast:
   # enabled is a flag to enable Hazelcast application

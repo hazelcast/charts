@@ -9,9 +9,15 @@ metadata:
     helm.sh/chart: {{ template "hazelcast.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-    {{- range $key, $val := .Values.metrics.prometheusRule.labels }}
+    {{- range $key, $val := (merge .Values.metrics.prometheusRule.labels .Values.commonLabels) }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- range $key, $val := .Values.commonAnnotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  {{- end }}
 spec:
   groups:
     - name: {{ template "hazelcast.name" . }}
