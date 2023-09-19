@@ -9,9 +9,15 @@ metadata:
     helm.sh/chart: {{ template "hazelcast.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-    {{- range $key, $val := .Values.metrics.serviceMonitor.labels }}
+    {{- range $key, $val := (merge .Values.metrics.serviceMonitor.labels .Values.commonLabels) }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- range $key, $val := .Values.commonAnnotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  {{- end }}
 spec:
   endpoints:
     - port: {{ .Values.metrics.service.portName }}

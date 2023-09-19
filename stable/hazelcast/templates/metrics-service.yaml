@@ -10,8 +10,15 @@ metadata:
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
     app.kubernetes.io/component: metrics
+    {{- range $key, $value := .Values.commonLabels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- if or .Values.metrics.service.annotations .Values.commonAnnotations }}
   annotations:
-{{ toYaml .Values.metrics.service.annotations | indent 4 }}
+    {{- range $key, $val := (merge .Values.metrics.service.annotations .Values.commonAnnotations) }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  {{- end }}
 spec:
   type: {{ .Values.metrics.service.type }}
   {{- if (and (eq .Values.metrics.service.type "LoadBalancer") (.Values.metrics.service.loadBalancerIP)) }}
