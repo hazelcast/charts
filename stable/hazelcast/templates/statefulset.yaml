@@ -8,12 +8,12 @@ metadata:
     helm.sh/chart: {{ template "hazelcast.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-    {{- range $key, $value := (merge .Values.labels .Values.commonLabels) }}
+    {{- range $key, $value := (merge nil .Values.labels .Values.commonLabels) }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- if or .Values.annotations .Values.commonAnnotations }}
   annotations:
-    {{- range $key, $val := (merge .Values.annotations .Values.commonAnnotations) }}
+    {{- range $key, $val := (merge nil .Values.annotations .Values.commonAnnotations) }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
   {{- end }}

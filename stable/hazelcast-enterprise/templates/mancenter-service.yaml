@@ -12,7 +12,7 @@ metadata:
     helm.sh/chart: {{ template "hazelcast.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-    {{- range $key, $value := (merge .Values.mancenter.service.labels .Values.commonLabels) }}
+    {{- range $key, $value := (merge nil .Values.mancenter.service.labels .Values.commonLabels) }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- if .Values.commonAnnotations }}

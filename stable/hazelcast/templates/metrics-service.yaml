@@ -15,7 +15,7 @@ metadata:
     {{- end }}
   {{- if or .Values.metrics.service.annotations .Values.commonAnnotations }}
   annotations:
-    {{- range $key, $val := (merge .Values.metrics.service.annotations .Values.commonAnnotations) }}
+    {{- range $key, $val := (merge nil .Values.metrics.service.annotations .Values.commonAnnotations) }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
   {{- end }}
