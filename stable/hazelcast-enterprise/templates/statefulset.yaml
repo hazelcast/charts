@@ -33,12 +33,14 @@ spec:
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
         role: hazelcast
-      {{- if .Values.podLabels }}
-{{ toYaml .Values.podLabels | indent 8 }}
-      {{- end }}
+        {{- if or .Values.podLabels .Values.commonLabels }}
+        {{- range $key, $val := (merge nil .Values.podLabels .Values.commonLabels) }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+        {{- end }}
       annotations:
         checksum/hazelcast-config: {{ toYaml .Values.hazelcast.yaml | sha256sum }}
-        {{- range $key, $val := .Values.annotations }}
+        {{- range $key, $val := (merge nil .Values.annotations .Values.commonAnnotations) }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
     spec:
@@ -241,6 +243,15 @@ spec:
         app.kubernetes.io/name: {{ template "hazelcast.name" . }}
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+        {{- range $key, $value := .Values.commonLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+      {{- if .Values.commonAnnotations }}
+      annotations:
+        {{- range $key, $val := .Values.commonAnnotations }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+      {{- end }}
     spec:
       accessModes:
       {{- range .Values.persistence.accessModes }}
