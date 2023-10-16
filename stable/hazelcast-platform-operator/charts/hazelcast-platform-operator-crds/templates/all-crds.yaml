@@ -22,6 +22,11 @@ spec:
       jsonPath: .status.state
       name: Status
       type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
     - description: Message for the current Cache Config
       jsonPath: .status.message
       name: Message
@@ -169,6 +174,11 @@ spec:
       jsonPath: .spec.suspend
       name: SUSPENDED
       type: boolean
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hotBackupTemplate.spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -300,6 +310,11 @@ spec:
     - description: Address of the HazelcastEndpoint
       jsonPath: .status.address
       name: Address
+      type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
       type: string
     - description: Message for the current HazelcastEndpoint
       jsonPath: .status.message
@@ -2406,6 +2421,11 @@ spec:
       jsonPath: .status.state
       name: Status
       type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
     - description: Message for the current HotBackup Config
       jsonPath: .status.message
       name: Message
@@ -2503,6 +2523,11 @@ spec:
     - description: ID of the JetJob
       jsonPath: .status.id
       name: Id
+      type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
       type: string
     - description: Time when the JetJob was submitted
       jsonPath: .status.submissionTime
@@ -4182,6 +4207,11 @@ spec:
       jsonPath: .status.state
       name: Status
       type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
     - description: Message for the current Map Config
       jsonPath: .status.message
       name: Message
@@ -4562,6 +4592,11 @@ spec:
       jsonPath: .status.state
       name: Status
       type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
     - description: Message for the current MultiMap Config
       jsonPath: .status.message
       name: Message
@@ -4683,6 +4718,11 @@ spec:
     - description: Current state of the Queue Config
       jsonPath: .status.state
       name: Status
+      type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
       type: string
     - description: Message for the current Queue Config
       jsonPath: .status.message
@@ -4813,6 +4853,11 @@ spec:
       jsonPath: .status.state
       name: Status
       type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
     - description: Message for the current ReplicatedMap Config
       jsonPath: .status.message
       name: Message
@@ -4918,6 +4963,11 @@ spec:
     - description: Current state of the Topic Config
       jsonPath: .status.state
       name: Status
+      type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
       type: string
     - description: Message for the current Topic Config
       jsonPath: .status.message
