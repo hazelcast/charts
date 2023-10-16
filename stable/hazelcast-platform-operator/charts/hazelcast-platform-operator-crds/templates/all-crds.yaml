@@ -4045,6 +4045,88 @@ spec:
                       type: object
                     type: array
                 type: object
+              securityProvider:
+                description: SecurityProviders to authenticate users in Management
+                  Center
+                properties:
+                  ldap:
+                    description: LDAP security provider
+                    properties:
+                      adminGroups:
+                        description: Members of these groups and its nested groups
+                          have admin privileges on the Management Center.
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      credentialsSecretName:
+                        description: CredentialsSecretName is the name of the secret
+                          that contains username and password of a user that has admin
+                          privileges on the LDAP server. The username must be the
+                          DN of the user. It is used to connect to the server when
+                          authenticating users.
+                        type: string
+                      groupDN:
+                        description: DN to be used for searching groups.
+                        type: string
+                      groupSearchFilter:
+                        description: LDAP search filter expression to search for the
+                          groups. For example, uniquemember={0} searches for a group
+                          that matches with the uniquemember attribute.
+                        type: string
+                      metricsOnlyGroups:
+                        description: Members of these groups and its nested groups
+                          have the privilege to see only the metrics on the Management
+                          Center.
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      nestedGroupSearch:
+                        default: false
+                        description: NestedGroupSearch enables searching for nested
+                          LDAP groups.
+                        type: boolean
+                      readonlyUserGroups:
+                        description: Members of these groups and its nested groups
+                          have only read privilege on the Management Center.
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      url:
+                        description: URL of your LDAP server, including schema (ldap://
+                          or ldaps://) and port.
+                        type: string
+                      userDN:
+                        description: DN to be used for searching users.
+                        type: string
+                      userGroups:
+                        description: Members of these groups and its nested groups
+                          have read and write privileges on the Management Center.
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      userSearchFilter:
+                        description: LDAP search filter expression to search for the
+                          users. For example, uid={0} searches for a username that
+                          matches with the uid attribute.
+                        type: string
+                    required:
+                    - adminGroups
+                    - credentialsSecretName
+                    - groupDN
+                    - groupSearchFilter
+                    - metricsOnlyGroups
+                    - nestedGroupSearch
+                    - readonlyUserGroups
+                    - url
+                    - userDN
+                    - userGroups
+                    - userSearchFilter
+                    type: object
+                type: object
               version:
                 default: 5.3.2
                 description: Version of Management Center.
@@ -4053,6 +4135,10 @@ spec:
           status:
             description: ManagementCenterStatus defines the observed state of ManagementCenter.
             properties:
+              configured:
+                description: Configured is a flag that indicates if the configuration
+                  step has successfully passed
+                type: boolean
               externalAddresses:
                 description: External addresses of the Management Center instance
                 type: string
@@ -4065,6 +4151,7 @@ spec:
                 - Running
                 - Failed
                 - Pending
+                - Configuring
                 - Terminating
                 type: string
             type: object
