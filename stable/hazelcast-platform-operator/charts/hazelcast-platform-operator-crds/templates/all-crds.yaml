@@ -22,6 +22,11 @@ spec:
       jsonPath: .status.state
       name: Status
       type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
     - description: Message for the current Cache Config
       jsonPath: .status.message
       name: Message
@@ -169,6 +174,11 @@ spec:
       jsonPath: .spec.suspend
       name: SUSPENDED
       type: boolean
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hotBackupTemplate.spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -280,6 +290,99 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.10.0
   creationTimestamp: null
+  name: hazelcastendpoints.hazelcast.com
+spec:
+  group: hazelcast.com
+  names:
+    kind: HazelcastEndpoint
+    listKind: HazelcastEndpointList
+    plural: hazelcastendpoints
+    shortNames:
+    - hzep
+    singular: hazelcastendpoint
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: Type of the HazelcastEndpoint
+      jsonPath: .spec.type
+      name: Type
+      type: string
+    - description: Address of the HazelcastEndpoint
+      jsonPath: .status.address
+      name: Address
+      type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
+    - description: Message for the current HazelcastEndpoint
+      jsonPath: .status.message
+      name: Message
+      priority: 1
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: HazelcastEndpoint is the Schema for the hazelcastendpoints API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: HazelcastEndpointSpec defines the desired state of HazelcastEndpoint
+            properties:
+              hazelcastResourceName:
+                description: HazelcastResourceName defines the name of the Hazelcast
+                  resource that this resource is created for.
+                minLength: 1
+                type: string
+              port:
+                description: Port of the endpoint.
+                format: int32
+                type: integer
+              type:
+                description: Type defines the endpoint connection. It is used to identify
+                  the target of the endpoint.
+                enum:
+                - Discovery
+                - Member
+                - WAN
+                type: string
+            required:
+            - hazelcastResourceName
+            - port
+            - type
+            type: object
+          status:
+            description: HazelcastEndpointStatus defines the observed state of HazelcastEndpoint
+            properties:
+              address:
+                description: Address is the external address of the endpoint. It is
+                  taken from the corresponding service.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.10.0
+  creationTimestamp: null
   name: hazelcasts.hazelcast.com
 spec:
   group: hazelcast.com
@@ -300,14 +403,6 @@ spec:
     - description: Current numbers of ready Hazelcast members
       jsonPath: .status.hazelcastClusterStatus.readyMembers
       name: Members
-      type: string
-    - description: External addresses of the Hazelcast cluster
-      jsonPath: .status.externalAddresses
-      name: External-Addresses
-      type: string
-    - description: WAN addresses of the Hazelcast cluster
-      jsonPath: .status.wanAddresses
-      name: WAN-Addresses
       type: string
     - description: Message for the current Hazelcast Config
       jsonPath: .status.message
@@ -365,7 +460,7 @@ spec:
               agent:
                 default:
                   repository: docker.io/hazelcast/platform-operator-agent
-                  version: 0.1.21
+                  version: 0.1.22
                 description: B&R Agent configurations
                 properties:
                   repository:
@@ -373,7 +468,7 @@ spec:
                     description: Repository to pull Hazelcast Platform Operator Agent(https://github.com/hazelcast/platform-operator-agent)
                     type: string
                   version:
-                    default: 0.1.21
+                    default: 0.1.22
                     description: Version of Hazelcast Platform Operator Agent.
                     type: string
                 type: object
@@ -2326,6 +2421,11 @@ spec:
       jsonPath: .status.state
       name: Status
       type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
     - description: Message for the current HotBackup Config
       jsonPath: .status.message
       name: Message
@@ -2423,6 +2523,11 @@ spec:
     - description: ID of the JetJob
       jsonPath: .status.id
       name: Id
+      type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
       type: string
     - description: Time when the JetJob was submitted
       jsonPath: .status.submissionTime
@@ -3965,6 +4070,88 @@ spec:
                       type: object
                     type: array
                 type: object
+              securityProvider:
+                description: SecurityProviders to authenticate users in Management
+                  Center
+                properties:
+                  ldap:
+                    description: LDAP security provider
+                    properties:
+                      adminGroups:
+                        description: Members of these groups and its nested groups
+                          have admin privileges on the Management Center.
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      credentialsSecretName:
+                        description: CredentialsSecretName is the name of the secret
+                          that contains username and password of a user that has admin
+                          privileges on the LDAP server. The username must be the
+                          DN of the user. It is used to connect to the server when
+                          authenticating users.
+                        type: string
+                      groupDN:
+                        description: DN to be used for searching groups.
+                        type: string
+                      groupSearchFilter:
+                        description: LDAP search filter expression to search for the
+                          groups. For example, uniquemember={0} searches for a group
+                          that matches with the uniquemember attribute.
+                        type: string
+                      metricsOnlyGroups:
+                        description: Members of these groups and its nested groups
+                          have the privilege to see only the metrics on the Management
+                          Center.
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      nestedGroupSearch:
+                        default: false
+                        description: NestedGroupSearch enables searching for nested
+                          LDAP groups.
+                        type: boolean
+                      readonlyUserGroups:
+                        description: Members of these groups and its nested groups
+                          have only read privilege on the Management Center.
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      url:
+                        description: URL of your LDAP server, including schema (ldap://
+                          or ldaps://) and port.
+                        type: string
+                      userDN:
+                        description: DN to be used for searching users.
+                        type: string
+                      userGroups:
+                        description: Members of these groups and its nested groups
+                          have read and write privileges on the Management Center.
+                        items:
+                          type: string
+                        minItems: 1
+                        type: array
+                      userSearchFilter:
+                        description: LDAP search filter expression to search for the
+                          users. For example, uid={0} searches for a username that
+                          matches with the uid attribute.
+                        type: string
+                    required:
+                    - adminGroups
+                    - credentialsSecretName
+                    - groupDN
+                    - groupSearchFilter
+                    - metricsOnlyGroups
+                    - nestedGroupSearch
+                    - readonlyUserGroups
+                    - url
+                    - userDN
+                    - userGroups
+                    - userSearchFilter
+                    type: object
+                type: object
               version:
                 default: 5.3.2
                 description: Version of Management Center.
@@ -3973,6 +4160,10 @@ spec:
           status:
             description: ManagementCenterStatus defines the observed state of ManagementCenter.
             properties:
+              configured:
+                description: Configured is a flag that indicates if the configuration
+                  step has successfully passed
+                type: boolean
               externalAddresses:
                 description: External addresses of the Management Center instance
                 type: string
@@ -3985,6 +4176,7 @@ spec:
                 - Running
                 - Failed
                 - Pending
+                - Configuring
                 - Terminating
                 type: string
             type: object
@@ -4014,6 +4206,11 @@ spec:
     - description: Current state of the Map Config
       jsonPath: .status.state
       name: Status
+      type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
       type: string
     - description: Message for the current Map Config
       jsonPath: .status.message
@@ -4395,6 +4592,11 @@ spec:
       jsonPath: .status.state
       name: Status
       type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
     - description: Message for the current MultiMap Config
       jsonPath: .status.message
       name: Message
@@ -4516,6 +4718,11 @@ spec:
     - description: Current state of the Queue Config
       jsonPath: .status.state
       name: Status
+      type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
       type: string
     - description: Message for the current Queue Config
       jsonPath: .status.message
@@ -4646,6 +4853,11 @@ spec:
       jsonPath: .status.state
       name: Status
       type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
+      type: string
     - description: Message for the current ReplicatedMap Config
       jsonPath: .status.message
       name: Message
@@ -4751,6 +4963,11 @@ spec:
     - description: Current state of the Topic Config
       jsonPath: .status.state
       name: Status
+      type: string
+    - description: Name of the Hazelcast resource that this resource is created for
+      jsonPath: .spec.hazelcastResourceName
+      name: Hazelcast-Resource
+      priority: 1
       type: string
     - description: Message for the current Topic Config
       jsonPath: .status.message

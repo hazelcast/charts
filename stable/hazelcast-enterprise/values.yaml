@@ -578,6 +578,8 @@ externalAccess:
     # Annotations for the services that will be created.
     annotations: {}
 test:
+  # enabled is a flag to enable Hazelcast chart test
+  enabled: true
   ## Hazelcast chart test hook image version
   image:
     # repository is the chart test hook image name
