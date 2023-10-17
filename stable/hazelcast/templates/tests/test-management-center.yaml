@@ -1,4 +1,4 @@
-{{- if .Values.mancenter.enabled }}
+{{- if and .Values.mancenter.enabled .Values.test.enabled }}
 apiVersion: v1
 kind: Pod
 metadata:
