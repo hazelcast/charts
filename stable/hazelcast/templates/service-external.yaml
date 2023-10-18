@@ -12,13 +12,15 @@ metadata:
     app.kubernetes.io/instance: "{{ $.Release.Name }}"
     app.kubernetes.io/managed-by: "{{ $.Release.Service }}"
     pod: {{ $targetPod }}
-    {{- range $key, $value := $.Values.externalAccess.service.labels }}
+    {{- range $key, $value := (merge nil .Values.externalAccess.service.labels .Values.commonLabels) }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
-{{- with $.Values.externalAccess.service.annotations }}
+  {{- if or .Values.externalAccess.service.annotations .Values.commonAnnotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-{{- end }}
+    {{- range $key, $val := (merge nil .Values.externalAccess.service.annotations .Values.commonAnnotations) }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  {{- end }}
 spec:
   type: {{ $.Values.externalAccess.service.type }}
   {{- if $.Values.externalAccess.service.loadBalancerIPs }}

@@ -8,10 +8,15 @@ metadata:
     helm.sh/chart: {{ template "hazelcast.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-{{- with .Values.mancenter.ingress.annotations }}
+    {{- range $key, $value := .Values.commonLabels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- if or .Values.mancenter.ingress.annotations .Values.commonAnnotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-{{- end }}
+    {{- range $key, $val := (merge nil .Values.mancenter.ingress.annotations .Values.commonAnnotations) }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  {{- end }}
 spec:
   ingressClassName: {{ .Values.mancenter.ingress.className }}
 {{- if .Values.mancenter.ingress.tls }}
