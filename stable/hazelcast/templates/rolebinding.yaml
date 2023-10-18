@@ -12,6 +12,15 @@ metadata:
     helm.sh/chart: {{ template "hazelcast.chart" . }}
     app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    {{- range $key, $value := .Values.commonLabels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations:
+    {{- range $key, $val := .Values.commonAnnotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  {{- end }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
 {{- if .Values.rbac.useClusterRole }}
