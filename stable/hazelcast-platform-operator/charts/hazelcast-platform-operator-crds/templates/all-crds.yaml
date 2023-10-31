@@ -2282,9 +2282,6 @@ spec:
           status:
             description: HazelcastStatus defines the observed state of Hazelcast
             properties:
-              externalAddresses:
-                description: External addresses of the Hazelcast cluster members
-                type: string
               hazelcastClusterStatus:
                 description: Status of the Hazelcast cluster
                 properties:
@@ -2388,9 +2385,6 @@ spec:
                     - Succeeded
                     type: string
                 type: object
-              wanAddresses:
-                description: WAN addresses of the Hazelcast cluster members
-                type: string
             type: object
         type: object
     served: true
@@ -4120,8 +4114,8 @@ spec:
                         minItems: 1
                         type: array
                       url:
-                        description: URL of your LDAP server, including schema (ldap://
-                          or ldaps://) and port.
+                        description: URL of your LDAP server, including schema (ldap://)
+                          and port.
                         type: string
                       userDN:
                         description: DN to be used for searching users.
