@@ -12,12 +12,12 @@ metadata:
     app.kubernetes.io/instance: "{{ $.Release.Name }}"
     app.kubernetes.io/managed-by: "{{ $.Release.Service }}"
     pod: {{ $targetPod }}
-    {{- range $key, $value := (merge nil .Values.externalAccess.service.labels .Values.commonLabels) }}
+    {{- range $key, $value := (merge nil $.Values.externalAccess.service.labels $.Values.commonLabels) }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
-  {{- if or .Values.externalAccess.service.annotations .Values.commonAnnotations }}
+  {{- if or $.Values.externalAccess.service.annotations $.Values.commonAnnotations }}
   annotations:
-    {{- range $key, $val := (merge nil .Values.externalAccess.service.annotations .Values.commonAnnotations) }}
+    {{- range $key, $val := (merge nil $.Values.externalAccess.service.annotations $.Values.commonAnnotations) }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
   {{- end }}
