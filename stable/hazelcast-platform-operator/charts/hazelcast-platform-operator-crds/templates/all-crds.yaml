@@ -4114,8 +4114,8 @@ spec:
                         minItems: 1
                         type: array
                       url:
-                        description: URL of your LDAP server, including schema (ldap://
-                          or ldaps://) and port.
+                        description: URL of your LDAP server, including schema (ldap://)
+                          and port.
                         type: string
                       userDN:
                         description: DN to be used for searching users.
