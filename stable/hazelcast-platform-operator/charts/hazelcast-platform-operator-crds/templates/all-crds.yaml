@@ -434,6 +434,13 @@ spec:
               advancedNetwork:
                 description: Hazelcast Advanced Network configuration
                 properties:
+                  clientServerSocketEndpointConfig:
+                    properties:
+                      interfaces:
+                        items:
+                          type: string
+                        type: array
+                    type: object
                   memberServerSocketEndpointConfig:
                     properties:
                       interfaces:
