@@ -6,9 +6,9 @@ description: A Helm chart for installing Hazelcast Platform Operator Custom Reso
 
 type: application
 
-version: "5.10.0-snapshot"
+version: "5.10.0"
 
-appVersion: "5.10.0-snapshot"
+appVersion: "5.10.0"
 
 home: https://github.com/hazelcast/hazelcast-platform-operator
 
