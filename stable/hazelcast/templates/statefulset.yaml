@@ -130,6 +130,14 @@ spec:
           failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
         {{- end }}
         volumeMounts:
+        {{- range $key, $val := .Values.hazelcast.configurationFiles }}
+        - name: config
+          mountPath: /opt/hazelcast/config/{{ $key }}
+          subPath: {{ $key }}
+        {{- end }}
+        - name: config
+          mountPath: /opt/hazelcast/config/hazelcast.yaml
+          subPath: hazelcast.yaml
         - name: hazelcast-storage
           mountPath: /data/hazelcast
         {{- if .Values.customVolume }}
@@ -157,7 +165,7 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
         - name: JAVA_OPTS
-          value: "-Dhazelcast.config=/data/hazelcast/hazelcast.yaml -DserviceName={{ template "hazelcast.serviceNameConfig" . }} -Dnamespace={{ .Release.Namespace }} -Dhz.jet.enabled={{ .Values.jet.enabled }} {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.hazelcast.javaOpts }}"
+          value: "-Dhazelcast.config=/opt/hazelcast/config/hazelcast.yaml -DserviceName={{ template "hazelcast.serviceNameConfig" . }} -Dnamespace={{ .Release.Namespace }} -Dhz.jet.enabled={{ .Values.jet.enabled }} {{ if .Values.gracefulShutdown.enabled }}-Dhazelcast.shutdownhook.policy=GRACEFUL -Dhazelcast.shutdownhook.enabled=true -Dhazelcast.graceful.shutdown.max.wait={{ .Values.gracefulShutdown.maxWaitSeconds }} {{ end }} {{ if .Values.metrics.enabled }}-Dhazelcast.jmx=true{{ end }} {{ .Values.hazelcast.javaOpts }}"
         {{- if .Values.hazelcast.loggingLevel }}
         - name: LOGGING_LEVEL
           value: {{ .Values.hazelcast.loggingLevel }}
@@ -183,13 +191,15 @@ spec:
       serviceAccountName: {{ template "hazelcast.serviceAccountName" . }}
       automountServiceAccountToken: {{ .Values.serviceAccount.automountToken }}
       volumes:
-      - name: hazelcast-storage
+      - name: config
         configMap:
           {{- if .Values.hazelcast.existingConfigMap }}
           name: {{ .Values.hazelcast.existingConfigMap }}
           {{- else }}
           name: {{ template "hazelcast.fullname" . }}-configuration
           {{- end }}
+      - name: hazelcast-storage
+        emptyDir: {}
       {{- if .Values.customVolume }}
       - name: hazelcast-custom
 {{ toYaml .Values.customVolume | indent 8 }}
