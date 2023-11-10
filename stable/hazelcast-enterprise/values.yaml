@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast image name
   repository: "hazelcast/hazelcast-enterprise"
   # tag is the Hazelcast image tag
-  tag: "5.3.2"
+  tag: "5.3.6"
   # digest is the Hazelcast image digest that will be used only if the tag is empty
   digest: ""
   #
