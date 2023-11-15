@@ -15,9 +15,7 @@ metadata:
     {{- end }}
   {{- if or .Values.metrics.service.annotations .Values.commonAnnotations }}
   annotations:
-    {{- range $key, $val := (merge nil .Values.metrics.service.annotations .Values.commonAnnotations) }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
+    {{- merge nil .Values.metrics.service.annotations .Values.commonAnnotations | toYaml | nindent 4 }}
   {{- end }}
 spec:
   type: {{ .Values.metrics.service.type }}

@@ -12,11 +12,9 @@ metadata:
     {{- range $key, $val := (merge nil .Values.metrics.serviceMonitor.labels .Values.commonLabels) }}
     {{ $key }}: {{ $val | quote }}
     {{- end }}
-  {{- if .Values.commonAnnotations }}
+  {{- with .Values.commonAnnotations }}
   annotations:
-    {{- range $key, $val := .Values.commonAnnotations }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   endpoints:
