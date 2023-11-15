@@ -13,9 +13,7 @@ metadata:
     {{- end }}
   {{- if or .Values.mancenter.ingress.annotations .Values.commonAnnotations }}
   annotations:
-    {{- range $key, $val := (merge nil .Values.mancenter.ingress.annotations .Values.commonAnnotations) }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
+    {{- merge nil .Values.mancenter.ingress.annotations .Values.commonAnnotations | toYaml | nindent 4 }}
   {{- end }}
 spec:
   ingressClassName: {{ .Values.mancenter.ingress.className }}

@@ -11,11 +11,9 @@ metadata:
     {{- range $key, $value := (merge nil .Values.mancenter.labels .Values.commonLabels) }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
-  {{- if .Values.commonAnnotations }}
+  {{- with .Values.commonAnnotations }}
   annotations:
-    {{- range $key, $val := .Values.commonAnnotations }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   serviceName: {{ template "mancenter.fullname" . }}
@@ -33,16 +31,12 @@ spec:
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
         role: mancenter
-        {{- if or .Values.mancenter.podLabels .Values.commonLabels }}
         {{- range $key, $val := (merge nil .Values.mancenter.podLabels .Values.commonLabels) }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
-        {{- end }}
       {{- if or .Values.mancenter.annotations .Values.commonAnnotations }}
       annotations:
-        {{- range $key, $val := (merge nil .Values.mancenter.annotations .Values.commonAnnotations) }}
-        {{ $key }}: {{ $val | quote }}
-        {{- end }}
+        {{- merge nil .Values.mancenter.annotations .Values.commonAnnotations | toYaml | nindent 8 }}
       {{- end }}
     spec:
       {{- if .Values.mancenter.image.pullSecrets }}
@@ -242,11 +236,9 @@ spec:
         {{- range $key, $value := .Values.commonLabels }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-      {{- if .Values.commonAnnotations }}
+      {{- with .Values.commonAnnotations }}
       annotations:
-        {{- range $key, $val := .Values.commonAnnotations }}
-        {{ $key }}: {{ $val | quote }}
-        {{- end }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
       accessModes:

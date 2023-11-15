@@ -13,9 +13,7 @@ metadata:
     {{- end }}
   {{- if or .Values.annotations .Values.commonAnnotations }}
   annotations:
-    {{- range $key, $val := (merge nil .Values.annotations .Values.commonAnnotations) }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
+    {{- merge nil .Values.annotations .Values.commonAnnotations | toYaml | nindent 4 }}
   {{- end }}
 spec:
   serviceName: {{ template "hazelcast.fullname" . }}
@@ -33,10 +31,8 @@ spec:
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
         role: hazelcast
-        {{- if or .Values.podLabels .Values.commonLabels }}
         {{- range $key, $val := (merge nil .Values.podLabels .Values.commonLabels) }}
         {{ $key }}: {{ $val | quote }}
-        {{- end }}
         {{- end }}
       annotations:
         checksum/hazelcast-config: {{ toYaml .Values.hazelcast.yaml | sha256sum }}

@@ -15,11 +15,9 @@ metadata:
     {{- range $key, $value := .Values.commonLabels }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
-  {{- if .Values.commonAnnotations }}
+  {{- with .Values.commonAnnotations }}
   annotations:
-    {{- range $key, $val := .Values.commonAnnotations }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 rules:
 - apiGroups:
