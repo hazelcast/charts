@@ -2,10 +2,6 @@
 apiVersion: v1
 kind: Service
 metadata:
-{{- if .Values.service.annotations }}
-  annotations:
-{{ toYaml .Values.service.annotations | indent 4 }}
-{{- end }}
   name: {{ template "hazelcast.serviceName" . }}
   labels:
     app.kubernetes.io/name: {{ template "hazelcast.name" . }}
@@ -15,9 +11,9 @@ metadata:
     {{- range $key, $value := (merge nil .Values.service.labels .Values.commonLabels) }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
-  {{- with .Values.commonAnnotations }}
+  {{- if or .Values.service.annotations .Values.commonAnnotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- merge nil .Values.service.annotations .Values.commonAnnotations | toYaml | nindent 4 }}
   {{- end }}
 spec:
   type: {{ .Values.service.type }}
