@@ -25,9 +25,6 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       KUBECTL_VERSION: 1.22.0
-      GCP_PROJECT_ID: hazelcast-33
-      GCP_NETWORK: operator-test-network
-      GKE_ZONE: europe-west1-b
       AWS_REGION: us-east-1
     steps:
       - name: Decide which ref to checkout
@@ -50,11 +47,6 @@ jobs:
           git remote add hazelcast https://github.com/hazelcast/charts.git
           git fetch hazelcast master
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1.1.1
-        with:
-          project_id: ${{ env.GCP_PROJECT_ID }}
-          
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -66,14 +58,8 @@ jobs:
         uses: aws-actions/aws-secretsmanager-get-secrets@v1
         with:
           secret-ids: |
-            GKE_SA_KEY,CN/GKE_SA_KEY
             HZ_LICENSE_KEY,CN/HZ_LICENSE_KEY
-            
-      - name: Authenticate to GCP
-        uses: 'google-github-actions/auth@v1.1.1'
-        with:
-          credentials_json: ${{ env.GKE_SA_KEY }}
-          
+
       - name: Set up Helm
         uses: azure/setup-helm@v3.5
         with:
@@ -119,25 +105,24 @@ jobs:
         run: |
           ct lint --config ${GITHUB_WORKSPACE}/test/ct.yaml
                     
-      - name: Create GKE cluster
-        run: |-
-          CLUSTER_NAME="charts-pr-test-${GITHUB_SHA::8}-${GITHUB_RUN_NUMBER}"
-          echo "CLUSTER_NAME=${CLUSTER_NAME}" >> $GITHUB_ENV
-          gcloud container clusters create ${CLUSTER_NAME} --zone=${{ env.GKE_ZONE }} --project=${{ env.GCP_PROJECT_ID }} --network=${{ env.GCP_NETWORK }} --machine-type=n1-standard-2 --num-nodes=2
-          sleep 30
+      - name: Create Kind Config
+        run: |
+          cat <<EOT >> ./kind-config.yaml
+          kind: Cluster
+          apiVersion: kind.x-k8s.io/v1alpha4
+          nodes:
+          - role: control-plane
+          - role: worker
+          - role: worker
+          - role: worker
+          EOT
 
-      - name: Connect to the GKE cluster
-        uses: 'google-github-actions/get-gke-credentials@v1'
+      - name: Create Kind Cluster
+        uses: helm/kind-action@v1.8.0
         with:
-          cluster_name: ${{ env.CLUSTER_NAME }}
-          project_id: ${{ env.GCP_PROJECT_ID }}
-          location: ${{ env.GKE_ZONE }}
+          config: ./kind-config.yaml
+          cluster_name: kind
 
       - name: Test Charts
         run: |
           ct install --config ${GITHUB_WORKSPACE}/test/ct.yaml
-
-      - name: Delete GKE cluster
-        if: always()
-        run: |-
-          gcloud container clusters delete ${{ env.CLUSTER_NAME }} --zone ${{ env.GKE_ZONE }} --quiet
