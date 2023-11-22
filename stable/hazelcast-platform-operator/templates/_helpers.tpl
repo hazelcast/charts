@@ -91,7 +91,11 @@ Create the image name of the deployment
 Watched namespaces list concatenated as comma separated string
 */}}
 {{- define "watched-namespaces.string" -}}
-{{ trim (join "," .Values.watchedNamespaces) }}
+{{- $str := "" -}}
+{{- range .Values.watchedNamespaces -}}
+  {{- $str = print $str (trim .) "," }}
+{{- end }}
+{{- trimSuffix "," $str -}}
 {{- end -}}
 
 {{/*
