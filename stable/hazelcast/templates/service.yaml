@@ -35,5 +35,5 @@ spec:
     nodePort: {{ .Values.service.nodePort }}
     {{- end }}
     name: hazelcast
-    appProtocol: TCP
+    appProtocol: tcp
 {{- end -}}
