@@ -239,13 +239,6 @@ spec:
         app.kubernetes.io/name: {{ template "hazelcast.name" . }}
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-        {{- range $key, $value := .Values.commonLabels }}
-        {{ $key }}: {{ $value | quote }}
-        {{- end }}
-      {{- with .Values.commonAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
     spec:
       accessModes:
       {{- range .Values.persistence.accessModes }}

@@ -224,13 +224,6 @@ spec:
         helm.sh/chart: "{{ .Chart.Name }}"
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-        {{- range $key, $value := .Values.commonLabels }}
-        {{ $key }}: {{ $value | quote }}
-        {{- end }}
-      {{- with .Values.commonAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
     spec:
       accessModes:
       {{- range .Values.mancenter.persistence.accessModes }}
