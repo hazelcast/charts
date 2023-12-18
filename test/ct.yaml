@@ -1,4 +1,4 @@
 target-branch: 4.2.z
 chart-dirs:
   - stable
-helm-extra-args: "--wait"
+helm-extra-args: --timeout 10m
