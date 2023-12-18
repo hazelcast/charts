@@ -2,4 +2,4 @@ remote: hazelcast
 target-branch: 4.2.z
 chart-dirs:
   - stable
-helm-extra-args: '--timeout 10m'
+helm-extra-args: "--timeout 10m"
