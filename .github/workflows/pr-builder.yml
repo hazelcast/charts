@@ -119,7 +119,7 @@ jobs:
           
       - name: Test Charts
         run: |
-          ct install --config ${GITHUB_WORKSPACE}/test/ct.yaml
+          ct install --config ${GITHUB_WORKSPACE}/test/ct.yaml --helm-extra-args '--timeout 10m'
 
       - name: Delete GKE cluster
         if: always()
