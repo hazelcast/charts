@@ -57,9 +57,12 @@ Create the name of the service to use
 Create the config of the service-name to use
 */}}
 {{- define "hazelcast.serviceNameConfig" -}}
-{{- if or (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "service-dns") 
-          (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "service-label-name")
-          (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "pod-label-name") -}}
+{{- if and ((((((.Values.hazelcast).yaml).hazelcast).network).join).kubernetes)
+            (or 
+                (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "service-dns") 
+                (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "service-label-name")
+                (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "pod-label-name")
+            ) -}}
     {{ default "" }}
 {{- else -}}
     {{ template "hazelcast.serviceName" .}}
