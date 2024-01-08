@@ -322,6 +322,8 @@ mancenter:
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
     # pullSecrets:
     # - myRegistryKeySecretName
+  # customPorts is the whole ports section to customize how Hazelcast management center container ports are defined
+  # customPorts:
 
   # Dev mode is for the Hazelcast clusters running on your local for development
   # or evaluation purposes and it provides quick access to the Management Center without requiring any security credentials

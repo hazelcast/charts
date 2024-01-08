@@ -82,8 +82,12 @@ spec:
         resources:
 {{ toYaml .Values.mancenter.resources | indent 10 }}
         ports:
+        {{- if .Values.customPorts }}
+{{ toYaml .Values.customPorts | indent 8 }}
+        {{- else }}
         - name: mancenter
           containerPort: {{ if .Values.mancenter.ssl }}8443{{ else }}8080{{ end }}
+        {{- end }}
         {{- if .Values.mancenter.livenessProbe.enabled }}
         livenessProbe:
           httpGet:
