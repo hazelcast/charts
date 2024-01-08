@@ -480,6 +480,11 @@ spec:
                     description: Version of Hazelcast Platform Operator Agent.
                     type: string
                 type: object
+              annotations:
+                additionalProperties:
+                  type: string
+                description: Hazelcast Kubernetes resource annotations
+                type: object
               clusterName:
                 default: dev
                 description: Name of the Hazelcast cluster.
@@ -743,6 +748,11 @@ spec:
                           a JVM
                         type: string
                     type: object
+                type: object
+              labels:
+                additionalProperties:
+                  type: string
+                description: Hazelcast Kubernetes resource labels
                 type: object
               licenseKeySecret:
                 description: licenseKeySecret is a deprecated alias for licenseKeySecretName.
@@ -2816,6 +2826,11 @@ spec:
               repository: docker.io/hazelcast/management-center
             description: Initial values will be filled with its fields' default values.
             properties:
+              annotations:
+                additionalProperties:
+                  type: string
+                description: ManagementCenter Kubernetes resource annotations
+                type: object
               externalConnectivity:
                 default:
                   type: LoadBalancer
@@ -2925,6 +2940,11 @@ spec:
                     items:
                       type: string
                     type: array
+                type: object
+              labels:
+                additionalProperties:
+                  type: string
+                description: ManagementCenter Kubernetes resource labels
                 type: object
               licenseKeySecret:
                 description: licenseKeySecret is a deprecated alias for licenseKeySecretName.
