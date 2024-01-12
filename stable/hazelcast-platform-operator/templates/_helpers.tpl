@@ -125,6 +125,7 @@ Rules needed for giving Hazelcast node read permissions
   - nodes
   verbs:
   - get
+  - list
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
