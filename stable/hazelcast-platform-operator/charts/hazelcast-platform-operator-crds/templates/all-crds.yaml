@@ -4278,6 +4278,22 @@ spec:
                 maximum: 6
                 minimum: 0
                 type: integer
+              attributes:
+                description: Attributes to be used with Predicates API. You can learn
+                  more at https://docs.hazelcast.com/hazelcast/latest/query/predicate-overview#creating-custom-query-attributes
+                items:
+                  properties:
+                    extractorClassName:
+                      description: Name of the extractor class https://docs.hazelcast.com/hazelcast/latest/query/predicate-overview#implementing-a-valueextractor
+                      type: string
+                    name:
+                      description: Name of the attribute https://docs.hazelcast.com/hazelcast/latest/query/predicate-overview#creating-custom-query-attributes
+                      type: string
+                  required:
+                  - extractorClassName
+                  - name
+                  type: object
+                type: array
               backupCount:
                 default: 1
                 description: Number of synchronous backups.
