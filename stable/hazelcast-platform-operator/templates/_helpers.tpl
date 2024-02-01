@@ -582,6 +582,32 @@ Rules needed for operator watched namespaces
 - apiGroups:
   - hazelcast.com
   resources:
+  - wansyncs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hazelcast.com
+  resources:
+  - wansyncs/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - hazelcast.com
+  resources:
+  - wansyncs/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - hazelcast.com
+  resources:
   - wanreplications
   verbs:
   - create
