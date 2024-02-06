@@ -5412,6 +5412,8 @@ spec:
                   in the spec directly or indirectly by Hazelcast resource.
                 type: object
             type: object
+        required:
+        - spec
         type: object
     served: true
     storage: true
