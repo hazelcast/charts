@@ -2878,6 +2878,10 @@ spec:
                       ingressClassName:
                         description: IngressClassName of the ingress object.
                         type: string
+                      path:
+                        default: /
+                        description: Path of the ingress rule.
+                        type: string
                     required:
                     - hostname
                     type: object
