@@ -2236,6 +2236,10 @@ spec:
                       type: object
                     type: array
                 type: object
+              serviceAccountName:
+                description: 'ServiceAccountName is the name of the ServiceAccount
+                  to use to run Hazelcast cluster. More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/'
+                type: string
               sql:
                 description: Hazelcast SQL configuration
                 properties:
