@@ -806,6 +806,57 @@ spec:
                 description: Name of the secret with Hazelcast Enterprise License
                   Key.
                 type: string
+              localDevices:
+                description: Hazelcast LocalDevice configuration
+                items:
+                  properties:
+                    blockSize:
+                      default: 4096
+                      description: BlockSize defines Device block/sector size in bytes.
+                      format: int32
+                      minimum: 512
+                      type: integer
+                    name:
+                      description: Name represents the name of the local device
+                      type: string
+                    pvc:
+                      description: Configuration of PersistenceVolumeClaim.
+                      properties:
+                        accessModes:
+                          description: 'AccessModes contains the actual access modes
+                            of the volume backing the PVC has. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1'
+                          items:
+                            type: string
+                          type: array
+                        requestStorage:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          default: 8Gi
+                          description: A description of the PVC request capacity.
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        storageClassName:
+                          description: Name of StorageClass which this persistent
+                            volume belongs to.
+                          type: string
+                      type: object
+                    readIOThreadCount:
+                      default: 4
+                      description: ReadIOThreadCount is Read IO thread count.
+                      format: int32
+                      minimum: 1
+                      type: integer
+                    writeIOThreadCount:
+                      default: 4
+                      description: WriteIOThreadCount is Write IO thread count.
+                      format: int32
+                      minimum: 1
+                      type: integer
+                  required:
+                  - name
+                  type: object
+                type: array
               loggingLevel:
                 default: INFO
                 description: Logging level for Hazelcast members
@@ -2364,7 +2415,7 @@ spec:
                     type: string
                 type: object
               version:
-                default: 5.3.5
+                default: 5.4.0-SNAPSHOT
                 description: Version of Hazelcast Platform.
                 type: string
             type: object
@@ -4684,6 +4735,24 @@ spec:
                 description: When enabled, map data will be persisted. It cannot be
                   updated after map config is created successfully.
                 type: boolean
+              tieredStore:
+                description: TieredStore enables the Hazelcast's Tiered-Store feature
+                  for the Map
+                properties:
+                  diskDeviceName:
+                    description: diskDeviceName defines the name of the device for
+                      a given disk tier.
+                    type: string
+                  memoryCapacity:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    default: 256M
+                    description: MemoryCapacity sets Memory tier capacity, i.e., how
+                      much main memory should this tier consume at most.
+                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                    x-kubernetes-int-or-string: true
+                type: object
               timeToLiveSeconds:
                 default: 0
                 description: Maximum time in seconds for each entry to stay in the
