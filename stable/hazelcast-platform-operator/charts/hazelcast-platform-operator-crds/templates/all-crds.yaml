@@ -540,6 +540,74 @@ spec:
                 format: int32
                 minimum: 0
                 type: integer
+              cpSubsystem:
+                description: CPSubsystem is the configuration of the Hazelcast CP
+                  Subsystem.
+                properties:
+                  dataLoadTimeoutSeconds:
+                    description: DataLoadTimeoutSeconds is the timeout duration in
+                      seconds for CP members to restore their persisted data from
+                      disk
+                    format: int32
+                    type: integer
+                  failOnIndeterminateOperationState:
+                    description: FailOnIndeterminateOperationState indicated whether
+                      CP Subsystem operations use at-least-once and at-most-once execution
+                      guarantees.
+                    type: boolean
+                  groupSize:
+                    description: GroupSize is the number of CP members to participate
+                      in each CP group. Allowed values are 3, 5, and 7.
+                    format: int32
+                    type: integer
+                  memberCount:
+                    description: MemberCount is the number of CP members to initialize
+                      the CP Subsystem.
+                    format: int32
+                    type: integer
+                  missingCpMemberAutoRemovalSeconds:
+                    description: MissingCpMemberAutoRemovalSeconds is the duration
+                      in seconds to wait before automatically removing a missing CP
+                      member from the CP Subsystem.
+                    format: int32
+                    type: integer
+                  pvc:
+                    description: PVC is the configuration of PersistenceVolumeClaim.
+                    properties:
+                      accessModes:
+                        description: 'AccessModes contains the actual access modes
+                          of the volume backing the PVC has. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1'
+                        items:
+                          type: string
+                        type: array
+                      requestStorage:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        default: 8Gi
+                        description: A description of the PVC request capacity.
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                      storageClassName:
+                        description: Name of StorageClass which this persistent volume
+                          belongs to.
+                        type: string
+                    type: object
+                  sessionHeartbeatIntervalSeconds:
+                    description: SessionHeartbeatIntervalSeconds Interval in seconds
+                      for the periodically committed CP session heartbeats. Must be
+                      greater than or equal to SessionTTLSeconds.
+                    format: int32
+                    type: integer
+                  sessionTTLSeconds:
+                    description: SessionTTLSeconds is the duration for a CP session
+                      to be kept alive after the last received heartbeat. Must be
+                      greater than or equal to SessionTTLSeconds.
+                    format: int32
+                    type: integer
+                required:
+                - memberCount
+                type: object
               customConfigCmName:
                 description: Name of the ConfigMap with the Hazelcast custom configuration.
                   This configuration from the ConfigMap might be overridden by the
