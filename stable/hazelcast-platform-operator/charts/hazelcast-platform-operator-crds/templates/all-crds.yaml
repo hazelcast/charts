@@ -464,7 +464,7 @@ spec:
               agent:
                 default:
                   repository: docker.io/hazelcast/platform-operator-agent
-                  version: 0.1.23
+                  version: 0.1.24
                 description: B&R Agent configurations
                 properties:
                   repository:
@@ -521,7 +521,7 @@ spec:
                         type: object
                     type: object
                   version:
-                    default: 0.1.23
+                    default: 0.1.24
                     description: Version of Hazelcast Platform Operator Agent.
                     type: string
                 type: object
@@ -998,6 +998,10 @@ spec:
               persistence:
                 description: Persistence configuration
                 properties:
+                  baseDir:
+                    description: BaseDir is deprecated. Use restore.localConfig to
+                      restore from a local backup.
+                    type: string
                   clusterDataRecoveryPolicy:
                     default: FullRecoveryOnly
                     description: Configuration of the cluster recovery strategy.
@@ -1064,6 +1068,27 @@ spec:
                         description: Name of the HotBackup resource from which backup
                           will be fetched.
                         type: string
+                      localConfig:
+                        description: Configuration to restore from local backup
+                        properties:
+                          backupDir:
+                            description: Local backup base directory
+                            type: string
+                          backupFolder:
+                            description: Backup directory
+                            minLength: 1
+                            type: string
+                          baseDir:
+                            description: Persistence base directory
+                            type: string
+                          pvcNamePrefix:
+                            default: persistence
+                            description: PVC name prefix used in existing PVCs
+                            enum:
+                            - persistence
+                            - hot-restart-persistence
+                            type: string
+                        type: object
                     type: object
                   startupAction:
                     description: StartupAction represents the action triggered when
