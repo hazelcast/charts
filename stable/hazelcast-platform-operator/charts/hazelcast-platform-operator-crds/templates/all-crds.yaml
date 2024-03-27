@@ -560,11 +560,6 @@ spec:
                       in each CP group. Allowed values are 3, 5, and 7.
                     format: int32
                     type: integer
-                  memberCount:
-                    description: MemberCount is the number of CP members to initialize
-                      the CP Subsystem.
-                    format: int32
-                    type: integer
                   missingCpMemberAutoRemovalSeconds:
                     description: MissingCpMemberAutoRemovalSeconds is the duration
                       in seconds to wait before automatically removing a missing CP
@@ -605,8 +600,6 @@ spec:
                       greater than or equal to SessionTTLSeconds.
                     format: int32
                     type: integer
-                required:
-                - memberCount
                 type: object
               customConfigCmName:
                 description: Name of the ConfigMap with the Hazelcast custom configuration.
