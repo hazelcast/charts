@@ -5497,6 +5497,10 @@ spec:
                   type: object
                 minItems: 1
                 type: array
+              syncConsistencyCheckStrategy:
+                description: SyncConsistencyCheckStrategy is the strategy for checking
+                  the consistency of data between replicas.
+                type: string
               targetClusterName:
                 description: ClusterName is the clusterName field of the target Hazelcast
                   resource.
