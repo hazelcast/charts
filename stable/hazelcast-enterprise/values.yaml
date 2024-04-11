@@ -85,7 +85,7 @@ affinity:
 #        - key: app.kubernetes.io/name
 #          operator: In
 #          values:
-#          - hazelcast
+#          - hazelcast-enterprise
 #        - key: role
 #          operator: In
 #          values:
