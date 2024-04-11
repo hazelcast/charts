@@ -21,4 +21,4 @@ The documentation for the Hazelcast Platform Operator can be found [here](https:
 
 ## How to find us?
 
-In case of any question or issue, please raise a GH issue, send an email to [Hazelcast Google Groups](https://groups.google.com/forum/#!forum/hazelcast) or contact as directly via [Hazelcast Slack](https://slack.hazelcast.com).
+In case of any question or issue, please raise a GH issue, or contact as directly via [Hazelcast Slack](https://slack.hazelcast.com).
