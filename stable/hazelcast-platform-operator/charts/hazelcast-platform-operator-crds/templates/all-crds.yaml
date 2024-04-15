@@ -464,7 +464,7 @@ spec:
               agent:
                 default:
                   repository: docker.io/hazelcast/platform-operator-agent
-                  version: 0.1.24
+                  version: 0.1.26
                 description: B&R Agent configurations
                 properties:
                   repository:
@@ -521,7 +521,7 @@ spec:
                         type: object
                     type: object
                   version:
-                    default: 0.1.24
+                    default: 0.1.26
                     description: Version of Hazelcast Platform Operator Agent.
                     type: string
                 type: object
@@ -556,11 +556,6 @@ spec:
                       CP Subsystem operations use at-least-once and at-most-once execution
                       guarantees.
                     type: boolean
-                  groupSize:
-                    description: GroupSize is the number of CP members to participate
-                      in each CP group. Allowed values are 3, 5, and 7.
-                    format: int32
-                    type: integer
                   missingCpMemberAutoRemovalSeconds:
                     description: MissingCpMemberAutoRemovalSeconds is the duration
                       in seconds to wait before automatically removing a missing CP
