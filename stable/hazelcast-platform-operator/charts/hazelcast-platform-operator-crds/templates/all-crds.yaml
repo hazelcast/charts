@@ -2498,7 +2498,7 @@ spec:
                     type: string
                 type: object
               version:
-                default: 5.4.0-SNAPSHOT
+                default: 5.4.0
                 description: Version of Hazelcast Platform.
                 type: string
             type: object
@@ -4419,7 +4419,7 @@ spec:
                     type: object
                 type: object
               version:
-                default: 5.3.3
+                default: 5.4.0
                 description: Version of Management Center.
                 type: string
             type: object
