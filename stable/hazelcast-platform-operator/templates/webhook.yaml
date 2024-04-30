@@ -201,6 +201,29 @@ webhooks:
       service:
         name: {{ $fullname }}
         namespace: {{ .Release.Namespace }}
+        path: /validate-hazelcast-com-v1alpha1-usercodenamespace
+    failurePolicy: Fail
+    name: vusercodenamespace.kb.io
+    rules:
+      - apiGroups:
+          - hazelcast.com
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - usercodenamespaces
+    sideEffects: None
+    namespaceSelector:
+      {{- include "watched-namespaces.labelSelector" . | nindent 6 }}
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      caBundle: {{ $ca.Cert | b64enc }}
+      service:
+        name: {{ $fullname }}
+        namespace: {{ .Release.Namespace }}
         path: /validate-hazelcast-com-v1alpha1-wanreplication
     failurePolicy: Ignore
     name: vwanreplication.kb.io
