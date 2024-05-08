@@ -4490,7 +4490,7 @@ spec:
                     type: object
                 type: object
               version:
-                default: 5.4.0
+                default: 5.4.1
                 description: Version of Management Center.
                 type: string
             type: object
