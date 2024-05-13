@@ -9,7 +9,3 @@ ignore:
     version: latest-snapshot
   - name: hazelcast-enterprise
     version: latest-snapshot
-  - name: hazelcast-platform-operator
-    version: snapshot
-  - name: hazelcast-platform-operator-crds
-    version: snapshot
