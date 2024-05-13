@@ -7,17 +7,8 @@ This is a repository for Hazelcast Helm Charts. For more information about insta
 
 See corresponding page from below for each chart for step-by-step installation:
 
-- [Hazelcast-Platform-Operator](https://docs.hazelcast.com/operator/latest/get-started#step-1-deploy-hazelcast-platform-operator)
 - [Hazelcast](https://docs.hazelcast.com/hazelcast/latest/kubernetes/helm-hazelcast-chart)
 - [Hazelcast Enterprise](https://docs.hazelcast.com/hazelcast/latest/kubernetes/helm-hazelcast-enterprise-chart)
-
-## Quick Start with Hazelcast Platform Operator
-
-    $ helm repo add hazelcast https://hazelcast-charts.s3.amazonaws.com/
-    $ helm repo update
-    $ helm install operator hazelcast/hazelcast-platform-operator --set installCRDs=true
-
-The documentation for the Hazelcast Platform Operator can be found [here](https://docs.hazelcast.com/operator/latest/get-started#step-1-deploy-hazelcast-platform-operator).
 
 ## How to find us?
 
