@@ -54,19 +54,19 @@ Create the name of the service to use
 {{- end -}}
 
 {{/*
-Create the config of the service-name to use
+Generate the Hazelcast configuration, ensuring that any conflicting configuration keys are removed.
 */}}
-{{- define "hazelcast.serviceNameConfig" -}}
-{{- if and ((((((.Values.hazelcast).yaml).hazelcast).network).join).kubernetes)
-            (or 
-                (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "service-dns") 
-                (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "service-label-name")
-                (index .Values.hazelcast.yaml.hazelcast.network.join.kubernetes "pod-label-name")
-            ) -}}
-    {{ default "" }}
-{{- else -}}
-    {{ template "hazelcast.serviceName" .}}
+{{- define "hazelcast.config" -}}
+{{- $config := .Values.hazelcast.yaml | deepCopy -}}
+{{- $k8sJoin := $config.hazelcast.network.join.kubernetes -}}
+
+{{- if and $k8sJoin -}}
+  {{- if or (index $k8sJoin "service-dns") (index $k8sJoin "service-label-name") (index $k8sJoin "pod-label-name") -}}
+      {{- $_ := unset $k8sJoin "service-name" -}}
+  {{- end -}}
 {{- end -}}
+
+{{- toYaml $config -}}
 {{- end -}}
 
 {{/*
