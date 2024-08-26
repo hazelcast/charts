@@ -256,3 +256,12 @@ spec:
       {{- end }}
   {{- end }}
 {{- end }}
+{{- if .Values.persistence.volumeClaimRetentionPolicy }}
+  persistentVolumeClaimRetentionPolicy:
+    {{- if .Values.persistence.volumeClaimRetentionPolicy.whenDeleted }}
+    whenDeleted: {{ .Values.persistence.volumeClaimRetentionPolicy.whenDeleted }}
+    {{- end }}
+    {{- if .Values.persistence.volumeClaimRetentionPolicy.whenScaled }}
+    whenScaled: {{ .Values.persistence.volumeClaimRetentionPolicy.whenScaled }}
+    {{- end }}
+{{- end }}

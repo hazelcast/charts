@@ -252,6 +252,18 @@ persistence:
   # hostPath is the path of the node machine directory that is used for persistent storage
   # if defined, it's used instead of Persistent Volume Claim
   # hostPath:
+  # volumeClaimRetentionPolicy controls if and how PVCs are deleted during the lifecycle of a StatefulSet
+  # There are two retention policies to be set:
+  # whenDeleted - configures the volume retention behavior that applies when the StatefulSet is deleted
+  # and
+  # whenScaled - configures the volume retention behavior that applies when the replica count of the StatefulSet
+  # is reduced; for example, when scaling down the set.
+  #
+  # Values can be either Retain which is the default or Delete
+  #
+  # volumeClaimRetentionPolicy:
+  #   whenDeleted: Retain
+  #   whenScaled: Retain
 
 # Hazelcast Jet Engine
 jet:
