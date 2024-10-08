@@ -41,9 +41,10 @@ jobs:
         working-directory: stable
         id: update_version
         run: |
-          HZ_REPO="hazelcast/hazelcast"
+          echo ${{ env.DEVOPS_GITHUB_TOKEN }} | gh auth login --with-token
+          HZ_REPO="hazelcast/hazelcast-mono"
           MC_REPO="hazelcast/management-center"
-          paths=("hazelcast" "hazelcast-enterprise")
+          paths=("hazelcast-enterprise")
 
           # Function to extract a specific field value from a YAML file
           extract_version() {
@@ -156,19 +157,28 @@ jobs:
           fi
             echo "TITLE=$TITLE" >> $GITHUB_ENV
             echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          
+          PR_NUMBER=$(gh pr list --repo ${GITHUB_REPOSITORY} --search "$TITLE" --json number | jq -r '.[].number')
+          if [[ -z "$PR_NUMBER" ]]; then
+            echo "PR_EXIST=false" >> $GITHUB_OUTPUT
+            echo "PR_EXIST=false" >> $GITHUB_ENV
+          fi
 
       - name: Commit and Push Changes
-        if: (steps.update_version.outputs.HZ_UPDATED == 'true' || steps.update_version.outputs.MC_UPDATED == 'true')
+        if: (steps.update_version.outputs.HZ_UPDATED == 'true' || steps.update_version.outputs.MC_UPDATED == 'true') && steps.title.outputs.PR_EXIST == 'false'
         run: |
           git config user.email "devopshelm@hazelcast.com"
           git config user.name "devOpsHelm"
+          git fetch origin
+          git checkout master
+          git pull origin master
           git checkout -b ${{ env.BRANCH }}
           git add .
           git commit --signoff -m "${{ env.TITLE }}"
           git push -u origin ${{ env.BRANCH }}
 
       - name: Create PR to Main Branch
-        if: (steps.update_version.outputs.HZ_UPDATED == 'true' || steps.update_version.outputs.MC_UPDATED == 'true')
+        if: (steps.update_version.outputs.HZ_UPDATED == 'true' || steps.update_version.outputs.MC_UPDATED == 'true') && steps.title.outputs.PR_EXIST == 'false'
         run: |
           echo ${{ env.DEVOPS_GITHUB_TOKEN }} | gh auth login --with-token
           gh pr create --fill \
