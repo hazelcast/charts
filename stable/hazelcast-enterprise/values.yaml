@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast image name
   repository: "hazelcast/hazelcast-enterprise"
   # tag is the Hazelcast image tag
-  tag: "5.5.2"
+  tag: "5.5.3"
   # digest is the Hazelcast image digest that will be used only if the tag is empty
   digest: ""
   #
@@ -346,7 +346,7 @@ mancenter:
     # repository is the Hazelcast Management Center image name
     repository: "hazelcast/management-center"
     # tag is the Hazelcast Management Center image tag
-    tag: "5.6.0"
+    tag: "5.7.0"
     # digest is the Hazelcast Management Center image digest that will be used only if the tag is empty
     digest: ""
     #
