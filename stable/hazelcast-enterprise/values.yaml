@@ -243,8 +243,6 @@ containerSecurityContext:
   capabilities:
     drop:
       - ALL
-  seccompProfile:
-    type: RuntimeDefault
 # Hazelcast Hot Restart persistence feature
 persistence:
   # enabled is a flag to enabled Hot Restart feature
