@@ -76,7 +76,7 @@ annotations: {}
 
 # affinity specifies the affinity/anti-affinity of different pods. The commented out
 # example below shows how you could ensure your hazelcast pods are scheduled on
-# different Kubernetes nodes
+# different Kubernetes nodes. The value can be a template.
 affinity:
 #  podAntiAffinity:
 #    requiredDuringSchedulingIgnoredDuringExecution:
@@ -413,7 +413,7 @@ mancenter:
   # annotations is an array of metadata for Management Center Statefulset
   annotations: {}
 
-  # affinity specifies the Management Center affinity/anti-affinity of different pods
+  # affinity specifies the Management Center affinity/anti-affinity of different pods. The value can be a template.
   # affinity:
 
   # tolerations enable Management Center POD to be able to run on nodes with taints
