@@ -64,16 +64,6 @@ annotations: {}
 # example below shows how you could ensure your hazelcast pods are scheduled on
 # different Kubernetes nodes. The value can be a template.
 affinity:
-  podAntiAffinity:
-    preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 100
-        podAffinityTerm:
-          namespaceSelector: { }
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/name: '{{ template "hazelcast.name" . }}'
-              app.kubernetes.io/instance: '{{ .Release.Name }}'
-          topologyKey: "kubernetes.io/hostname"
 #  podAntiAffinity:
 #    requiredDuringSchedulingIgnoredDuringExecution:
 #    - labelSelector:

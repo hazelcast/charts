@@ -86,7 +86,8 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Renders a value that contains template.
+Renders a value that could contains template.
+Usage:
 {{ include "hazelcast.render" ( dict "value" .Values.path.to.the.Value "context" $ ) }}
 */}}
 {{- define "hazelcast.render" -}}
