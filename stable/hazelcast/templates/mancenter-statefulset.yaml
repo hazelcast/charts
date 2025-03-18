@@ -160,11 +160,11 @@ spec:
         {{- end }}
         {{- $clusterConfigCommand := "" }}
         {{- if .Values.mancenter.clusterConfig.create }}
-        {{- $clusterConfigCommand = "./bin/mc-conf.sh cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml; " }}
+        {{- $clusterConfigCommand = "./bin/hz-mc conf cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml; " }}
         {{- end }}
         {{- if .Values.mancenter.devMode.enabled }}
         - name: MC_INIT_CMD
-          value: "{{ $clusterConfigCommand }}./bin/mc-conf.sh dev-mode configure"
+          value: "{{ $clusterConfigCommand }}./bin/hz-mc conf dev-mode configure"
         {{- else if .Values.mancenter.clusterConfig.create }}
         - name: MC_INIT_CMD
           value: "{{ $clusterConfigCommand }}"
