@@ -10,7 +10,7 @@
 
 To access Hazelcast within the Kubernetes cluster:
 
-- Use Hazelcast Client with Kubernetes Discovery Strategy. Read more at: https://github.com/hazelcast/hazelcast-kubernetes.
+- Use Hazelcast Client with Kubernetes Discovery Strategy. Read more at: https://docs.hazelcast.com/hazelcast/latest/kubernetes/kubernetes-auto-discovery.
 
 -------------------------------------------------------------------------------
 
