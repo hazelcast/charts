@@ -84,3 +84,17 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- define "mancenter.name" -}}
 {{- printf "%s" .Chart.Name | trunc 53 | trimSuffix "-" | }}-mancenter
 {{- end -}}
+
+{{/*
+Renders a value that could contains template.
+Usage:
+{{ include "hazelcast.render" ( dict "value" .Values.path.to.the.Value "context" $ ) }}
+*/}}
+{{- define "hazelcast.render" -}}
+{{- $value := typeIs "string" .value | ternary .value (.value | toYaml) }}
+{{- if contains "{{" (toJson .value) }}
+    {{- tpl $value .context }}
+{{- else }}
+  {{- $value }}
+{{- end }}
+{{- end -}}

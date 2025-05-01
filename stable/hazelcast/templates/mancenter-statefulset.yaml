@@ -60,8 +60,7 @@ spec:
         fsGroup: {{ .Values.securityContext.fsGroup }}
       {{- end }}
       {{- if .Values.mancenter.affinity }}
-      affinity:
-{{ toYaml .Values.mancenter.affinity | indent 8 }}
+      affinity: {{- include "hazelcast.render" (dict "value" .Values.mancenter.affinity "context" .) | nindent 8 }}
       {{- end }}
       {{- if .Values.mancenter.tolerations }}
       tolerations:
