@@ -34,7 +34,7 @@ spec:
     - host: {{ $host | quote }}
       http:
         paths:
-          - path: "/"
+          - path: {{ $.Values.mancenter.contextPath | quote }}
             pathType: Prefix
             backend:
                 service:
@@ -45,7 +45,7 @@ spec:
   {{- else }}
     - http:
         paths:
-          - path: "/"
+          - path: {{ .Values.mancenter.contextPath | quote }}
             pathType: Prefix
             backend:
                 service:
