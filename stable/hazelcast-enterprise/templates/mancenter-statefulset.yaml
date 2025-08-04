@@ -141,7 +141,7 @@ spec:
               name: {{ .Values.mancenter.adminCredentialsSecretName }}
               key: password
         {{- end }}
-        {{- if .Values.mancenter.contextPath }}
+        {{- if and .Values.mancenter.contextPath (ne .Values.mancenter.contextPath "/") }}
         - name: MC_CONTEXT_PATH
           value: {{ .Values.mancenter.contextPath }}
         {{- end }}
