@@ -5,7 +5,7 @@ image:
   # repository is the Hazelcast image name
   repository: "hazelcast/hazelcast-enterprise"
   # tag is the Hazelcast image tag
-  tag: "5.5.2"
+  tag: "5.5.7"
   # digest is the Hazelcast image digest that will be used only if the tag is empty
   digest: ""
   #
@@ -197,7 +197,7 @@ service:
   # nodePort: 30100
   #
   # clusterIP set to None makes the service headless
-  # It is required if DNS Lookup is used (https://github.com/hazelcast/hazelcast-kubernetes#dns-lookup)
+  # It is required if DNS Lookup is used (https://docs.hazelcast.com/hazelcast/latest/kubernetes/kubernetes-auto-discovery#using-kubernetes-in-dns-lookup-mode)
   clusterIP: "None"
   # loadBalancerIP use statically set IP or set to empty to use dynamic IP allocation
   loadBalancerIP: ""
@@ -210,7 +210,7 @@ service:
 # Role-based Access Control
 rbac:
   # Specifies whether RBAC resources should be created
-  # It is not required if DNS Lookup is used (https://github.com/hazelcast/hazelcast-kubernetes#dns-lookup)
+  # It is not required if DNS Lookup is used (https://docs.hazelcast.com/hazelcast/latest/kubernetes/kubernetes-auto-discovery#using-kubernetes-in-dns-lookup-mode)
   create: true
   # Set this to false to use kubernetes Role and RoleBinding instead of ClusterRole and ClusterRoleBinding.
   useClusterRole: true
@@ -271,7 +271,7 @@ metrics:
       prometheus.io/port: "8080"
   ## Prometheus Operator ServiceMonitor
   ## ref: https://github.com/coreos/prometheus-operator
-  ##      https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
+  ##      https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#endpoint
   ##
   serviceMonitor:
     enabled: false
@@ -346,7 +346,7 @@ mancenter:
     # repository is the Hazelcast Management Center image name
     repository: "hazelcast/management-center"
     # tag is the Hazelcast Management Center image tag
-    tag: "5.6.0"
+    tag: "5.8.0"
     # digest is the Hazelcast Management Center image digest that will be used only if the tag is empty
     digest: ""
     #

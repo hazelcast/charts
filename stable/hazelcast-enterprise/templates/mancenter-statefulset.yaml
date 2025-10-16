@@ -170,20 +170,20 @@ spec:
         {{- end }}
         {{- $clusterConfigCommand := "" }}
         {{- if .Values.mancenter.clusterConfig.create }}
-        {{- $clusterConfigCommand = "./bin/mc-conf.sh cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml; " }}
+        {{- $clusterConfigCommand = "./bin/hz-mc conf cluster add --lenient=true -H /data -cc /config/hazelcast-client.yaml; " }}
         {{- end }}
         {{- if .Values.mancenter.devMode.enabled }}
         - name: MC_INIT_CMD
-          value: "{{ $clusterConfigCommand }}./bin/mc-conf.sh dev-mode configure"
+          value: "{{ $clusterConfigCommand }}./bin/hz-mc conf dev-mode configure"
         {{- else if .Values.mancenter.clusterConfig.create }}
         - name: MC_INIT_CMD
           value: "{{ $clusterConfigCommand }}"
         {{- end }}
-        - name: JAVA_OPTS
-          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName .Values.hazelcast.licenseKey .Values.hazelcast.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} {{ if or .Values.mancenter.readinessProbe.enabled .Values.mancenter.livenessProbe.enabled }}-Dhazelcast.mc.healthCheck.enable=true{{ end }} -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} -Dmancenter.ssl={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
         {{- with .Values.mancenter.env }}
           {{- toYaml . | nindent 8 }}
-        {{- end }}        
+        {{- end }}
+        - name: JAVA_OPTS
+          value: "{{ if or .Values.mancenter.licenseKey .Values.mancenter.licenseKeySecretName .Values.hazelcast.licenseKey .Values.hazelcast.licenseKeySecretName }}-Dhazelcast.mc.license=$(MC_LICENSE_KEY){{ end }} {{ if or .Values.mancenter.readinessProbe.enabled .Values.mancenter.livenessProbe.enabled }}-Dhazelcast.mc.healthCheck.enable=true{{ end }} -DserviceName={{ template "hazelcast.serviceName" . }} -Dnamespace={{ .Release.Namespace }} -Dhazelcast.mc.tls.enabled={{ .Values.mancenter.ssl }} -Dmancenter.ssl={{ .Values.mancenter.ssl }} {{ .Values.mancenter.javaOpts }}"
         {{- if .Values.securityContext.enabled }}
         securityContext:
           runAsNonRoot: {{ if eq (int .Values.securityContext.runAsUser) 0 }}false{{ else }}true{{ end }}

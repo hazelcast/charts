@@ -1,7 +1,7 @@
 apiVersion: v1
 name: hazelcast-enterprise
-version: 5.12.3
-appVersion: "5.5.2"
+version: 5.13.2
+appVersion: "5.5.7"
 kubeVersion: ">=1.19.0-0"
 description: Hazelcast is a streaming and memory-first application platform for fast, stateful, data-intensive workloads on-premises, at the edge or as a fully managed cloud service.
 keywords:
@@ -11,7 +11,7 @@ keywords:
   - database
   - caching
 home: https://hazelcast.com/products/
-icon: https://hazelcast.com/brand-assets/files/hazelcast-stacked-flat-sm.png
+icon: https://docs.hazelcast.com/_/img/hazelcast-logo.svg
 maintainers:
   - name: Hazelcast Cloud Native Team
     email: cloudnative@hazelcast.com

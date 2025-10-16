@@ -183,4 +183,4 @@ jobs:
           echo ${{ env.DEVOPS_GITHUB_TOKEN }} | gh auth login --with-token
           gh pr create --fill \
           --label "safe-to-test" \
-          --reviewer "hasancelik,cheels"
+          --reviewer "SeriyBg,cheels"
