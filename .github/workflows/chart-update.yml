@@ -32,7 +32,7 @@ jobs:
           fi
 
       - name: Install yq
-        uses: mikefarah/yq@v4.48.1
+        uses: mikefarah/yq@v4.49.1
 
       - name: Checkout code
         uses: actions/checkout@v5
