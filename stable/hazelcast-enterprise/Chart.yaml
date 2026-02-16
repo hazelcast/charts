@@ -15,6 +15,4 @@ icon: https://docs.hazelcast.com/_/img/hazelcast-logo.svg
 maintainers:
   - name: Hazelcast Cloud Native Team
     email: cloudnative@hazelcast.com
-  - name: hasancelik
-    email: hasan@hazelcast.com
 engine: gotpl

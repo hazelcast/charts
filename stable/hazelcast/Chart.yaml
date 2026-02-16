@@ -17,6 +17,4 @@ sources:
 maintainers:
   - name: Hazelcast Cloud Native Team
     email: cloudnative@hazelcast.com
-  - name: hasancelik
-    email: hasan@hazelcast.com
 engine: gotpl
