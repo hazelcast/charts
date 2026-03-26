@@ -8,12 +8,16 @@ on:
 jobs:
   chart-update:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_HAZELCAST_OIDC_GITHUB_ACTIONS_ROLE_ARN }}
           aws-region: us-east-1
 
       - name: Get Secrets
@@ -32,7 +36,7 @@ jobs:
           fi
 
       - name: Install yq
-        uses: mikefarah/yq@v4.50.1
+        uses: mikefarah/yq@v4.52.4
 
       - name: Checkout code
         uses: actions/checkout@v6
