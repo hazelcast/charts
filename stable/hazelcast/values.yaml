@@ -218,6 +218,8 @@ securityContext:
   fsGroup: 65534
   # readOnlyRootFilesystem is a flag to enable readOnlyRootFilesystem for the Hazelcast security context
   readOnlyRootFilesystem: true
+  # seccomp profile for Hazelcast and Management Center containers.
+  seccompProfile: {}
 
 # Allows to enable a Prometheus to scrape pods, implemented for Hazelcast version >= 3.12 (or 'latest')
 metrics:

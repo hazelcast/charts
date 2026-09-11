@@ -58,6 +58,10 @@ spec:
         runAsUser: {{ .Values.securityContext.runAsUser }}
         runAsGroup: {{ .Values.securityContext.runAsGroup }}
         fsGroup: {{ .Values.securityContext.fsGroup }}
+        {{- if .Values.securityContext.seccompProfile }}
+        seccompProfile:
+          {{- toYaml .Values.securityContext.seccompProfile | nindent 10 }}
+        {{- end }}
       {{- end }}
       {{- if .Values.mancenter.affinity }}
       affinity:
@@ -185,6 +189,10 @@ spec:
           capabilities:
             drop:
             - ALL
+          {{- if .Values.securityContext.seccompProfile }}
+          seccompProfile:
+            {{- toYaml .Values.securityContext.seccompProfile | nindent 12 }}
+          {{- end }}
         {{- end }}
       {{- if .Values.mancenter.priorityClassName }}
       priorityClassName: "{{ .Values.mancenter.priorityClassName }}"

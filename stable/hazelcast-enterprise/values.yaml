@@ -236,6 +236,8 @@ securityContext:
   fsGroup: 65534
   # readOnlyRootFilesystem is a flag to enable readOnlyRootFilesystem for the Hazelcast security context
   readOnlyRootFilesystem: true
+  # seccomp profile for Hazelcast and Management Center containers.
+  seccompProfile: {}
 
 # Hazelcast Hot Restart persistence feature
 persistence:
