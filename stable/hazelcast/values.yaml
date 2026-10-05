@@ -275,6 +275,11 @@ metrics:
 # externalVolume is the configuration for any volume mounted as '/data/external/'
 # externalVolume:
 
+# secretsMountNames are extra Secrets, each mounted as '/data/secrets/<name>/' (e.g. separate keystore/truststore Secrets)
+secretsMountNames: []
+  # - hz-keystore
+  # - hz-truststore
+
 # Init containers to add to the Hazelcast statefulset's pod spec.
 initContainers: []
   # - name: init-container
@@ -489,6 +494,11 @@ mancenter:
     create: true
   # secretsMountName is the secret name that is mounted as '/data/secrets/' (e.g. with keystore/trustore files)
   # secretsMountName:
+
+  # secretsMountNames are extra Secrets, each mounted as '/data/secrets/<name>/' (e.g. separate keystore/truststore Secrets)
+  secretsMountNames: []
+    # - hz-keystore
+    # - hz-truststore
 
   # Additional Environment variables
   env: []

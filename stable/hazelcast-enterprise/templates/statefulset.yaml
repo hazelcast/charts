@@ -142,6 +142,11 @@ spec:
         - name: hazelcast-secrets
           mountPath: /data/secrets
         {{- end }}
+        {{- range .Values.secretsMountNames }}
+        - name: secrets-{{ . }}
+          mountPath: /data/secrets/{{ . }}
+          readOnly: true
+        {{- end }}
         {{- if .Values.customVolume }}
         - name: hazelcast-custom
           mountPath: /data/custom
@@ -218,6 +223,11 @@ spec:
         - name: hazelcast-secrets
           secret:
             secretName: {{ .Values.secretsMountName }}
+        {{- end }}
+        {{- range .Values.secretsMountNames }}
+        - name: secrets-{{ . }}
+          secret:
+            secretName: {{ . }}
         {{- end }}
         {{- if .Values.customVolume }}
         - name: hazelcast-custom

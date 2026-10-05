@@ -123,6 +123,11 @@ spec:
         - name: mancenter-secrets
           mountPath: /secrets
         {{- end }}
+        {{- range .Values.mancenter.secretsMountNames }}
+        - name: secrets-{{ . }}
+          mountPath: /data/secrets/{{ . }}
+          readOnly: true
+        {{- end }}
         {{- if .Values.mancenter.customVolume }}
         - name: mancenter-custom
           mountPath: /data/custom
@@ -211,6 +216,11 @@ spec:
       - name: mancenter-secrets
         secret:
           secretName: {{ .Values.mancenter.secretsMountName }}
+      {{- end }}
+      {{- range .Values.mancenter.secretsMountNames }}
+      - name: secrets-{{ . }}
+        secret:
+          secretName: {{ . }}
       {{- end }}
       - name: mancenter-storage
         {{- if and (eq .Values.mancenter.persistence.enabled true) .Values.mancenter.persistence.existingClaim }}
