@@ -55,8 +55,7 @@ Create the name of the service to use
 
 {{/*
 Generate the Hazelcast configuration, ensuring that any conflicting discovery configurations are resolved.
-Remove the default 'network' section when advanced network is enabled, because Hazelcast refuses a
-configuration that contains both of them.
+Remove the default 'network' section when advanced network is enabled, because Hazelcast refuses a configuration that contains both of them.
 Remove the default value for the 'service-name' field when other discovery mechanisms are explicitly used.
 */}}
 {{- define "hazelcast.config" -}}
