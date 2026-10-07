@@ -38,6 +38,12 @@ spec:
       nodePort: null
       {{- end }}
       targetPort: hazelcast
+    {{- $clientPort := include "hazelcast.externalClientPort" $ | trim }}
+    {{- if and $clientPort (ne (int $clientPort) (int $.Values.service.port)) }}
+    - name: client
+      port: {{ $clientPort }}
+      targetPort: {{ $clientPort }}
+    {{- end }}
   selector:
     app.kubernetes.io/name: {{ template "hazelcast.name" $ }}
     app.kubernetes.io/instance: "{{ $.Release.Name }}"
