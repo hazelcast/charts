@@ -55,17 +55,35 @@ Create the name of the service to use
 
 {{/*
 Generate the Hazelcast configuration, ensuring that any conflicting discovery configurations are resolved.
+Remove the default 'network' section when advanced network is enabled, because Hazelcast refuses a
+configuration that contains both of them.
 Remove the default value for the 'service-name' field when other discovery mechanisms are explicitly used.
 */}}
 {{- define "hazelcast.config" -}}
 {{- $config := .Values.hazelcast.yaml | deepCopy -}}
-{{- $k8sJoin := $config.hazelcast.network.join.kubernetes -}}
+{{- $hz := $config.hazelcast -}}
+{{- if dig "advanced-network" "enabled" false $hz -}}
+{{- $_ := unset $hz "network" -}}
+{{- else -}}
+{{- $k8sJoin := dig "network" "join" "kubernetes" nil $hz -}}
 {{- if and $k8sJoin -}}
   {{- if or (index $k8sJoin "service-dns") (index $k8sJoin "service-label-name") (index $k8sJoin "pod-label-name") -}}
       {{- $_ := unset $k8sJoin "service-name" -}}
   {{- end -}}
 {{- end -}}
+{{- end -}}
 {{- toYaml $config -}}
+{{- end -}}
+
+{{/*
+Client socket port from advanced-network, when that config is enabled.
+Empty when advanced network is off, so the external Service keeps a single member port.
+*/}}
+{{- define "hazelcast.externalClientPort" -}}
+{{- $config := .Values.hazelcast.yaml | default dict -}}
+{{- if dig "hazelcast" "advanced-network" "enabled" false $config -}}
+{{- with dig "hazelcast" "advanced-network" "client-server-socket-endpoint-config" "port" "port" nil $config }}{{ . | int }}{{ end -}}
+{{- end -}}
 {{- end -}}
 
 {{/*
