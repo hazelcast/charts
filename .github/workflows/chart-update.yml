@@ -117,13 +117,21 @@ jobs:
               CHART_VERSION=$(extract_version .version "$path/Chart.yaml")
               MC_VERSION=$(extract_version .mancenter.image.tag "$path/values.yaml")
 
+              if [[ "$path" == "hazelcast-enterprise" ]]; then
+                CHART_UPDATED_ENV="ENTERPRISE_UPDATED"
+              else
+                CHART_UPDATED_ENV="COMMUNITY_UPDATED"
+              fi
+
               if [[ $HZ_LATEST_TAG != $APP_VERSION && $MC_LATEST_TAG != $MC_VERSION ]]; then
                 NEW_CHART_VERSION=$(update_version "$HZ_LATEST_TAG" "$APP_VERSION" "$CHART_VERSION")
                 sed -i -E -e 's/(version: ).*/\1'"$NEW_CHART_VERSION"'/' -e 's/(appVersion: ).*/\1'\"$HZ_LATEST_TAG\"'/' "$path/Chart.yaml"
                 awk '/^image:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$HZ_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
                 awk '/^mancenter:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$MC_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
+                echo "Updating $path to HZ $HZ_LATEST_TAG and MC $MC_LATEST_TAG"
                 echo "HZ_LATEST_TAG=${HZ_LATEST_TAG}" >> $GITHUB_ENV
                 echo "MC_LATEST_TAG=${MC_LATEST_TAG}" >> $GITHUB_ENV
+                echo "${CHART_UPDATED_ENV}=true" >> $GITHUB_ENV
                 echo "HZ_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "HZ_UPDATED=true" >> $GITHUB_ENV
                 echo "MC_UPDATED=true" >> $GITHUB_OUTPUT
@@ -132,14 +140,18 @@ jobs:
                 NEW_CHART_VERSION=$(update_version "$HZ_LATEST_TAG" "$APP_VERSION" "$CHART_VERSION")
                 sed -i -E -e 's/(version: ).*/\1'"$NEW_CHART_VERSION"'/' -e 's/(appVersion: ).*/\1'\"$HZ_LATEST_TAG\"'/' "$path/Chart.yaml"
                 awk '/^image:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$HZ_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
+                echo "Updating $path to HZ $HZ_LATEST_TAG"
                 echo "HZ_LATEST_TAG=${HZ_LATEST_TAG}" >> $GITHUB_ENV
+                echo "${CHART_UPDATED_ENV}=true" >> $GITHUB_ENV
                 echo "HZ_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "HZ_UPDATED=true" >> $GITHUB_ENV
               elif [[ $HZ_LATEST_TAG == $APP_VERSION && $MC_LATEST_TAG != $MC_VERSION ]]; then
                 NEW_CHART_VERSION=$(update_version "$MC_LATEST_TAG" "$MC_VERSION" "$CHART_VERSION")
                 sed -i -E -e 's/(version: ).*/\1'"$NEW_CHART_VERSION"'/' "$path/Chart.yaml"
                 awk '/^mancenter:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$MC_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
+                echo "Updating $path to MC $MC_LATEST_TAG"
                 echo "MC_LATEST_TAG=${MC_LATEST_TAG}" >> $GITHUB_ENV
+                echo "${CHART_UPDATED_ENV}=true" >> $GITHUB_ENV
                 echo "MC_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "MC_UPDATED=true" >> $GITHUB_ENV
               else
@@ -154,7 +166,13 @@ jobs:
         id: title
         if: (steps.update_version.outputs.HZ_UPDATED == 'true' || steps.update_version.outputs.MC_UPDATED == 'true')
         run: |
-          if [[ $HZ_UPDATED == 'true' && $MC_UPDATED != 'true' ]]; then
+          if [[ "$COMMUNITY_UPDATED" == "true" && "$ENTERPRISE_UPDATED" != "true" && "$HZ_UPDATED" == "true" ]]; then
+             TITLE="Upgrade Hazelcast chart to ${{ env.HZ_LATEST_TAG }}"
+             BRANCH="update-hazelcast-to-${{ env.HZ_LATEST_TAG }}"
+          elif [[ "$COMMUNITY_UPDATED" == "true" && "$ENTERPRISE_UPDATED" != "true" ]]; then
+             TITLE="Upgrade Hazelcast chart MC to ${{ env.MC_LATEST_TAG }}"
+             BRANCH="update-hazelcast-mc-to-${{ env.MC_LATEST_TAG }}"
+          elif [[ $HZ_UPDATED == 'true' && $MC_UPDATED != 'true' ]]; then
              TITLE="Upgrade Hazelcast version to ${{ env.HZ_LATEST_TAG }}"
              BRANCH="update-hz-to-${{ env.HZ_LATEST_TAG }}"
           elif [[ $HZ_UPDATED != 'true' && $MC_UPDATED == 'true' ]]; then
