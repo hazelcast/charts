@@ -117,10 +117,10 @@ jobs:
               CHART_VERSION=$(extract_version .version "$path/Chart.yaml")
               MC_VERSION=$(extract_version .mancenter.image.tag "$path/values.yaml")
 
-              if [[ "$path" == "hazelcast-enterprise" ]]; then
-                CHART_UPDATED_ENV="ENTERPRISE_UPDATED"
+              if [[ "$path" == "hazelcast" ]]; then
+                CHART_PREFIX="COMMUNITY"
               else
-                CHART_UPDATED_ENV="COMMUNITY_UPDATED"
+                CHART_PREFIX="ENTERPRISE"
               fi
 
               if [[ $HZ_LATEST_TAG != $APP_VERSION && $MC_LATEST_TAG != $MC_VERSION ]]; then
@@ -131,7 +131,8 @@ jobs:
                 echo "Updating $path to HZ $HZ_LATEST_TAG and MC $MC_LATEST_TAG"
                 echo "HZ_LATEST_TAG=${HZ_LATEST_TAG}" >> $GITHUB_ENV
                 echo "MC_LATEST_TAG=${MC_LATEST_TAG}" >> $GITHUB_ENV
-                echo "${CHART_UPDATED_ENV}=true" >> $GITHUB_ENV
+                echo "${CHART_PREFIX}_HZ_TAG=${HZ_LATEST_TAG}" >> $GITHUB_ENV
+                echo "${CHART_PREFIX}_UPDATED=true" >> $GITHUB_ENV
                 echo "HZ_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "HZ_UPDATED=true" >> $GITHUB_ENV
                 echo "MC_UPDATED=true" >> $GITHUB_OUTPUT
@@ -142,7 +143,7 @@ jobs:
                 awk '/^image:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$HZ_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
                 echo "Updating $path to HZ $HZ_LATEST_TAG"
                 echo "HZ_LATEST_TAG=${HZ_LATEST_TAG}" >> $GITHUB_ENV
-                echo "${CHART_UPDATED_ENV}=true" >> $GITHUB_ENV
+                echo "${CHART_PREFIX}_UPDATED=true" >> $GITHUB_ENV
                 echo "HZ_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "HZ_UPDATED=true" >> $GITHUB_ENV
               elif [[ $HZ_LATEST_TAG == $APP_VERSION && $MC_LATEST_TAG != $MC_VERSION ]]; then
@@ -151,7 +152,7 @@ jobs:
                 awk '/^mancenter:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$MC_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
                 echo "Updating $path to MC $MC_LATEST_TAG"
                 echo "MC_LATEST_TAG=${MC_LATEST_TAG}" >> $GITHUB_ENV
-                echo "${CHART_UPDATED_ENV}=true" >> $GITHUB_ENV
+                echo "${CHART_PREFIX}_UPDATED=true" >> $GITHUB_ENV
                 echo "MC_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "MC_UPDATED=true" >> $GITHUB_ENV
               else
@@ -166,21 +167,21 @@ jobs:
         id: title
         if: (steps.update_version.outputs.HZ_UPDATED == 'true' || steps.update_version.outputs.MC_UPDATED == 'true')
         run: |
-          if [[ "$COMMUNITY_UPDATED" == "true" && "$ENTERPRISE_UPDATED" != "true" && "$HZ_UPDATED" == "true" ]]; then
-             TITLE="Upgrade Hazelcast chart to ${{ env.HZ_LATEST_TAG }}"
-             BRANCH="update-hazelcast-to-${{ env.HZ_LATEST_TAG }}"
-          elif [[ "$COMMUNITY_UPDATED" == "true" && "$ENTERPRISE_UPDATED" != "true" ]]; then
-             TITLE="Upgrade Hazelcast chart MC to ${{ env.MC_LATEST_TAG }}"
-             BRANCH="update-hazelcast-mc-to-${{ env.MC_LATEST_TAG }}"
+          if [[ "$COMMUNITY_UPDATED" == "true" && "$ENTERPRISE_UPDATED" != "true" && "$HZ_UPDATED" == "true" && "$MC_UPDATED" == "true" ]]; then
+             TITLE="Upgrade Hazelcast chart to ${HZ_LATEST_TAG} and MC to ${MC_LATEST_TAG}"
+             BRANCH="update-hazelcast-to-${HZ_LATEST_TAG}-${MC_LATEST_TAG}"
           elif [[ $HZ_UPDATED == 'true' && $MC_UPDATED != 'true' ]]; then
-             TITLE="Upgrade Hazelcast version to ${{ env.HZ_LATEST_TAG }}"
-             BRANCH="update-hz-to-${{ env.HZ_LATEST_TAG }}"
+             TITLE="Upgrade Hazelcast version to ${HZ_LATEST_TAG}"
+             BRANCH="update-hz-to-${HZ_LATEST_TAG}"
           elif [[ $HZ_UPDATED != 'true' && $MC_UPDATED == 'true' ]]; then
-             TITLE="Upgrade MC version to ${{ env.MC_LATEST_TAG }}"
-             BRANCH="update-mc-to-${{ env.MC_LATEST_TAG }}"
+             TITLE="Upgrade MC version to ${MC_LATEST_TAG}"
+             BRANCH="update-mc-to-${MC_LATEST_TAG}"
+          elif [[ -n "$COMMUNITY_HZ_TAG" && -n "$ENTERPRISE_HZ_TAG" ]]; then
+             TITLE="Upgrade Hazelcast chart to ${COMMUNITY_HZ_TAG} and Enterprise to ${ENTERPRISE_HZ_TAG} and MC to ${MC_LATEST_TAG}"
+             BRANCH="update-hazelcast-to-${COMMUNITY_HZ_TAG}-enterprise-to-${ENTERPRISE_HZ_TAG}-mc-to-${MC_LATEST_TAG}"
           else
-             TITLE="Upgrade Hazelcast and MC version to ${{ env.HZ_LATEST_TAG }} and ${{ env.MC_LATEST_TAG }}"
-             BRANCH="update-hz-mc-to-${{ env.HZ_LATEST_TAG }}-${{ env.MC_LATEST_TAG }}"
+             TITLE="Upgrade Hazelcast and MC version to ${HZ_LATEST_TAG} and ${MC_LATEST_TAG}"
+             BRANCH="update-hz-mc-to-${HZ_LATEST_TAG}-${MC_LATEST_TAG}"
           fi
             echo "TITLE=$TITLE" >> $GITHUB_ENV
             echo "BRANCH=$BRANCH" >> $GITHUB_ENV
