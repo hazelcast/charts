@@ -46,9 +46,8 @@ jobs:
         id: update_version
         run: |
           echo ${{ env.DEVOPS_GITHUB_TOKEN }} | gh auth login --with-token
-          HZ_REPO="hazelcast/hazelcast-mono"
           MC_REPO="hazelcast/management-center"
-          paths=("hazelcast-enterprise")
+          paths=("hazelcast" "hazelcast-enterprise")
 
           # Function to extract a specific field value from a YAML file
           extract_version() {
@@ -106,21 +105,25 @@ jobs:
 
           # Function to check the version and update the chart files if necessary
           check_version_and_update() {
-              HZ_LATEST_TAG=$(get_latest_tag "$HZ_REPO")
-              MC_LATEST_TAG=$(get_latest_tag "$MC_REPO")
+            MC_LATEST_TAG=$(get_latest_tag "$MC_REPO")
             for path in "${paths[@]}"; do
+              if [[ "$path" == "hazelcast" ]]; then
+                HZ_REPO="hazelcast/hazelcast"
+              else
+                HZ_REPO="hazelcast/hazelcast-mono"
+              fi
+              HZ_LATEST_TAG=$(get_latest_tag "$HZ_REPO")
               APP_VERSION=$(extract_version .appVersion "$path/Chart.yaml")
               CHART_VERSION=$(extract_version .version "$path/Chart.yaml")
               MC_VERSION=$(extract_version .mancenter.image.tag "$path/values.yaml")
-          
-              echo "HZ_LATEST_TAG=${HZ_LATEST_TAG}" >> $GITHUB_ENV
-              echo "MC_LATEST_TAG=${MC_LATEST_TAG}" >> $GITHUB_ENV
-          
+
               if [[ $HZ_LATEST_TAG != $APP_VERSION && $MC_LATEST_TAG != $MC_VERSION ]]; then
                 NEW_CHART_VERSION=$(update_version "$HZ_LATEST_TAG" "$APP_VERSION" "$CHART_VERSION")
                 sed -i -E -e 's/(version: ).*/\1'"$NEW_CHART_VERSION"'/' -e 's/(appVersion: ).*/\1'\"$HZ_LATEST_TAG\"'/' "$path/Chart.yaml"
                 awk '/^image:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$HZ_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
                 awk '/^mancenter:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$MC_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
+                echo "HZ_LATEST_TAG=${HZ_LATEST_TAG}" >> $GITHUB_ENV
+                echo "MC_LATEST_TAG=${MC_LATEST_TAG}" >> $GITHUB_ENV
                 echo "HZ_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "HZ_UPDATED=true" >> $GITHUB_ENV
                 echo "MC_UPDATED=true" >> $GITHUB_OUTPUT
@@ -129,15 +132,17 @@ jobs:
                 NEW_CHART_VERSION=$(update_version "$HZ_LATEST_TAG" "$APP_VERSION" "$CHART_VERSION")
                 sed -i -E -e 's/(version: ).*/\1'"$NEW_CHART_VERSION"'/' -e 's/(appVersion: ).*/\1'\"$HZ_LATEST_TAG\"'/' "$path/Chart.yaml"
                 awk '/^image:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$HZ_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
+                echo "HZ_LATEST_TAG=${HZ_LATEST_TAG}" >> $GITHUB_ENV
                 echo "HZ_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "HZ_UPDATED=true" >> $GITHUB_ENV
               elif [[ $HZ_LATEST_TAG == $APP_VERSION && $MC_LATEST_TAG != $MC_VERSION ]]; then
                 NEW_CHART_VERSION=$(update_version "$MC_LATEST_TAG" "$MC_VERSION" "$CHART_VERSION")
                 sed -i -E -e 's/(version: ).*/\1'"$NEW_CHART_VERSION"'/' "$path/Chart.yaml"
                 awk '/^mancenter:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$MC_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
+                echo "MC_LATEST_TAG=${MC_LATEST_TAG}" >> $GITHUB_ENV
                 echo "MC_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "MC_UPDATED=true" >> $GITHUB_ENV
-              else 
+              else
                 echo "No new tag found for HZ in '$path' path. The latest tag is: $HZ_LATEST_TAG"
                 echo "No new tag found for MC in '$path' path. The latest tag is: $MC_LATEST_TAG"
               fi
